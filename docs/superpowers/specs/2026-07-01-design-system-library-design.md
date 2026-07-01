@@ -75,9 +75,14 @@ those variables being present.
 `src/components/Logo/`:
 
 - `<LogoMark>` — the eL monogram tile (rounded-rect background + `e`/`L` letterforms +
-  tilde). Letterforms are rendered as **SVG path outlines** (not live `<text>`), sourced
-  from the path data in the provided `espanolenka_design_system/logos/*.svg` exports, so the
-  mark renders correctly regardless of whether the Baloo 2 web font has loaded. Props:
+  tilde). Letterforms are rendered as **SVG path outlines** (not live `<text>`). The
+  provided `espanolenka_design_system/logos/*.svg` exports only contain live `<text>`
+  elements (no outline data), so a one-off dev-time script (`scripts/extract-glyph-paths.mjs`,
+  using `opentype.js` against the `@fontsource/baloo-2` font file) extracts the actual 'e'
+  (weight 500) and 'L' (weight 600) glyph outlines and the resulting SVG path `d` strings
+  are baked into `LogoMark.tsx` as constants. This is a one-time generation step, not a
+  runtime dependency — the mark renders correctly regardless of whether the Baloo 2 web
+  font has loaded. Props:
   `size` (px), `variant`: `"coral" | "knockout" | "outline"`.
 - `<Logo>` — full wordmark: `<LogoMark>` plus "Españo"/"Lenka" text (this text does use the
   live Baloo 2 font, per the README's wordmark spec — only the monogram itself is
