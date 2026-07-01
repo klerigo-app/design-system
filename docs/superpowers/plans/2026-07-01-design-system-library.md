@@ -1869,7 +1869,7 @@ git commit -m "Add Toggle component"
 - Modify: `src/index.ts`
 
 **Interfaces:**
-- Produces: `SearchField` component, `SearchFieldProps` (`id: string`, `'aria-label': string`, plus native `<input type="search">` attributes except `id`/`type`).
+- Produces: `SearchField` component, `SearchFieldProps` (`id: string`, `'aria-label': string`, `placeholder: string`, plus native `<input type="search">` attributes except `id`/`type`/`placeholder`). `placeholder` is required — the component has no default copy baked in, per the Global Constraint that all text is consumer-supplied.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1883,7 +1883,7 @@ import { SearchField } from './SearchField'
 
 describe('SearchField', () => {
   it('renders a search input with the given accessible label', () => {
-    render(<SearchField id="search" aria-label="Buscar lecciones" />)
+    render(<SearchField id="search" aria-label="Buscar lecciones" placeholder="Buscar..." />)
     expect(screen.getByRole('searchbox', { name: 'Buscar lecciones' })).toBeInTheDocument()
   })
 
@@ -1894,7 +1894,7 @@ describe('SearchField', () => {
 
   it('fires onChange as the user types', async () => {
     const onChange = vi.fn()
-    render(<SearchField id="search" aria-label="Buscar lecciones" onChange={onChange} />)
+    render(<SearchField id="search" aria-label="Buscar lecciones" placeholder="Buscar..." onChange={onChange} />)
     await userEvent.type(screen.getByRole('searchbox'), 'a')
     expect(onChange).toHaveBeenCalled()
   })
@@ -1913,13 +1913,14 @@ import { forwardRef, type InputHTMLAttributes } from 'react'
 import { MagnifyingGlass } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
-export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type'> {
+export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type' | 'placeholder'> {
   id: string
   'aria-label': string
+  placeholder: string
 }
 
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
-  ({ id, className, placeholder = 'Buscar...', ...props }, ref) => {
+  ({ id, className, placeholder, ...props }, ref) => {
     return (
       <div className="relative">
         <MagnifyingGlass className="pointer-events-none absolute left-[14px] top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
@@ -3028,7 +3029,7 @@ git commit -m "Add LessonCard component"
 
 **Interfaces:**
 - Consumes: `Card` (`src/components/Card/Card.tsx`, prop `variant="elevated"`), `ProgressBar` (`src/components/ProgressBar/ProgressBar.tsx`, prop `variant="xp-gradient"`), `Button` (`src/components/Button/Button.tsx`, prop `variant="primary"`, `fullWidth`).
-- Produces: `AnswerOption` component, `AnswerOptionStatus` (`'default' | 'selected' | 'correct' | 'wrong'`), `AnswerOptionProps` (`status?: AnswerOptionStatus`, `onSelect?: () => void`, `children: ReactNode`). `QuizCard` component, `QuizCardProps` (`current: number`, `total: number`, `promptLabel: string`, `question: ReactNode`, `children: ReactNode`, `onSubmit?: () => void`, `submitLabel?: string`, `submitDisabled?: boolean`). `QuizCard`'s `children` is expected to be a list of `AnswerOption` elements, composed by the consumer.
+- Produces: `AnswerOption` component, `AnswerOptionStatus` (`'default' | 'selected' | 'correct' | 'wrong'`), `AnswerOptionProps` (`status?: AnswerOptionStatus`, `onSelect?: () => void`, `children: ReactNode`). `QuizCard` component, `QuizCardProps` (`current: number`, `total: number`, `promptLabel: string`, `question: ReactNode`, `children: ReactNode`, `onSubmit?: () => void`, `submitLabel: string`, `submitDisabled?: boolean`). `submitLabel` is required — no default copy is baked into the component, per the Global Constraint that all text is consumer-supplied. `QuizCard`'s `children` is expected to be a list of `AnswerOption` elements, composed by the consumer.
 
 - [ ] **Step 1: Write the failing test for AnswerOption**
 
@@ -3162,7 +3163,13 @@ import { AnswerOption } from './AnswerOption'
 describe('QuizCard', () => {
   it('renders the counter, prompt label, and question', () => {
     render(
-      <QuizCard current={2} total={5} promptLabel="Completa la frase" question="Ayer yo ___ al cine.">
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="Completa la frase"
+        question="Ayer yo ___ al cine."
+        submitLabel="Comprobar"
+      >
         <AnswerOption>fui</AnswerOption>
       </QuizCard>,
     )
@@ -3173,7 +3180,13 @@ describe('QuizCard', () => {
 
   it('renders the answer options passed as children', () => {
     render(
-      <QuizCard current={2} total={5} promptLabel="Completa la frase" question="Ayer yo ___ al cine.">
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="Completa la frase"
+        question="Ayer yo ___ al cine."
+        submitLabel="Comprobar"
+      >
         <AnswerOption>fui</AnswerOption>
         <AnswerOption>fue</AnswerOption>
       </QuizCard>,
@@ -3185,7 +3198,7 @@ describe('QuizCard', () => {
   it('fires onSubmit when the submit button is clicked', async () => {
     const onSubmit = vi.fn()
     render(
-      <QuizCard current={2} total={5} promptLabel="p" question="q" onSubmit={onSubmit}>
+      <QuizCard current={2} total={5} promptLabel="p" question="q" submitLabel="Comprobar" onSubmit={onSubmit}>
         <AnswerOption>fui</AnswerOption>
       </QuizCard>,
     )
@@ -3196,7 +3209,15 @@ describe('QuizCard', () => {
   it('disables the submit button when submitDisabled is set', async () => {
     const onSubmit = vi.fn()
     render(
-      <QuizCard current={2} total={5} promptLabel="p" question="q" onSubmit={onSubmit} submitDisabled>
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="p"
+        question="q"
+        submitLabel="Comprobar"
+        onSubmit={onSubmit}
+        submitDisabled
+      >
         <AnswerOption>fui</AnswerOption>
       </QuizCard>,
     )
@@ -3204,7 +3225,7 @@ describe('QuizCard', () => {
     expect(onSubmit).not.toHaveBeenCalled()
   })
 
-  it('uses a custom submit label when provided', () => {
+  it('uses the given submit label', () => {
     render(
       <QuizCard current={2} total={5} promptLabel="p" question="q" submitLabel="Enviar">
         <AnswerOption>fui</AnswerOption>
@@ -3235,7 +3256,7 @@ export interface QuizCardProps {
   question: ReactNode
   children: ReactNode
   onSubmit?: () => void
-  submitLabel?: string
+  submitLabel: string
   submitDisabled?: boolean
 }
 
@@ -3246,7 +3267,7 @@ export function QuizCard({
   question,
   children,
   onSubmit,
-  submitLabel = 'Comprobar',
+  submitLabel,
   submitDisabled,
 }: QuizCardProps) {
   return (
@@ -3311,6 +3332,7 @@ export const Default: Story = {
         total={5}
         promptLabel="Completa la frase"
         question="Ayer yo ___ al cine con mis amigos."
+        submitLabel="Comprobar"
         onSubmit={() => {}}
       >
         {options.map((option) => (
@@ -3325,7 +3347,13 @@ export const Default: Story = {
 
 export const AnswerStates: Story = {
   render: () => (
-    <QuizCard current={2} total={5} promptLabel="Completa la frase" question="Ayer yo ___ al cine.">
+    <QuizCard
+      current={2}
+      total={5}
+      promptLabel="Completa la frase"
+      question="Ayer yo ___ al cine."
+      submitLabel="Comprobar"
+    >
       <AnswerOption status="correct">fui</AnswerOption>
       <AnswerOption status="wrong">fue</AnswerOption>
       <AnswerOption status="default">iba</AnswerOption>
