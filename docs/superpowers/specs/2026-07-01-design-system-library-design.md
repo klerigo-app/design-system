@@ -78,7 +78,9 @@ those variables being present.
   tilde). Letterforms are rendered as **SVG path outlines** (not live `<text>`). The
   provided `espanolenka_design_system/logos/*.svg` exports only contain live `<text>`
   elements (no outline data), so a one-off dev-time script (`scripts/extract-glyph-paths.mjs`,
-  using `opentype.js` against the `@fontsource/baloo-2` font file) extracts the actual 'e'
+  using `fontkit` against the `@fontsource/baloo-2` font file — `fontkit` decodes WOFF2 and
+  exposes glyph outlines directly, unlike `opentype.js` which lacks WOFF2 support) extracts
+  the actual 'e'
   (weight 500) and 'L' (weight 600) glyph outlines and the resulting SVG path `d` strings
   are baked into `LogoMark.tsx` as constants. This is a one-time generation step, not a
   runtime dependency — the mark renders correctly regardless of whether the Baloo 2 web
