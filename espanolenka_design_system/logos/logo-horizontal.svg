@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 672 160" width="672" height="160">
-  <defs></defs>
-  <g transform="translate(20,20) scale(0.234375)">
-    <rect width="512" height="512" rx="132" fill="#F14E3A"></rect>
-    <g transform="translate(161,104) scale(2.21)" fill="none" stroke="#FFC23C" stroke-width="11" stroke-linecap="round"><path d="M6 18 C 16 2, 30 2, 43 14 C 56 26, 70 26, 80 10"></path></g>
-    <text x="256" y="360" text-anchor="middle" fill="#FFFFFF"><tspan font-size="250" font-weight="500">e</tspan><tspan font-size="280" font-weight="600" dx="-10">L</tspan></text>
-  </g>
-  <text x="168" y="106" font-family="&#39;Baloo 2&#39;,&#39;Trebuchet MS&#39;,sans-serif" font-size="74" font-weight="600" fill="#1F2933">Españo<tspan fill="#F14E3A">Lenka</tspan></text>
-</svg>
