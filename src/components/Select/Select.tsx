@@ -1,5 +1,5 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react'
-import { CaretDown } from '@phosphor-icons/react'
+import { CaretDownIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export interface SelectOption {
@@ -42,7 +42,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <CaretDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
         </div>
         {error && <span className="text-[12.5px] font-medium text-error mt-1">{error}</span>}
       </div>
