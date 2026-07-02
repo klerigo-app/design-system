@@ -1,0 +1,51 @@
+import { LogoMark, type LogoMarkVariant } from './LogoMark'
+
+export type LogoOrientation = 'horizontal' | 'stacked'
+
+export interface LogoProps {
+  variant?: LogoMarkVariant
+  orientation?: LogoOrientation
+  markSize?: number
+  className?: string
+}
+
+const ESPANO_COLOR: Record<LogoMarkVariant, string> = {
+  coral: '#1F2933',
+  knockout: '#FFFFFF',
+  outline: '#1F2933',
+}
+
+const LENKA_COLOR: Record<LogoMarkVariant, string> = {
+  coral: '#F14E3A',
+  knockout: '#FFC23C',
+  outline: '#F14E3A',
+}
+
+export function Logo({ variant = 'coral', orientation = 'horizontal', markSize = 40, className }: LogoProps) {
+  const isStacked = orientation === 'stacked'
+  return (
+    <div
+      className={className}
+      style={{
+        display: 'flex',
+        flexDirection: isStacked ? 'column' : 'row',
+        alignItems: 'center',
+        gap: isStacked ? 8 : 12,
+      }}
+    >
+      <LogoMark size={markSize} variant={variant} />
+      <span
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 600,
+          fontSize: markSize * 0.46,
+          color: ESPANO_COLOR[variant],
+          whiteSpace: 'nowrap',
+        }}
+      >
+        Españo
+        <span style={{ color: LENKA_COLOR[variant] }}>Lenka</span>
+      </span>
+    </div>
+  )
+}
