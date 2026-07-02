@@ -1065,11 +1065,12 @@ export interface ButtonProps
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, size, fullWidth, icon, disabled, className, children, ...props }, ref) => {
+  ({ variant, size, fullWidth, icon, disabled, type = 'button', className, children, ...props }, ref) => {
     const resolvedVariant = disabled ? 'disabled' : variant
     return (
       <button
         ref={ref}
+        type={type}
         disabled={disabled}
         className={clsx(buttonStyles({ variant: resolvedVariant, size, fullWidth }), className)}
         {...props}
@@ -1386,6 +1387,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={id}
             aria-invalid={hasError}
+            aria-describedby={error ? `${id}-error` : undefined}
             className={clsx(
               'appearance-none w-full font-body text-[15px] bg-white border-[1.5px] rounded-md pl-[14px] pr-10 py-3 outline-none transition-shadow',
               hasError
@@ -1403,7 +1405,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </select>
           <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
         </div>
-        {error && <span className="text-[12.5px] font-medium text-error mt-1">{error}</span>}
+        {error && (
+          <span id={`${id}-error`} className="text-[12.5px] font-medium text-error mt-1">
+            {error}
+          </span>
+        )}
       </div>
     )
   },
