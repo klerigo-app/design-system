@@ -8,7 +8,7 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          'bg-coral-500 text-white shadow-lift-coral hover:bg-[#E0402D] active:translate-y-[3px] active:shadow-[0_1px_0_#C63823]',
+          'bg-coral-500 text-white shadow-lift-coral hover:bg-[#E0402D] active:translate-y-[3px] active:shadow-[0_1px_0_var(--color-coral-700)]',
         reward:
           'bg-sun-500 text-ink shadow-lift-sun hover:bg-[#F5B52E] active:translate-y-[3px] active:shadow-[0_1px_0_#D99A18]',
         secondary: 'bg-white text-teal-500 border-2 border-teal-500 hover:bg-teal-50',
@@ -35,7 +35,8 @@ const buttonStyles = cva(
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
-    VariantProps<typeof buttonStyles> {
+    Omit<VariantProps<typeof buttonStyles>, 'variant'> {
+  variant?: 'primary' | 'reward' | 'secondary' | 'ghost'
   icon?: ReactNode
   disabled?: boolean
 }
