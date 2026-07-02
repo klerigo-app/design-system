@@ -2730,6 +2730,7 @@ Expected: FAIL — `Cannot find module './UnitPath'`.
 ```tsx
 import { CheckIcon, LockIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
+import { colors } from '../../tokens/tokens'
 
 export type UnitNodeState = 'completed' | 'current' | 'locked'
 
@@ -2748,7 +2749,7 @@ function Connector({ fromState, toState }: { fromState: UnitNodeState; toState: 
       <div
         data-connector
         className="flex-1 h-1 rounded-md"
-        style={{ background: 'linear-gradient(90deg, #17A2A2 50%, #E7EFEF 50%)' }}
+        style={{ background: `linear-gradient(90deg, ${colors.teal[500]} 50%, #E7EFEF 50%)` }}
       />
     )
   }
