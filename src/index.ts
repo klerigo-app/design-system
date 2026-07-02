@@ -1,3 +1,5 @@
+import './tokens/tokens.css'
+
 export * from './tokens/tokens'
 export * from './components/Logo'
 export * from './components/Button'

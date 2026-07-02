@@ -11,7 +11,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./tokens.css": "./dist/tokens.css",
+    "./tokens.css": "./dist/index.css",
     "./fonts.css": "./dist/fonts.css"
   },
   "files": [
@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "tsc -p tsconfig.json && vite build",
+    "build": "tsc -p tsconfig.json && vite build && cp src/tokens/fonts.css dist/fonts.css",
     "build-storybook": "storybook build",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -19,6 +19,54 @@
 - Every component ships a co-located `.test.tsx` (Vitest + Testing Library) and `.stories.tsx` (Storybook).
 - Commit after each task's tests pass.
 
+## Addendum (found during Task 10): Tailwind CSS was never actually generated
+
+Tasks 1-9 shipped correctly per their briefs, but the plan itself had a foundational
+gap that none of the automated checks (`pnpm test`/`lint`/`build`, Storybook booting
+without console errors) could catch: **no file anywhere contained the `@tailwind
+base; @tailwind components; @tailwind utilities;` directives**, so Tailwind never
+generated any actual CSS for the utility classes every component uses (`bg-coral-500`,
+`rounded-lg`, etc.). Every component rendered completely unstyled. The user caught
+this by actually looking at Storybook. Fixed retroactively as follows — treat this as
+the authoritative build/CSS architecture for Task 10 onward, superseding anything
+Tasks 1/2/20 said about `tokens.css`/`fonts.css` build output:
+
+- `src/tokens/tokens.css` now starts with `@tailwind base; @tailwind components;
+  @tailwind utilities;` before the `:root { ... }` custom properties block.
+- `src/index.ts` now has `import './tokens/tokens.css'` at the top (so Vite's library
+  build actually processes and emits it as `dist/index.css`, scanned against
+  `tailwind.config.js`'s `content` globs). It deliberately does NOT import
+  `./tokens/fonts.css` — see below for why.
+- `tsconfig.json` needed `"types": ["vite/client"]` added to `compilerOptions` so
+  TypeScript accepts the CSS side-effect import.
+- `fonts.css` is intentionally kept OUT of the JS/CSS module graph. When it was
+  imported through Vite's library build, the `@fontsource` WOFF2 files got
+  base64-inlined directly into the CSS (Vite lib mode has no stable public asset path
+  to emit loose files to), producing a 1.7MB stylesheet. Since `fonts.css` only
+  contains bare-specifier `@import '@fontsource/...'` statements (no component
+  styling), it doesn't need Tailwind/PostCSS processing at all — it just needs to
+  reach `dist/fonts.css` verbatim, the same as the source file, so that a *consuming
+  app's own bundler* resolves the `@fontsource` imports against its own
+  `node_modules` (standard pattern; `@fontsource/*` are real `dependencies`, not
+  `devDependencies`, of this package, from Task 1, so they install transitively).
+  `package.json`'s `build` script is now `"tsc -p tsconfig.json && vite build && cp
+  src/tokens/fonts.css dist/fonts.css"`.
+- `package.json`'s `exports` map: `"./tokens.css"` now points at `"./dist/index.css"`
+  (Vite names the library's CSS output after the JS entry, not after the source file
+  it started as) — the public subpath name `tokens.css` is unchanged, only its target
+  moved. `"./fonts.css"` still points at `"./dist/fonts.css"`, now populated by the
+  copy step above instead of a Vite-bundled (and bloated) file.
+- `.storybook/preview.tsx` needed no changes — it already imports both source files
+  directly (`../src/tokens/tokens.css`, `../src/tokens/fonts.css`), and Storybook's
+  own Vite dev/build (an app build, not a library build) correctly expands the
+  `@tailwind` directives and emits real separate font asset files rather than
+  inlining them, since app-mode Vite's default asset handling differs from lib mode.
+
+Verified end-to-end: `dist/index.css` contains real rules (e.g.
+`.bg-coral-500{background-color:var(--color-coral-500)}`) at ~12KB; `dist/fonts.css`
+is ~4KB of `@import`/custom-properties; `pnpm build-storybook`'s output CSS also
+contains the same real utility rules and emits actual `.woff2` files (not inlined).
+
 ---
 ## Task 1: Project scaffolding & tooling
 
