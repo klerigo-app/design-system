@@ -525,7 +525,7 @@ Expected: PASS (4 tests).
 - [ ] **Step 7: Create `src/tokens/Tokens.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { colors, radii } from './tokens'
 
 function Swatch({ name, hex }: { name: string; hex: string }) {
@@ -860,7 +860,7 @@ export * from './Logo'
 - [ ] **Step 10: Create `src/components/Logo/Logo.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Logo } from './Logo'
 import { LogoMark } from './LogoMark'
 
@@ -1048,7 +1048,7 @@ export * from './Button'
 - [ ] **Step 6: Create `src/components/Button/Button.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from './Button'
 
 const meta: Meta<typeof Button> = {
@@ -1212,7 +1212,7 @@ export * from './TextInput'
 - [ ] **Step 6: Create `src/components/TextInput/TextInput.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { TextInput } from './TextInput'
 
 const meta: Meta<typeof TextInput> = {
@@ -1376,7 +1376,7 @@ export * from './Select'
 - [ ] **Step 6: Create `src/components/Select/Select.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Select } from './Select'
 
 const options = [
@@ -1527,7 +1527,7 @@ export * from './Checkbox'
 - [ ] **Step 6: Create `src/components/Checkbox/Checkbox.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Checkbox } from './Checkbox'
 
 const meta: Meta<typeof Checkbox> = {
@@ -1675,7 +1675,7 @@ export * from './Radio'
 - [ ] **Step 6: Create `src/components/Radio/Radio.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Radio } from './Radio'
 
 const meta: Meta<typeof Radio> = {
@@ -1818,7 +1818,7 @@ export * from './Toggle'
 - [ ] **Step 6: Create `src/components/Toggle/Toggle.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Toggle } from './Toggle'
 
 const meta: Meta<typeof Toggle> = {
@@ -1956,7 +1956,7 @@ export * from './SearchField'
 - [ ] **Step 6: Create `src/components/SearchField/SearchField.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SearchField } from './SearchField'
 
 const meta: Meta<typeof SearchField> = {
@@ -2111,7 +2111,7 @@ export * from './Card'
 - [ ] **Step 6: Create `src/components/Card/Card.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Card } from './Card'
 
 const meta: Meta<typeof Card> = {
@@ -2263,7 +2263,7 @@ export * from './Chip'
 - [ ] **Step 6: Create `src/components/Chip/Chip.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Chip } from './Chip'
 
 const meta: Meta<typeof Chip> = {
@@ -2427,7 +2427,7 @@ export * from './ProgressBar'
 - [ ] **Step 6: Create `src/components/ProgressBar/ProgressBar.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ProgressBar } from './ProgressBar'
 
 const meta: Meta<typeof ProgressBar> = {
@@ -2580,7 +2580,7 @@ export * from './ProgressRing'
 - [ ] **Step 6: Create `src/components/ProgressRing/ProgressRing.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ProgressRing } from './ProgressRing'
 
 const meta: Meta<typeof ProgressRing> = {
@@ -2752,7 +2752,7 @@ export * from './UnitPath'
 - [ ] **Step 6: Create `src/components/UnitPath/UnitPath.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { UnitPath } from './UnitPath'
 
 const meta: Meta<typeof UnitPath> = {
@@ -2960,7 +2960,7 @@ export * from './LessonCard'
 - [ ] **Step 6: Create `src/components/LessonCard/LessonCard.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { LessonCard } from './LessonCard'
 
 const meta: Meta<typeof LessonCard> = {
@@ -3128,7 +3128,7 @@ Expected: PASS (7 tests).
 - [ ] **Step 4b: Create `src/components/QuizCard/AnswerOption.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { AnswerOption } from './AnswerOption'
 
 const meta: Meta<typeof AnswerOption> = {
@@ -3309,7 +3309,7 @@ export * from './QuizCard'
 
 ```tsx
 import { useState } from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { QuizCard } from './QuizCard'
 import { AnswerOption, type AnswerOptionStatus } from './AnswerOption'
 
@@ -3508,7 +3508,7 @@ export * from './StreakCard'
 - [ ] **Step 6: Create `src/components/StreakCard/StreakCard.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { StreakCard } from './StreakCard'
 
 const meta: Meta<typeof StreakCard> = {
@@ -3641,7 +3641,7 @@ export * from './RewardBanner'
 - [ ] **Step 6: Create `src/components/RewardBanner/RewardBanner.stories.tsx`**
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { RewardBanner } from './RewardBanner'
 
 const meta: Meta<typeof RewardBanner> = {
