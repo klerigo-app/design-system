@@ -33,10 +33,6 @@ Then use components:
       )
     }
 
-Tailwind utility classes (`bg-coral-500`, `rounded-lg`, etc.) are also available if your app's
-own Tailwind config extends `tailwind.config.js` from this package, since all components are
-styled with them internally.
-
 ## Development
 
     pnpm install
