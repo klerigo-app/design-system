@@ -1,1 +1,16 @@
-/* Placeholder — populated in Task 2 (design tokens). */
+@import '@fontsource/baloo-2/400.css';
+@import '@fontsource/baloo-2/500.css';
+@import '@fontsource/baloo-2/600.css';
+@import '@fontsource/baloo-2/700.css';
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dm-sans/600.css';
+@import '@fontsource/dm-sans/700.css';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
+
+:root {
+  --font-display: 'Baloo 2', 'Trebuchet MS', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}

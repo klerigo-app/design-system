@@ -1,1 +1,59 @@
-/* Placeholder — populated in Task 2 (design tokens). */
+:root {
+  /* Coral */
+  --color-coral-50: #FEECE8;
+  --color-coral-100: #FBC7BC;
+  --color-coral-300: #F79684;
+  --color-coral-500: #F14E3A;
+  --color-coral-700: #C63823;
+  --color-coral-900: #8A2415;
+
+  /* Sunshine */
+  --color-sun-50: #FFF6E1;
+  --color-sun-100: #FFE7AE;
+  --color-sun-300: #FFD574;
+  --color-sun-500: #FFC23C;
+  --color-sun-700: #C98A16;
+  --color-sun-900: #8A5C09;
+
+  /* Teal */
+  --color-teal-50: #E1F3F3;
+  --color-teal-100: #B3E0E0;
+  --color-teal-300: #5CBFBF;
+  --color-teal-500: #17A2A2;
+  --color-teal-700: #0F7373;
+  --color-teal-900: #0A4A4A;
+
+  /* Neutrals */
+  --color-paper: #FFFDF7;
+  --color-surface: #FFF9EE;
+  --color-border: #F0E6D0;
+  --color-border-input: #E4D9C4;
+  --color-muted: #A79C89;
+  --color-slate: #5C6670;
+  --color-ink: #1F2933;
+
+  /* Semantic */
+  --color-success: #3DAE6B;
+  --color-warning: #F5A623;
+  --color-error: #E23B3B;
+  --color-info: #17A2A2;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-pill: 9999px;
+  --radius-card: 22px;
+
+  /* Shadows */
+  --shadow-button-lift-coral: 0 4px 0 #C63823;
+  --shadow-button-lift-sun: 0 4px 0 #D99A18;
+  --shadow-card-elevated: 0 14px 30px -18px rgba(90, 60, 30, 0.45);
+  --shadow-device: 0 30px 60px -30px rgba(90, 60, 30, 0.5);
+
+  /* Focus rings */
+  --focus-ring-teal: 0 0 0 3px #D6EFEF;
+  --focus-ring-error: 0 0 0 3px #FBDCDC;
+}
