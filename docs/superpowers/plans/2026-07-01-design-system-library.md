@@ -1310,7 +1310,7 @@ Expected: FAIL — `Cannot find module './Select'`.
 
 ```tsx
 import { forwardRef, type SelectHTMLAttributes } from 'react'
-import { CaretDown } from '@phosphor-icons/react'
+import { CaretDownIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export interface SelectOption {
@@ -1353,7 +1353,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <CaretDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
         </div>
         {error && <span className="text-[12.5px] font-medium text-error mt-1">{error}</span>}
       </div>
@@ -1480,7 +1480,7 @@ Expected: FAIL — `Cannot find module './Checkbox'`.
 
 ```tsx
 import { forwardRef, type InputHTMLAttributes } from 'react'
-import { Check } from '@phosphor-icons/react'
+import { CheckIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type'> {
@@ -1502,7 +1502,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({ id, label
           )}
           {...props}
         />
-        <Check
+        <CheckIcon
           weight="bold"
           className="pointer-events-none absolute inset-0 w-6 h-6 p-1 text-white opacity-0 peer-checked:opacity-100"
         />
@@ -1911,7 +1911,7 @@ Expected: FAIL — `Cannot find module './SearchField'`.
 
 ```tsx
 import { forwardRef, type InputHTMLAttributes } from 'react'
-import { MagnifyingGlass } from '@phosphor-icons/react'
+import { MagnifyingGlassIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type' | 'placeholder'> {
@@ -1924,7 +1924,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   ({ id, className, placeholder, ...props }, ref) => {
     return (
       <div className="relative">
-        <MagnifyingGlass className="pointer-events-none absolute left-[14px] top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+        <MagnifyingGlassIcon className="pointer-events-none absolute left-[14px] top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
         <input
           ref={ref}
           id={id}
@@ -2212,7 +2212,7 @@ Expected: FAIL — `Cannot find module './Chip'`.
 
 ```tsx
 import { type HTMLAttributes, type ReactNode } from 'react'
-import { Check } from '@phosphor-icons/react'
+import { CheckIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export type ChipVariant = 'level' | 'category' | 'new' | 'completed' | 'live' | 'dark' | 'outline'
@@ -2242,7 +2242,7 @@ export function Chip({ variant, className, children, ...props }: ChipProps) {
       )}
       {...props}
     >
-      {variant === 'completed' && <Check weight="bold" className="w-3.5 h-3.5" />}
+      {variant === 'completed' && <CheckIcon weight="bold" className="w-3.5 h-3.5" />}
       {variant === 'live' && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-white" />}
       {children}
     </span>
@@ -2680,7 +2680,7 @@ Expected: FAIL — `Cannot find module './UnitPath'`.
 - [ ] **Step 3: Create `src/components/UnitPath/UnitPath.tsx`**
 
 ```tsx
-import { Check, Lock } from '@phosphor-icons/react'
+import { CheckIcon, LockIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export type UnitNodeState = 'completed' | 'current' | 'locked'
@@ -2725,9 +2725,9 @@ export function UnitPath({ nodes }: UnitPathProps) {
                 'w-14 h-14 bg-white border-2 border-dashed border-[#D8CDB6] opacity-[0.55]',
             )}
           >
-            {node.state === 'completed' && <Check weight="bold" className="w-6 h-6 text-white" />}
+            {node.state === 'completed' && <CheckIcon weight="bold" className="w-6 h-6 text-white" />}
             {node.state === 'current' && <span className="text-white font-semibold">{node.label}</span>}
-            {node.state === 'locked' && <Lock className="w-5 h-5 text-muted" />}
+            {node.state === 'locked' && <LockIcon className="w-5 h-5 text-muted" />}
           </div>
           {index < nodes.length - 1 && (
             <Connector fromState={node.state} toState={nodes[index + 1].state} />
@@ -3076,7 +3076,7 @@ Expected: FAIL — `Cannot find module './AnswerOption'`.
 
 ```tsx
 import { type ReactNode } from 'react'
-import { Check, X } from '@phosphor-icons/react'
+import { CheckIcon, XIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
 export type AnswerOptionStatus = 'default' | 'selected' | 'correct' | 'wrong'
@@ -3108,12 +3108,12 @@ export function AnswerOption({ status = 'default', onSelect, children }: AnswerO
       {status === 'selected' && <span className="w-3 h-3 rounded-full bg-teal-500 shrink-0" />}
       {status === 'correct' && (
         <span className="w-6 h-6 rounded-full bg-success flex items-center justify-center shrink-0">
-          <Check weight="bold" className="w-4 h-4 text-white" />
+          <CheckIcon weight="bold" className="w-4 h-4 text-white" />
         </span>
       )}
       {status === 'wrong' && (
         <span className="w-6 h-6 rounded-full bg-error flex items-center justify-center shrink-0">
-          <X weight="bold" className="w-4 h-4 text-white" />
+          <XIcon weight="bold" className="w-4 h-4 text-white" />
         </span>
       )}
     </button>
@@ -3606,7 +3606,7 @@ Expected: FAIL — `Cannot find module './RewardBanner'`.
 - [ ] **Step 3: Create `src/components/RewardBanner/RewardBanner.tsx`**
 
 ```tsx
-import { Check } from '@phosphor-icons/react'
+import { CheckIcon } from '@phosphor-icons/react'
 
 export interface RewardBannerProps {
   title: string
@@ -3617,7 +3617,7 @@ export function RewardBanner({ title, subtitle }: RewardBannerProps) {
   return (
     <div className="rounded-[18px] bg-[#EAF6EF] border border-[#C9E8D5] p-5 flex items-center gap-4">
       <div className="w-12 h-12 rounded-2xl bg-success flex items-center justify-center shrink-0">
-        <Check weight="bold" className="w-6 h-6 text-white" />
+        <CheckIcon weight="bold" className="w-6 h-6 text-white" />
       </div>
       <div>
         <p className="font-display font-medium text-lg text-ink">{title}</p>
