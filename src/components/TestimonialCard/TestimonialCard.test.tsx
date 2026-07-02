@@ -123,4 +123,16 @@ describe('TestimonialCard', () => {
     expect(screen.getByTestId('custom-avatar')).toBeInTheDocument()
     expect(screen.getByTestId('custom-avatar')).toHaveTextContent('JK')
   })
+
+  it('renders screen-reader-only text with rating for accessibility', () => {
+    render(
+      <TestimonialCard
+        rating={3}
+        quote="Test quote"
+        name="John"
+        role="role"
+      />,
+    )
+    expect(screen.getByText('Valoración: 3 de 5 estrellas')).toBeInTheDocument()
+  })
 })

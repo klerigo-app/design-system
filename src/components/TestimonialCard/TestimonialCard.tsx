@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Card } from '../Card/Card'
 
 export interface TestimonialCardProps {
-  /** 1-5, defaults to 5. Values outside range are clamped/rounded. */
+  /** 0-5, defaults to 5. Values outside range are clamped, and non-integers are rounded. */
   rating?: number
   quote: ReactNode
   /** Avatar slot — consumer supplies an <img> or its own placeholder node. */
@@ -21,10 +21,13 @@ export function TestimonialCard({ rating = 5, quote, avatar, name, role, classNa
 
   return (
     <Card variant="elevated" className={clsx('!rounded-[var(--radius-card)] !p-7 flex flex-col gap-4', className)}>
-      <div className="flex items-center gap-1" data-testid="testimonial-stars" aria-hidden>
-        {Array.from({ length: MAX_RATING }, (_, i) => (
-          <StarIcon key={i} weight="fill" className={clsx('w-4 h-4', i < filled ? 'text-sun-500' : 'text-border')} />
-        ))}
+      <div>
+        <div className="flex items-center gap-1" data-testid="testimonial-stars" aria-hidden>
+          {Array.from({ length: MAX_RATING }, (_, i) => (
+            <StarIcon key={i} weight="fill" className={clsx('w-4 h-4', i < filled ? 'text-sun-500' : 'text-border')} />
+          ))}
+        </div>
+        <span className="sr-only">Valoración: {filled} de {MAX_RATING} estrellas</span>
       </div>
 
       <p className="font-body text-base leading-relaxed text-[#3A454F]">&ldquo;{quote}&rdquo;</p>

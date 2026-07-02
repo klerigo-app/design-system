@@ -4,6 +4,7 @@ import { TestimonialCard } from './TestimonialCard'
 const meta: Meta<typeof TestimonialCard> = {
   title: 'Marketing/TestimonialCard',
   component: TestimonialCard,
+  tags: ['autodocs'],
   argTypes: {
     rating: { control: 'number', min: 0, max: 5, step: 1 },
   },
