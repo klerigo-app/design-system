@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
+    "prepare": "npm run build",
     "build": "tsc -p tsconfig.json && vite build && cp src/tokens/fonts.css dist/fonts.css",
     "build-storybook": "storybook build",
     "test": "vitest run",
