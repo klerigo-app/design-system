@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { LogoMark, type LogoMarkVariant } from './LogoMark'
 
 export type LogoOrientation = 'horizontal' | 'stacked'
@@ -21,7 +22,12 @@ const LENKA_COLOR: Record<LogoMarkVariant, string> = {
   outline: '#F14E3A',
 }
 
-export function Logo({ variant = 'coral', orientation = 'horizontal', markSize = 40, className }: LogoProps) {
+export function Logo({
+  variant = 'coral',
+  orientation = 'horizontal',
+  markSize = 40,
+  className,
+}: LogoProps): ReactElement {
   const isStacked = orientation === 'stacked'
   return (
     <div

@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { CheckIcon, LockIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 import { colors } from '../../tokens/tokens'
@@ -13,7 +14,13 @@ export interface UnitPathProps {
   nodes: UnitNode[]
 }
 
-function Connector({ fromState, toState }: { fromState: UnitNodeState; toState: UnitNodeState }) {
+function Connector({
+  fromState,
+  toState,
+}: {
+  fromState: UnitNodeState
+  toState: UnitNodeState
+}): ReactElement {
   if (fromState === 'completed' && toState === 'locked') {
     return (
       <div
@@ -29,7 +36,7 @@ function Connector({ fromState, toState }: { fromState: UnitNodeState; toState: 
   return <div data-connector className="flex-1 h-1 rounded-md bg-[#E7EFEF]" />
 }
 
-export function UnitPath({ nodes }: UnitPathProps) {
+export function UnitPath({ nodes }: UnitPathProps): ReactElement {
   return (
     <div className="flex items-center w-full">
       {nodes.map((node, index) => (

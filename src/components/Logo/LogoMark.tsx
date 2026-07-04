@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { LETTER_E_PATH, LETTER_L_PATH } from './glyphPaths'
 
 const TILDE_PATH = 'M6 18 C 16 2, 30 2, 43 14 C 56 26, 70 26, 80 10'
@@ -28,7 +29,7 @@ const STROKE_COLOR: Record<LogoMarkVariant, string> = {
   outline: '#1F2933',
 }
 
-export function LogoMark({ size = 160, variant = 'coral', className }: LogoMarkProps) {
+export function LogoMark({ size = 160, variant = 'coral', className }: LogoMarkProps): ReactElement {
   return (
     <svg width={size} height={size} viewBox="0 0 512 512" role="img" aria-label="EspañoLenka" className={className}>
       {variant === 'outline' ? (
