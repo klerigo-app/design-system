@@ -2,7 +2,15 @@ import { type HTMLAttributes, type ReactNode } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import clsx from 'clsx'
 
-const cardStyles = cva('rounded-xl', {
+// Explicit return type so declaration emit doesn't need to reference cva's
+// internal (non-exported) `ClassProp` type — `class`/`className` are never
+// passed to this call directly (clsx() merges className afterwards instead),
+// so they're safely omitted here.
+type CardStyleProps = {
+  variant?: 'flat' | 'elevated' | 'feature'
+}
+
+const cardStyles: (props?: CardStyleProps) => string = cva('rounded-xl', {
   variants: {
     variant: {
       flat: 'bg-white border border-border p-6',

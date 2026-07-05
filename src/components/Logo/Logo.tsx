@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { LogoMark, type LogoMarkVariant } from './LogoMark'
 
 export type LogoOrientation = 'horizontal' | 'stacked'
@@ -26,7 +27,7 @@ export function Logo({
   orientation = 'horizontal',
   markSize = 40,
   className,
-}: LogoProps) {
+}: LogoProps): ReactElement {
   const isStacked = orientation === 'stacked'
   return (
     <div

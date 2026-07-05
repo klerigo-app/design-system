@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import clsx from 'clsx'
 
 export interface SegmentedControlOption {
@@ -12,7 +13,12 @@ export interface SegmentedControlProps {
   className?: string
 }
 
-export function SegmentedControl({ options, value, onChange, className }: SegmentedControlProps) {
+export function SegmentedControl({
+  options,
+  value,
+  onChange,
+  className,
+}: SegmentedControlProps): ReactElement {
   return (
     <div
       role="tablist"

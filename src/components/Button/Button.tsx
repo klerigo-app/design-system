@@ -2,7 +2,17 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import clsx from 'clsx'
 
-const buttonStyles = cva(
+// Explicit return type so declaration emit doesn't need to reference cva's
+// internal (non-exported) `ClassProp` type — see espanolenka-design ADR-less
+// note: `class`/`className` are never passed to this call directly (clsx()
+// merges className afterwards instead), so they're safely omitted here.
+type ButtonStyleProps = {
+  variant?: 'primary' | 'reward' | 'secondary' | 'ghost' | 'disabled'
+  size?: 'sm' | 'md' | 'lg'
+  fullWidth?: boolean
+}
+
+const buttonStyles: (props?: ButtonStyleProps) => string = cva(
   'inline-flex items-center justify-center gap-[9px] font-display font-medium transition-transform duration-150 disabled:cursor-not-allowed disabled:shadow-none',
   {
     variants: {

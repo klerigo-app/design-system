@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import { colors } from '../../tokens/tokens'
 
 export interface ProgressRingProps {
@@ -7,7 +8,12 @@ export interface ProgressRingProps {
   caption?: string
 }
 
-export function ProgressRing({ percent, size = 88, label, caption }: ProgressRingProps) {
+export function ProgressRing({
+  percent,
+  size = 88,
+  label,
+  caption,
+}: ProgressRingProps): ReactElement {
   const pct = Math.min(100, Math.max(0, percent))
   return (
     <div

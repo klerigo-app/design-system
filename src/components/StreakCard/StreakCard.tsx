@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react'
 import clsx from 'clsx'
 import { colors } from '../../tokens/tokens'
 
@@ -9,7 +10,13 @@ export interface StreakCardProps {
   dayLetters: string[]
 }
 
-export function StreakCard({ days, title, subtitle, activeDays, dayLetters }: StreakCardProps) {
+export function StreakCard({
+  days,
+  title,
+  subtitle,
+  activeDays,
+  dayLetters,
+}: StreakCardProps): ReactElement {
   return (
     <div className="rounded-[var(--radius-card)] bg-ink text-white p-6 flex flex-col gap-5">
       <div className="flex items-center gap-4">
