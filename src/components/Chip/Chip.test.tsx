@@ -20,6 +20,8 @@ describe('Chip', () => {
 
   it('renders a leading dot only for the live variant', () => {
     render(<Chip variant="live">En vivo</Chip>)
-    expect(screen.getByText('En vivo').parentElement?.querySelector('[aria-hidden]')).toBeInTheDocument()
+    expect(
+      screen.getByText('En vivo').parentElement?.querySelector('[aria-hidden]'),
+    ).toBeInTheDocument()
   })
 })

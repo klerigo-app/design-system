@@ -44,8 +44,12 @@ export function UnitPath({ nodes }: UnitPathProps) {
                 'w-14 h-14 bg-white border-2 border-dashed border-[#D8CDB6] opacity-[0.55]',
             )}
           >
-            {node.state === 'completed' && <CheckIcon weight="bold" className="w-6 h-6 text-white" />}
-            {node.state === 'current' && <span className="text-white font-semibold">{node.label}</span>}
+            {node.state === 'completed' && (
+              <CheckIcon weight="bold" className="w-6 h-6 text-white" />
+            )}
+            {node.state === 'current' && (
+              <span className="text-white font-semibold">{node.label}</span>
+            )}
             {node.state === 'locked' && <LockIcon className="w-5 h-5 text-muted" />}
           </div>
           {index < nodes.length - 1 && (

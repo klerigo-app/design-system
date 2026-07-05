@@ -32,7 +32,7 @@ the authoritative build/CSS architecture for Task 10 onward, superseding anythin
 Tasks 1/2/20 said about `tokens.css`/`fonts.css` build output:
 
 - `src/tokens/tokens.css` now starts with `@tailwind base; @tailwind components;
-  @tailwind utilities;` before the `:root { ... }` custom properties block.
+@tailwind utilities;` before the `:root { ... }` custom properties block.
 - `src/index.ts` now has `import './tokens/tokens.css'` at the top (so Vite's library
   build actually processes and emits it as `dist/index.css`, scanned against
   `tailwind.config.js`'s `content` globs). It deliberately does NOT import
@@ -45,12 +45,12 @@ Tasks 1/2/20 said about `tokens.css`/`fonts.css` build output:
   to emit loose files to), producing a 1.7MB stylesheet. Since `fonts.css` only
   contains bare-specifier `@import '@fontsource/...'` statements (no component
   styling), it doesn't need Tailwind/PostCSS processing at all — it just needs to
-  reach `dist/fonts.css` verbatim, the same as the source file, so that a *consuming
-  app's own bundler* resolves the `@fontsource` imports against its own
+  reach `dist/fonts.css` verbatim, the same as the source file, so that a _consuming
+  app's own bundler_ resolves the `@fontsource` imports against its own
   `node_modules` (standard pattern; `@fontsource/*` are real `dependencies`, not
   `devDependencies`, of this package, from Task 1, so they install transitively).
   `package.json`'s `build` script is now `"tsc -p tsconfig.json && vite build && cp
-  src/tokens/fonts.css dist/fonts.css"`.
+src/tokens/fonts.css dist/fonts.css"`.
 - `package.json`'s `exports` map: `"./tokens.css"` now points at `"./dist/index.css"`
   (Vite names the library's CSS output after the JS entry, not after the source file
   it started as) — the public subpath name `tokens.css` is unchanged, only its target
@@ -68,9 +68,11 @@ is ~4KB of `@import`/custom-properties; `pnpm build-storybook`'s output CSS also
 contains the same real utility rules and emits actual `.woff2` files (not inlined).
 
 ---
+
 ## Task 1: Project scaffolding & tooling
 
 **Files:**
+
 - Create: `package.json`, `tsconfig.json`, `vite.config.ts`, `vitest.setup.ts`
 - Create: `tailwind.config.js`, `postcss.config.js`
 - Create: `eslint.config.js`, `.prettierrc`, `.gitignore`
@@ -78,6 +80,7 @@ contains the same real utility rules and emits actual `.woff2` files (not inline
 - Create: `.storybook/main.ts`, `.storybook/preview.ts` (via Storybook generator, then edited)
 
 **Interfaces:**
+
 - Produces: `pnpm build`, `pnpm test`, `pnpm lint`, `pnpm dev` (Storybook), `pnpm build-storybook` scripts that every later task relies on.
 
 - [ ] **Step 1: Initialize the package and install dependencies**
@@ -392,12 +395,14 @@ git commit -m "Scaffold @espanolenka/design-system package (Vite, Tailwind, Vite
 ## Task 2: Design tokens
 
 **Files:**
+
 - Create: `src/tokens/tokens.css`, `src/tokens/tokens.ts`, `src/tokens/tokens.test.ts`
 - Create: `src/tokens/fonts.css`
 - Create: `src/tokens/Tokens.stories.tsx`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `colors`, `radii`, `shadows` named exports from `src/tokens/tokens.ts`, and the CSS custom properties consumed by `tailwind.config.js` (Task 1, Step 7).
 
 - [ ] **Step 1: Write the failing test**
@@ -444,9 +449,30 @@ Expected: FAIL — `Cannot find module './tokens'`.
 
 ```ts
 export const colors = {
-  coral: { 50: '#FEECE8', 100: '#FBC7BC', 300: '#F79684', 500: '#F14E3A', 700: '#C63823', 900: '#8A2415' },
-  sun: { 50: '#FFF6E1', 100: '#FFE7AE', 300: '#FFD574', 500: '#FFC23C', 700: '#C98A16', 900: '#8A5C09' },
-  teal: { 50: '#E1F3F3', 100: '#B3E0E0', 300: '#5CBFBF', 500: '#17A2A2', 700: '#0F7373', 900: '#0A4A4A' },
+  coral: {
+    50: '#FEECE8',
+    100: '#FBC7BC',
+    300: '#F79684',
+    500: '#F14E3A',
+    700: '#C63823',
+    900: '#8A2415',
+  },
+  sun: {
+    50: '#FFF6E1',
+    100: '#FFE7AE',
+    300: '#FFD574',
+    500: '#FFC23C',
+    700: '#C98A16',
+    900: '#8A5C09',
+  },
+  teal: {
+    50: '#E1F3F3',
+    100: '#B3E0E0',
+    300: '#5CBFBF',
+    500: '#17A2A2',
+    700: '#0F7373',
+    900: '#0A4A4A',
+  },
   paper: '#FFFDF7',
   surface: '#FFF9EE',
   border: '#F0E6D0',
@@ -490,43 +516,43 @@ Expected: PASS (4 tests).
 ```css
 :root {
   /* Coral */
-  --color-coral-50: #FEECE8;
-  --color-coral-100: #FBC7BC;
-  --color-coral-300: #F79684;
-  --color-coral-500: #F14E3A;
-  --color-coral-700: #C63823;
-  --color-coral-900: #8A2415;
+  --color-coral-50: #feece8;
+  --color-coral-100: #fbc7bc;
+  --color-coral-300: #f79684;
+  --color-coral-500: #f14e3a;
+  --color-coral-700: #c63823;
+  --color-coral-900: #8a2415;
 
   /* Sunshine */
-  --color-sun-50: #FFF6E1;
-  --color-sun-100: #FFE7AE;
-  --color-sun-300: #FFD574;
-  --color-sun-500: #FFC23C;
-  --color-sun-700: #C98A16;
-  --color-sun-900: #8A5C09;
+  --color-sun-50: #fff6e1;
+  --color-sun-100: #ffe7ae;
+  --color-sun-300: #ffd574;
+  --color-sun-500: #ffc23c;
+  --color-sun-700: #c98a16;
+  --color-sun-900: #8a5c09;
 
   /* Teal */
-  --color-teal-50: #E1F3F3;
-  --color-teal-100: #B3E0E0;
-  --color-teal-300: #5CBFBF;
-  --color-teal-500: #17A2A2;
-  --color-teal-700: #0F7373;
-  --color-teal-900: #0A4A4A;
+  --color-teal-50: #e1f3f3;
+  --color-teal-100: #b3e0e0;
+  --color-teal-300: #5cbfbf;
+  --color-teal-500: #17a2a2;
+  --color-teal-700: #0f7373;
+  --color-teal-900: #0a4a4a;
 
   /* Neutrals */
-  --color-paper: #FFFDF7;
-  --color-surface: #FFF9EE;
-  --color-border: #F0E6D0;
-  --color-border-input: #E4D9C4;
-  --color-muted: #A79C89;
-  --color-slate: #5C6670;
-  --color-ink: #1F2933;
+  --color-paper: #fffdf7;
+  --color-surface: #fff9ee;
+  --color-border: #f0e6d0;
+  --color-border-input: #e4d9c4;
+  --color-muted: #a79c89;
+  --color-slate: #5c6670;
+  --color-ink: #1f2933;
 
   /* Semantic */
-  --color-success: #3DAE6B;
-  --color-warning: #F5A623;
-  --color-error: #E23B3B;
-  --color-info: #17A2A2;
+  --color-success: #3dae6b;
+  --color-warning: #f5a623;
+  --color-error: #e23b3b;
+  --color-info: #17a2a2;
 
   /* Radii */
   --radius-sm: 8px;
@@ -538,14 +564,14 @@ Expected: PASS (4 tests).
   --radius-card: 22px;
 
   /* Shadows */
-  --shadow-button-lift-coral: 0 4px 0 #C63823;
-  --shadow-button-lift-sun: 0 4px 0 #D99A18;
+  --shadow-button-lift-coral: 0 4px 0 #c63823;
+  --shadow-button-lift-sun: 0 4px 0 #d99a18;
   --shadow-card-elevated: 0 14px 30px -18px rgba(90, 60, 30, 0.45);
   --shadow-device: 0 30px 60px -30px rgba(90, 60, 30, 0.5);
 
   /* Focus rings */
-  --focus-ring-teal: 0 0 0 3px #D6EFEF;
-  --focus-ring-error: 0 0 0 3px #FBDCDC;
+  --focus-ring-teal: 0 0 0 3px #d6efef;
+  --focus-ring-error: 0 0 0 3px #fbdcdc;
 }
 ```
 
@@ -579,7 +605,15 @@ import { colors, radii } from './tokens'
 function Swatch({ name, hex }: { name: string; hex: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-      <div style={{ width: 40, height: 40, borderRadius: 8, background: hex, border: '1px solid #F0E6D0' }} />
+      <div
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 8,
+          background: hex,
+          border: '1px solid #F0E6D0',
+        }}
+      />
       <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>
         {name}: {hex}
       </span>
@@ -602,7 +636,9 @@ function TokensPage() {
       <h2 style={{ fontFamily: 'var(--font-display)' }}>Radii</h2>
       {Object.entries(radii).map(([name, value]) => (
         <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-          <div style={{ width: 60, height: 40, borderRadius: value, background: colors.teal[100] }} />
+          <div
+            style={{ width: 60, height: 40, borderRadius: value, background: colors.teal[100] }}
+          />
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>
             {name}: {value}
           </span>
@@ -645,6 +681,7 @@ git commit -m "Add design tokens (CSS vars + typed tokens.ts + fonts)"
 ## Task 3: Logo (glyph outline extraction + LogoMark + Logo)
 
 **Files:**
+
 - Create: `scripts/extract-glyph-paths.mjs`
 - Create: `src/components/Logo/glyphPaths.ts`
 - Create: `src/components/Logo/LogoMark.tsx`, `src/components/Logo/Logo.tsx`
@@ -653,6 +690,7 @@ git commit -m "Add design tokens (CSS vars + typed tokens.ts + fonts)"
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `LogoMark` (props: `size?: number`, `variant?: 'coral' | 'knockout' | 'outline'`, `className?: string`), `Logo` (props: `variant?`, `orientation?: 'horizontal' | 'stacked'`, `markSize?: number`, `className?: string`).
 
 - [ ] **Step 1: Write the one-off glyph extraction script**
@@ -683,7 +721,8 @@ function glyphPathAt(font, char, fontSize, originX, baselineY) {
   const scale = fontSize / font.unitsPerEm
   const advance = glyph.advanceWidth * scale
 
-  const toSvgPoint = (x, y) => `${(originX + x * scale).toFixed(2)},${(baselineY - y * scale).toFixed(2)}`
+  const toSvgPoint = (x, y) =>
+    `${(originX + x * scale).toFixed(2)},${(baselineY - y * scale).toFixed(2)}`
 
   const commands = glyph.path.commands.map((cmd) => {
     switch (cmd.command) {
@@ -705,8 +744,12 @@ function glyphPathAt(font, char, fontSize, originX, baselineY) {
   return { d: commands.join(' '), advance }
 }
 
-const fontE = fontkit.openSync(require.resolve('@fontsource/baloo-2/files/baloo-2-latin-500-normal.woff2'))
-const fontL = fontkit.openSync(require.resolve('@fontsource/baloo-2/files/baloo-2-latin-600-normal.woff2'))
+const fontE = fontkit.openSync(
+  require.resolve('@fontsource/baloo-2/files/baloo-2-latin-500-normal.woff2'),
+)
+const fontL = fontkit.openSync(
+  require.resolve('@fontsource/baloo-2/files/baloo-2-latin-600-normal.woff2'),
+)
 
 // First pass (at origin 0,0) just to read advance widths, so the "eL" pair
 // can be centered as one block around TILE_CENTER_X, matching the source SVG's
@@ -755,10 +798,13 @@ describe('LogoMark', () => {
     expect(screen.getByRole('img', { name: 'EspañoLenka' })).toBeInTheDocument()
   })
 
-  it.each(['coral', 'knockout', 'outline'] as const)('renders the %s variant without throwing', (variant) => {
-    render(<LogoMark variant={variant} />)
-    expect(screen.getByRole('img')).toBeInTheDocument()
-  })
+  it.each(['coral', 'knockout', 'outline'] as const)(
+    'renders the %s variant without throwing',
+    (variant) => {
+      render(<LogoMark variant={variant} />)
+      expect(screen.getByRole('img')).toBeInTheDocument()
+    },
+  )
 })
 
 describe('Logo', () => {
@@ -768,10 +814,13 @@ describe('Logo', () => {
     expect(screen.getByText('Lenka')).toBeInTheDocument()
   })
 
-  it.each(['horizontal', 'stacked'] as const)('renders the %s orientation without throwing', (orientation) => {
-    render(<Logo orientation={orientation} />)
-    expect(screen.getByText('Españo')).toBeInTheDocument()
-  })
+  it.each(['horizontal', 'stacked'] as const)(
+    'renders the %s orientation without throwing',
+    (orientation) => {
+      render(<Logo orientation={orientation} />)
+      expect(screen.getByText('Españo')).toBeInTheDocument()
+    },
+  )
 })
 ```
 
@@ -815,9 +864,25 @@ const STROKE_COLOR: Record<LogoMarkVariant, string> = {
 
 export function LogoMark({ size = 160, variant = 'coral', className }: LogoMarkProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 512 512" role="img" aria-label="EspañoLenka" className={className}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 512 512"
+      role="img"
+      aria-label="EspañoLenka"
+      className={className}
+    >
       {variant === 'outline' ? (
-        <rect x={4} y={4} width={504} height={504} rx={130} fill="none" stroke={STROKE_COLOR.outline} strokeWidth={8} />
+        <rect
+          x={4}
+          y={4}
+          width={504}
+          height={504}
+          rx={130}
+          fill="none"
+          stroke={STROKE_COLOR.outline}
+          strokeWidth={8}
+        />
       ) : (
         <rect width={512} height={512} rx={132} fill={TILE_FILL[variant]} />
       )}
@@ -863,7 +928,12 @@ const LENKA_COLOR: Record<LogoMarkVariant, string> = {
   outline: '#F14E3A',
 }
 
-export function Logo({ variant = 'coral', orientation = 'horizontal', markSize = 40, className }: LogoProps) {
+export function Logo({
+  variant = 'coral',
+  orientation = 'horizontal',
+  markSize = 40,
+  className,
+}: LogoProps) {
   const isStacked = orientation === 'stacked'
   return (
     <div
@@ -928,7 +998,13 @@ export const Horizontal: Story = { args: { orientation: 'horizontal' } }
 export const Stacked: Story = { args: { orientation: 'stacked' } }
 export const Knockout: Story = {
   args: { variant: 'knockout' },
-  decorators: [(Story) => <div style={{ background: '#1F2933', padding: 24 }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ background: '#1F2933', padding: 24 }}>
+        <Story />
+      </div>
+    ),
+  ],
 }
 
 export const MarkOnly: StoryObj<typeof LogoMark> = {
@@ -961,10 +1037,12 @@ git commit -m "Add Logo and LogoMark components with extracted glyph outlines"
 ## Task 4: Button
 
 **Files:**
+
 - Create: `src/components/Button/Button.tsx`, `src/components/Button/Button.test.tsx`, `src/components/Button/Button.stories.tsx`, `src/components/Button/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Button` component, `ButtonProps` (`variant?: 'primary' | 'reward' | 'secondary' | 'ghost'`, `size?: 'sm' | 'md' | 'lg'`, `fullWidth?: boolean`, `icon?: ReactNode`, `disabled?: boolean`, plus native `<button>` attributes).
 
 - [ ] **Step 1: Write the failing test**
@@ -978,10 +1056,13 @@ import userEvent from '@testing-library/user-event'
 import { Button } from './Button'
 
 describe('Button', () => {
-  it.each(['primary', 'reward', 'secondary', 'ghost'] as const)('renders the %s variant', (variant) => {
-    render(<Button variant={variant}>Click me</Button>)
-    expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
-  })
+  it.each(['primary', 'reward', 'secondary', 'ghost'] as const)(
+    'renders the %s variant',
+    (variant) => {
+      render(<Button variant={variant}>Click me</Button>)
+      expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
+    },
+  )
 
   it.each(['sm', 'md', 'lg'] as const)('renders the %s size', (size) => {
     render(<Button size={size}>Click me</Button>)
@@ -1057,7 +1138,8 @@ const buttonStyles = cva(
 )
 
 export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
+  extends
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
     Omit<VariantProps<typeof buttonStyles>, 'variant'> {
   variant?: 'primary' | 'reward' | 'secondary' | 'ghost'
   icon?: ReactNode
@@ -1065,7 +1147,10 @@ export interface ButtonProps
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, size, fullWidth, icon, disabled, type = 'button', className, children, ...props }, ref) => {
+  (
+    { variant, size, fullWidth, icon, disabled, type = 'button', className, children, ...props },
+    ref,
+  ) => {
     const resolvedVariant = disabled ? 'disabled' : variant
     return (
       <button
@@ -1149,10 +1234,12 @@ git commit -m "Add Button component"
 ## Task 5: TextInput
 
 **Files:**
+
 - Create: `src/components/TextInput/TextInput.tsx`, `src/components/TextInput/TextInput.test.tsx`, `src/components/TextInput/TextInput.stories.tsx`, `src/components/TextInput/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `TextInput` component, `TextInputProps` (`id: string`, `label: string`, `helperText?: string`, `error?: string`, plus native `<input>` attributes except `id`).
 
 - [ ] **Step 1: Write the failing test**
@@ -1305,10 +1392,12 @@ git commit -m "Add TextInput component"
 ## Task 6: Select
 
 **Files:**
+
 - Create: `src/components/Select/Select.tsx`, `src/components/Select/Select.test.tsx`, `src/components/Select/Select.stories.tsx`, `src/components/Select/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Select` component, `SelectOption` (`{ value: string; label: string }`), `SelectProps` (`id: string`, `label: string`, `options: SelectOption[]`, `error?: string`, plus native `<select>` attributes except `id`).
 
 - [ ] **Step 1: Write the failing test**
@@ -1480,10 +1569,12 @@ git commit -m "Add Select component"
 ## Task 7: Checkbox
 
 **Files:**
+
 - Create: `src/components/Checkbox/Checkbox.tsx`, `src/components/Checkbox/Checkbox.test.tsx`, `src/components/Checkbox/Checkbox.stories.tsx`, `src/components/Checkbox/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Checkbox` component, `CheckboxProps` (`id: string`, `label: string`, plus native `<input type="checkbox">` attributes except `id`/`type`).
 
 - [ ] **Step 1: Write the failing test**
@@ -1542,29 +1633,31 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   label: string
 }
 
-export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({ id, label, className, ...props }, ref) => {
-  return (
-    <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-      <span className="relative inline-flex w-6 h-6 shrink-0">
-        <input
-          ref={ref}
-          id={id}
-          type="checkbox"
-          className={clsx(
-            'peer appearance-none w-6 h-6 rounded-sm border-2 border-border-input checked:bg-coral-500 checked:border-coral-500',
-            className,
-          )}
-          {...props}
-        />
-        <CheckIcon
-          weight="bold"
-          className="pointer-events-none absolute inset-0 w-6 h-6 p-1 text-white opacity-0 peer-checked:opacity-100"
-        />
-      </span>
-      <span className="font-body text-base text-ink">{label}</span>
-    </label>
-  )
-})
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ id, label, className, ...props }, ref) => {
+    return (
+      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
+        <span className="relative inline-flex w-6 h-6 shrink-0">
+          <input
+            ref={ref}
+            id={id}
+            type="checkbox"
+            className={clsx(
+              'peer appearance-none w-6 h-6 rounded-sm border-2 border-border-input checked:bg-coral-500 checked:border-coral-500',
+              className,
+            )}
+            {...props}
+          />
+          <CheckIcon
+            weight="bold"
+            className="pointer-events-none absolute inset-0 w-6 h-6 p-1 text-white opacity-0 peer-checked:opacity-100"
+          />
+        </span>
+        <span className="font-body text-base text-ink">{label}</span>
+      </label>
+    )
+  },
+)
 Checkbox.displayName = 'Checkbox'
 ```
 
@@ -1627,10 +1720,12 @@ git commit -m "Add Checkbox component"
 ## Task 8: Radio
 
 **Files:**
+
 - Create: `src/components/Radio/Radio.tsx`, `src/components/Radio/Radio.test.tsx`, `src/components/Radio/Radio.stories.tsx`, `src/components/Radio/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Radio` component, `RadioProps` (`id: string`, `label: string`, plus native `<input type="radio">` attributes except `id`/`type`).
 
 - [ ] **Step 1: Write the failing test**
@@ -1693,26 +1788,28 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   label: string
 }
 
-export const Radio = forwardRef<HTMLInputElement, RadioProps>(({ id, label, className, ...props }, ref) => {
-  return (
-    <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-      <span className="relative inline-flex w-6 h-6 shrink-0">
-        <input
-          ref={ref}
-          id={id}
-          type="radio"
-          className={clsx(
-            'peer appearance-none w-6 h-6 rounded-full border-2 border-border-input checked:border-teal-500',
-            className,
-          )}
-          {...props}
-        />
-        <span className="pointer-events-none absolute inset-0 m-auto w-3 h-3 rounded-full bg-teal-500 opacity-0 peer-checked:opacity-100" />
-      </span>
-      <span className="font-body text-base text-ink">{label}</span>
-    </label>
-  )
-})
+export const Radio = forwardRef<HTMLInputElement, RadioProps>(
+  ({ id, label, className, ...props }, ref) => {
+    return (
+      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
+        <span className="relative inline-flex w-6 h-6 shrink-0">
+          <input
+            ref={ref}
+            id={id}
+            type="radio"
+            className={clsx(
+              'peer appearance-none w-6 h-6 rounded-full border-2 border-border-input checked:border-teal-500',
+              className,
+            )}
+            {...props}
+          />
+          <span className="pointer-events-none absolute inset-0 m-auto w-3 h-3 rounded-full bg-teal-500 opacity-0 peer-checked:opacity-100" />
+        </span>
+        <span className="font-body text-base text-ink">{label}</span>
+      </label>
+    )
+  },
+)
 Radio.displayName = 'Radio'
 ```
 
@@ -1776,10 +1873,12 @@ git commit -m "Add Radio component"
 ## Task 9: Toggle
 
 **Files:**
+
 - Create: `src/components/Toggle/Toggle.tsx`, `src/components/Toggle/Toggle.test.tsx`, `src/components/Toggle/Toggle.stories.tsx`, `src/components/Toggle/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Toggle` component, `ToggleProps` (`id: string`, `label: string`, plus native `<input type="checkbox" role="switch">` attributes except `id`/`type`).
 
 - [ ] **Step 1: Write the failing test**
@@ -1837,25 +1936,27 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   label: string
 }
 
-export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(({ id, label, className, ...props }, ref) => {
-  return (
-    <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-      <span className="relative inline-flex w-12 h-7 shrink-0">
-        <input
-          ref={ref}
-          id={id}
-          type="checkbox"
-          role="switch"
-          className={clsx('peer sr-only', className)}
-          {...props}
-        />
-        <span className="absolute inset-0 rounded-pill bg-border-input transition-colors peer-checked:bg-teal-500" />
-        <span className="absolute top-[3px] left-[3px] w-[22px] h-[22px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-5" />
-      </span>
-      <span className="font-body text-base text-ink">{label}</span>
-    </label>
-  )
-})
+export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
+  ({ id, label, className, ...props }, ref) => {
+    return (
+      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
+        <span className="relative inline-flex w-12 h-7 shrink-0">
+          <input
+            ref={ref}
+            id={id}
+            type="checkbox"
+            role="switch"
+            className={clsx('peer sr-only', className)}
+            {...props}
+          />
+          <span className="absolute inset-0 rounded-pill bg-border-input transition-colors peer-checked:bg-teal-500" />
+          <span className="absolute top-[3px] left-[3px] w-[22px] h-[22px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-5" />
+        </span>
+        <span className="font-body text-base text-ink">{label}</span>
+      </label>
+    )
+  },
+)
 Toggle.displayName = 'Toggle'
 ```
 
@@ -1920,10 +2021,12 @@ git commit -m "Add Toggle component"
 ## Task 10: SearchField
 
 **Files:**
+
 - Create: `src/components/SearchField/SearchField.tsx`, `src/components/SearchField/SearchField.test.tsx`, `src/components/SearchField/SearchField.stories.tsx`, `src/components/SearchField/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `SearchField` component, `SearchFieldProps` (`id: string`, `'aria-label': string`, `placeholder: string`, plus native `<input type="search">` attributes except `id`/`type`/`placeholder`). `placeholder` is required — the component has no default copy baked in, per the Global Constraint that all text is consumer-supplied.
 
 - [ ] **Step 1: Write the failing test**
@@ -1949,7 +2052,14 @@ describe('SearchField', () => {
 
   it('fires onChange as the user types', async () => {
     const onChange = vi.fn()
-    render(<SearchField id="search" aria-label="Buscar lecciones" placeholder="Buscar..." onChange={onChange} />)
+    render(
+      <SearchField
+        id="search"
+        aria-label="Buscar lecciones"
+        placeholder="Buscar..."
+        onChange={onChange}
+      />,
+    )
     await userEvent.type(screen.getByRole('searchbox'), 'a')
     expect(onChange).toHaveBeenCalled()
   })
@@ -1968,7 +2078,10 @@ import { forwardRef, type InputHTMLAttributes } from 'react'
 import { MagnifyingGlassIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
-export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type' | 'placeholder'> {
+export interface SearchFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'id' | 'type' | 'placeholder'
+> {
   id: string
   'aria-label': string
   placeholder: string
@@ -2057,10 +2170,12 @@ git commit -m "Add SearchField component"
 ## Task 11: Card
 
 **Files:**
+
 - Create: `src/components/Card/Card.tsx`, `src/components/Card/Card.test.tsx`, `src/components/Card/Card.stories.tsx`, `src/components/Card/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Card` component, `CardProps` (`variant?: 'flat' | 'elevated' | 'feature'`, `decorativeCircle?: boolean`, plus native `<div>` attributes). Later tasks (LessonCard is standalone; QuizCard) rely on `Card` accepting `className` for radius overrides and rendering `children`.
 
 - [ ] **Step 1: Write the failing test**
@@ -2073,10 +2188,13 @@ import { render, screen } from '@testing-library/react'
 import { Card } from './Card'
 
 describe('Card', () => {
-  it.each(['flat', 'elevated', 'feature'] as const)('renders the %s variant with its children', (variant) => {
-    render(<Card variant={variant}>Contenido</Card>)
-    expect(screen.getByText('Contenido')).toBeInTheDocument()
-  })
+  it.each(['flat', 'elevated', 'feature'] as const)(
+    'renders the %s variant with its children',
+    (variant) => {
+      render(<Card variant={variant}>Contenido</Card>)
+      expect(screen.getByText('Contenido')).toBeInTheDocument()
+    },
+  )
 
   it('does not render a decorative circle by default', () => {
     render(
@@ -2123,7 +2241,8 @@ const cardStyles = cva('rounded-xl', {
   variants: {
     variant: {
       flat: 'bg-white border border-border p-6',
-      elevated: 'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
+      elevated:
+        'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
       feature: 'bg-ink text-white p-6 relative overflow-hidden',
     },
   },
@@ -2219,10 +2338,12 @@ git commit -m "Add Card component"
 ## Task 12: Chip
 
 **Files:**
+
 - Create: `src/components/Chip/Chip.tsx`, `src/components/Chip/Chip.test.tsx`, `src/components/Chip/Chip.stories.tsx`, `src/components/Chip/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `Chip` component, `ChipVariant` (`'level' | 'category' | 'new' | 'completed' | 'live' | 'dark' | 'outline'`), `ChipProps` (`variant: ChipVariant`, `children: ReactNode`, plus native `<span>` attributes). `LessonCard` (Task 16) consumes `Chip` with `variant="level"` and `variant="category"`.
 
 - [ ] **Step 1: Write the failing test**
@@ -2252,7 +2373,9 @@ describe('Chip', () => {
 
   it('renders a leading dot only for the live variant', () => {
     render(<Chip variant="live">En vivo</Chip>)
-    expect(screen.getByText('En vivo').parentElement?.querySelector('[aria-hidden]')).toBeInTheDocument()
+    expect(
+      screen.getByText('En vivo').parentElement?.querySelector('[aria-hidden]'),
+    ).toBeInTheDocument()
   })
 })
 ```
@@ -2377,10 +2500,12 @@ git commit -m "Add Chip component"
 ## Task 13: ProgressBar
 
 **Files:**
+
 - Create: `src/components/ProgressBar/ProgressBar.tsx`, `src/components/ProgressBar/ProgressBar.test.tsx`, `src/components/ProgressBar/ProgressBar.stories.tsx`, `src/components/ProgressBar/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `ProgressBar` component, `ProgressBarProps` (`value: number`, `max?: number`, `variant?: 'teal' | 'xp-gradient'`, `height?: number`, plus native `<div>` attributes except `children`). Consumed by `LessonCard` (Task 16, default `variant="teal"`) and `QuizCard` (Task 17, `variant="xp-gradient"`).
 
 - [ ] **Step 1: Write the failing test**
@@ -2535,10 +2660,12 @@ git commit -m "Add ProgressBar component"
 ## Task 14: ProgressRing
 
 **Files:**
+
 - Create: `src/components/ProgressRing/ProgressRing.tsx`, `src/components/ProgressRing/ProgressRing.test.tsx`, `src/components/ProgressRing/ProgressRing.stories.tsx`, `src/components/ProgressRing/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `ProgressRing` component, `ProgressRingProps` (`percent: number`, `size?: number`, `label?: string`, `caption?: string`).
 
 - [ ] **Step 1: Write the failing test**
@@ -2613,7 +2740,9 @@ export function ProgressRing({ percent, size = 88, label, caption }: ProgressRin
         className="absolute rounded-full bg-surface flex flex-col items-center justify-center"
         style={{ width: size * 0.727, height: size * 0.727 }}
       >
-        <span className="font-display font-semibold text-[22px] text-ink">{label ?? `${Math.round(pct)}%`}</span>
+        <span className="font-display font-semibold text-[22px] text-ink">
+          {label ?? `${Math.round(pct)}%`}
+        </span>
         {caption && <span className="text-[11px] text-slate">{caption}</span>}
       </div>
     </div>
@@ -2686,10 +2815,12 @@ git commit -m "Add ProgressRing component"
 ## Task 15: UnitPath
 
 **Files:**
+
 - Create: `src/components/UnitPath/UnitPath.tsx`, `src/components/UnitPath/UnitPath.test.tsx`, `src/components/UnitPath/UnitPath.stories.tsx`, `src/components/UnitPath/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `UnitPath` component, `UnitNodeState` (`'completed' | 'current' | 'locked'`), `UnitNode` (`{ label: string; state: UnitNodeState }`), `UnitPathProps` (`nodes: UnitNode[]`).
 
 - [ ] **Step 1: Write the failing test**
@@ -2780,8 +2911,12 @@ export function UnitPath({ nodes }: UnitPathProps) {
                 'w-14 h-14 bg-white border-2 border-dashed border-[#D8CDB6] opacity-[0.55]',
             )}
           >
-            {node.state === 'completed' && <CheckIcon weight="bold" className="w-6 h-6 text-white" />}
-            {node.state === 'current' && <span className="text-white font-semibold">{node.label}</span>}
+            {node.state === 'completed' && (
+              <CheckIcon weight="bold" className="w-6 h-6 text-white" />
+            )}
+            {node.state === 'current' && (
+              <span className="text-white font-semibold">{node.label}</span>
+            )}
             {node.state === 'locked' && <LockIcon className="w-5 h-5 text-muted" />}
           </div>
           {index < nodes.length - 1 && (
@@ -2867,10 +3002,12 @@ git commit -m "Add UnitPath component"
 ## Task 16: LessonCard
 
 **Files:**
+
 - Create: `src/components/LessonCard/LessonCard.tsx`, `src/components/LessonCard/LessonCard.test.tsx`, `src/components/LessonCard/LessonCard.stories.tsx`, `src/components/LessonCard/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `Chip` (`src/components/Chip/Chip.tsx`, props `variant: ChipVariant`, `children`), `ProgressBar` (`src/components/ProgressBar/ProgressBar.tsx`, props `value`, `max`), `Button` (`src/components/Button/Button.tsx`, props `variant`, `size`, `onClick`).
 - Produces: `LessonCard` component, `LessonCardProps` (`number: number`, `levelLabel: string`, `levelVariant?: ChipVariant`, `categoryLabel: string`, `duration: string`, `title: string`, `subtitle: string`, `progress: number`, `progressMax: number`, `actionLabel: string`, `onAction?: () => void`, `actionSlot?: ReactNode`).
 
@@ -3078,12 +3215,14 @@ git commit -m "Add LessonCard component"
 ## Task 17: AnswerOption + QuizCard
 
 **Files:**
+
 - Create: `src/components/QuizCard/AnswerOption.tsx`, `src/components/QuizCard/AnswerOption.test.tsx`
 - Create: `src/components/QuizCard/QuizCard.tsx`, `src/components/QuizCard/QuizCard.test.tsx`
 - Create: `src/components/QuizCard/QuizCard.stories.tsx`, `src/components/QuizCard/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Consumes: `Card` (`src/components/Card/Card.tsx`, prop `variant="elevated"`), `ProgressBar` (`src/components/ProgressBar/ProgressBar.tsx`, prop `variant="xp-gradient"`), `Button` (`src/components/Button/Button.tsx`, prop `variant="primary"`, `fullWidth`).
 - Produces: `AnswerOption` component, `AnswerOptionStatus` (`'default' | 'selected' | 'correct' | 'wrong'`), `AnswerOptionProps` (`status?: AnswerOptionStatus`, `onSelect?: () => void`, `children: ReactNode`). `QuizCard` component, `QuizCardProps` (`current: number`, `total: number`, `promptLabel: string`, `question: ReactNode`, `children: ReactNode`, `onSubmit?: () => void`, `submitLabel: string`, `submitDisabled?: boolean`). `submitLabel` is required — no default copy is baked into the component, per the Global Constraint that all text is consumer-supplied. `QuizCard`'s `children` is expected to be a list of `AnswerOption` elements, composed by the consumer.
 
@@ -3098,10 +3237,13 @@ import userEvent from '@testing-library/user-event'
 import { AnswerOption } from './AnswerOption'
 
 describe('AnswerOption', () => {
-  it.each(['default', 'selected', 'correct', 'wrong'] as const)('renders the %s status with its text', (status) => {
-    render(<AnswerOption status={status}>fui</AnswerOption>)
-    expect(screen.getByText('fui')).toBeInTheDocument()
-  })
+  it.each(['default', 'selected', 'correct', 'wrong'] as const)(
+    'renders the %s status with its text',
+    (status) => {
+      render(<AnswerOption status={status}>fui</AnswerOption>)
+      expect(screen.getByText('fui')).toBeInTheDocument()
+    },
+  )
 
   it('fires onSelect when clicked', async () => {
     const onSelect = vi.fn()
@@ -3254,7 +3396,14 @@ describe('QuizCard', () => {
   it('fires onSubmit when the submit button is clicked', async () => {
     const onSubmit = vi.fn()
     render(
-      <QuizCard current={2} total={5} promptLabel="p" question="q" submitLabel="Comprobar" onSubmit={onSubmit}>
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="p"
+        question="q"
+        submitLabel="Comprobar"
+        onSubmit={onSubmit}
+      >
         <AnswerOption>fui</AnswerOption>
       </QuizCard>,
     )
@@ -3329,7 +3478,13 @@ export function QuizCard({
   return (
     <Card variant="elevated" className="!rounded-[var(--radius-card)] flex flex-col gap-5">
       <div className="flex items-center gap-3">
-        <ProgressBar value={current} max={total} variant="xp-gradient" height={6} className="flex-1" />
+        <ProgressBar
+          value={current}
+          max={total}
+          variant="xp-gradient"
+          height={6}
+          className="flex-1"
+        />
         <span className="font-mono text-[13px] text-slate">
           {current}/{total}
         </span>
@@ -3381,7 +3536,8 @@ export const Default: Story = {
   render: () => {
     const options = ['fui', 'fue', 'iba'] as const
     const [selected, setSelected] = useState<(typeof options)[number] | null>(null)
-    const statusFor = (option: string): AnswerOptionStatus => (selected === option ? 'selected' : 'default')
+    const statusFor = (option: string): AnswerOptionStatus =>
+      selected === option ? 'selected' : 'default'
     return (
       <QuizCard
         current={2}
@@ -3392,7 +3548,11 @@ export const Default: Story = {
         onSubmit={() => {}}
       >
         {options.map((option) => (
-          <AnswerOption key={option} status={statusFor(option)} onSelect={() => setSelected(option)}>
+          <AnswerOption
+            key={option}
+            status={statusFor(option)}
+            onSelect={() => setSelected(option)}
+          >
             {option}
           </AnswerOption>
         ))}
@@ -3456,10 +3616,12 @@ git commit -m "Add AnswerOption and QuizCard components"
 ## Task 18: StreakCard
 
 **Files:**
+
 - Create: `src/components/StreakCard/StreakCard.tsx`, `src/components/StreakCard/StreakCard.test.tsx`, `src/components/StreakCard/StreakCard.stories.tsx`, `src/components/StreakCard/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `StreakCard` component, `StreakCardProps` (`days: number`, `title: string`, `subtitle: string`, `activeDays: boolean[]`, `dayLetters: string[]`).
 
 - [ ] **Step 1: Write the failing test**
@@ -3624,10 +3786,12 @@ git commit -m "Add StreakCard component"
 ## Task 19: RewardBanner
 
 **Files:**
+
 - Create: `src/components/RewardBanner/RewardBanner.tsx`, `src/components/RewardBanner/RewardBanner.test.tsx`, `src/components/RewardBanner/RewardBanner.stories.tsx`, `src/components/RewardBanner/index.ts`
 - Modify: `src/index.ts`
 
 **Interfaces:**
+
 - Produces: `RewardBanner` component, `RewardBannerProps` (`title: string`, `subtitle: string`).
 
 - [ ] **Step 1: Write the failing test**
@@ -3752,10 +3916,12 @@ git commit -m "Add RewardBanner component"
 ## Task 20: Package README and final verification
 
 **Files:**
+
 - Create: `README.md` (package-level, at repo root — the existing design-reference README lives at `espanolenka_design_system/README.md` and is untouched)
 - Verify: `src/index.ts` exports every component built in Tasks 2–19
 
 **Interfaces:**
+
 - Consumes: every export added to `src/index.ts` across Tasks 2–19.
 
 - [ ] **Step 1: Verify `src/index.ts` contains every export**
@@ -3848,6 +4014,7 @@ Expected: all four commands exit 0. `pnpm build` produces `dist/index.js` and `d
 - [ ] **Step 4: Manually spot-check Storybook against the reference README**
 
 Run: `pnpm dev`, open `http://localhost:6006`, and compare at least these against `espanolenka_design_system/README.md`'s written values (colors/px/behavior) — not against the `.dc.html` files, which are prototypes only:
+
 - Tokens/Overview story: ramp hex values match the README's color tables.
 - Core/Button: primary variant shows the `0 4px 0 #C63823` lift shadow at rest, and the press interaction (translateY 3px, shadow shrinks to `0 1px 0 #C63823`) on `:active`.
 - Learning/QuizCard: AnswerStates story shows correct (green) and wrong (red) states matching the README's hex values.

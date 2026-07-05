@@ -4,10 +4,13 @@ import userEvent from '@testing-library/user-event'
 import { AnswerOption } from './AnswerOption'
 
 describe('AnswerOption', () => {
-  it.each(['default', 'selected', 'correct', 'wrong'] as const)('renders the %s status with its text', (status) => {
-    render(<AnswerOption status={status}>fui</AnswerOption>)
-    expect(screen.getByText('fui')).toBeInTheDocument()
-  })
+  it.each(['default', 'selected', 'correct', 'wrong'] as const)(
+    'renders the %s status with its text',
+    (status) => {
+      render(<AnswerOption status={status}>fui</AnswerOption>)
+      expect(screen.getByText('fui')).toBeInTheDocument()
+    },
+  )
 
   it('fires onSelect when clicked', async () => {
     const onSelect = vi.fn()

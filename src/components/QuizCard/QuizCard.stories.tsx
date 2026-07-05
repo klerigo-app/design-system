@@ -15,7 +15,8 @@ export const Default: Story = {
   render: () => {
     const options = ['fui', 'fue', 'iba'] as const
     const [selected, setSelected] = useState<(typeof options)[number] | null>(null)
-    const statusFor = (option: string): AnswerOptionStatus => (selected === option ? 'selected' : 'default')
+    const statusFor = (option: string): AnswerOptionStatus =>
+      selected === option ? 'selected' : 'default'
     return (
       <QuizCard
         current={2}
@@ -26,7 +27,11 @@ export const Default: Story = {
         onSubmit={() => {}}
       >
         {options.map((option) => (
-          <AnswerOption key={option} status={statusFor(option)} onSelect={() => setSelected(option)}>
+          <AnswerOption
+            key={option}
+            status={statusFor(option)}
+            onSelect={() => setSelected(option)}
+          >
             {option}
           </AnswerOption>
         ))}

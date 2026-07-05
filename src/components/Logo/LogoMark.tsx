@@ -30,9 +30,25 @@ const STROKE_COLOR: Record<LogoMarkVariant, string> = {
 
 export function LogoMark({ size = 160, variant = 'coral', className }: LogoMarkProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 512 512" role="img" aria-label="EspañoLenka" className={className}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 512 512"
+      role="img"
+      aria-label="EspañoLenka"
+      className={className}
+    >
       {variant === 'outline' ? (
-        <rect x={4} y={4} width={504} height={504} rx={130} fill="none" stroke={STROKE_COLOR.outline} strokeWidth={8} />
+        <rect
+          x={4}
+          y={4}
+          width={504}
+          height={504}
+          rx={130}
+          fill="none"
+          stroke={STROKE_COLOR.outline}
+          strokeWidth={8}
+        />
       ) : (
         <rect width={512} height={512} rx={132} fill={TILE_FILL[variant]} />
       )}

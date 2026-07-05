@@ -14,7 +14,13 @@ export interface SegmentedControlProps {
 
 export function SegmentedControl({ options, value, onChange, className }: SegmentedControlProps) {
   return (
-    <div role="tablist" className={clsx('inline-flex items-center gap-[3px] rounded-[16px] bg-[#F3EADB] p-[3px]', className)}>
+    <div
+      role="tablist"
+      className={clsx(
+        'inline-flex items-center gap-[3px] rounded-[16px] bg-[#F3EADB] p-[3px]',
+        className,
+      )}
+    >
       {options.map((option) => {
         const isActive = option.value === value
         return (

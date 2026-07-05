@@ -34,7 +34,10 @@ export function FaqAccordion({ items, className }: FaqAccordionProps) {
               <span className="font-display font-medium text-[17px] text-ink">{item.question}</span>
               <CaretDownIcon
                 weight="bold"
-                className={clsx('w-5 h-5 text-coral-500 shrink-0 transition-transform duration-200', isOpen && 'rotate-180')}
+                className={clsx(
+                  'w-5 h-5 text-coral-500 shrink-0 transition-transform duration-200',
+                  isOpen && 'rotate-180',
+                )}
               />
             </button>
             <div
@@ -47,7 +50,9 @@ export function FaqAccordion({ items, className }: FaqAccordionProps) {
               )}
             >
               <div className="overflow-hidden min-h-0">
-                <p className="font-body text-[15.5px] leading-relaxed text-slate px-6 pb-5">{item.answer}</p>
+                <p className="font-body text-[15.5px] leading-relaxed text-slate px-6 pb-5">
+                  {item.answer}
+                </p>
               </div>
             </div>
           </div>

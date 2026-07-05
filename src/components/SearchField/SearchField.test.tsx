@@ -16,7 +16,14 @@ describe('SearchField', () => {
 
   it('fires onChange as the user types', async () => {
     const onChange = vi.fn()
-    render(<SearchField id="search" aria-label="Buscar lecciones" placeholder="Buscar..." onChange={onChange} />)
+    render(
+      <SearchField
+        id="search"
+        aria-label="Buscar lecciones"
+        placeholder="Buscar..."
+        onChange={onChange}
+      />,
+    )
     await userEvent.type(screen.getByRole('searchbox'), 'a')
     expect(onChange).toHaveBeenCalled()
   })

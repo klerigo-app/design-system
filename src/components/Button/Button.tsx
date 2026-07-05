@@ -34,7 +34,8 @@ const buttonStyles = cva(
 )
 
 export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
+  extends
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
     Omit<VariantProps<typeof buttonStyles>, 'variant'> {
   variant?: 'primary' | 'reward' | 'secondary' | 'ghost'
   icon?: ReactNode
@@ -42,7 +43,10 @@ export interface ButtonProps
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant, size, fullWidth, icon, disabled, className, children, type = 'button', ...props }, ref) => {
+  (
+    { variant, size, fullWidth, icon, disabled, className, children, type = 'button', ...props },
+    ref,
+  ) => {
     const resolvedVariant = disabled ? 'disabled' : variant
     return (
       <button

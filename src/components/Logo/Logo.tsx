@@ -21,7 +21,12 @@ const LENKA_COLOR: Record<LogoMarkVariant, string> = {
   outline: '#F14E3A',
 }
 
-export function Logo({ variant = 'coral', orientation = 'horizontal', markSize = 40, className }: LogoProps) {
+export function Logo({
+  variant = 'coral',
+  orientation = 'horizontal',
+  markSize = 40,
+  className,
+}: LogoProps) {
   const isStacked = orientation === 'stacked'
   return (
     <div

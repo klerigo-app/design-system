@@ -24,7 +24,9 @@ export function ProgressRing({ percent, size = 88, label, caption }: ProgressRin
         className="absolute rounded-full bg-surface flex flex-col items-center justify-center"
         style={{ width: size * 0.727, height: size * 0.727 }}
       >
-        <span className="font-display font-semibold text-[22px] text-ink">{label ?? `${Math.round(pct)}%`}</span>
+        <span className="font-display font-semibold text-[22px] text-ink">
+          {label ?? `${Math.round(pct)}%`}
+        </span>
         {caption && <span className="text-[11px] text-slate">{caption}</span>}
       </div>
     </div>

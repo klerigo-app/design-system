@@ -15,7 +15,9 @@ export function StreakCard({ days, title, subtitle, activeDays, dayLetters }: St
       <div className="flex items-center gap-4">
         <div
           className="w-[66px] h-[66px] rounded-2xl flex items-center justify-center font-display font-semibold text-white text-2xl shrink-0"
-          style={{ background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})` }}
+          style={{
+            background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})`,
+          }}
         >
           {days}
         </div>

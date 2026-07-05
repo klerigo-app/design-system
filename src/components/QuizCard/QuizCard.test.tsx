@@ -42,7 +42,14 @@ describe('QuizCard', () => {
   it('fires onSubmit when the submit button is clicked', async () => {
     const onSubmit = vi.fn()
     render(
-      <QuizCard current={2} total={5} promptLabel="p" question="q" submitLabel="Comprobar" onSubmit={onSubmit}>
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="p"
+        question="q"
+        submitLabel="Comprobar"
+        onSubmit={onSubmit}
+      >
         <AnswerOption>fui</AnswerOption>
       </QuizCard>,
     )

@@ -4,10 +4,13 @@ import userEvent from '@testing-library/user-event'
 import { Button } from './Button'
 
 describe('Button', () => {
-  it.each(['primary', 'reward', 'secondary', 'ghost'] as const)('renders the %s variant', (variant) => {
-    render(<Button variant={variant}>Click me</Button>)
-    expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
-  })
+  it.each(['primary', 'reward', 'secondary', 'ghost'] as const)(
+    'renders the %s variant',
+    (variant) => {
+      render(<Button variant={variant}>Click me</Button>)
+      expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument()
+    },
+  )
 
   it.each(['sm', 'md', 'lg'] as const)('renders the %s size', (size) => {
     render(<Button size={size}>Click me</Button>)

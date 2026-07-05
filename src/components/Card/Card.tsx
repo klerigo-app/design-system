@@ -6,7 +6,8 @@ const cardStyles = cva('rounded-xl', {
   variants: {
     variant: {
       flat: 'bg-white border border-border p-6',
-      elevated: 'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
+      elevated:
+        'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
       feature: 'bg-ink text-white p-6 relative overflow-hidden',
     },
   },
