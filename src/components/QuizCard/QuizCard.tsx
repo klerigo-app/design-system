@@ -27,7 +27,13 @@ export function QuizCard({
   return (
     <Card variant="elevated" className="!rounded-[var(--radius-card)] flex flex-col gap-5">
       <div className="flex items-center gap-3">
-        <ProgressBar value={current} max={total} variant="xp-gradient" height={6} className="flex-1" />
+        <ProgressBar
+          value={current}
+          max={total}
+          variant="xp-gradient"
+          height={6}
+          className="flex-1"
+        />
         <span className="font-mono text-[13px] text-slate">
           {current}/{total}
         </span>

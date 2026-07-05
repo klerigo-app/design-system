@@ -21,7 +21,8 @@ function glyphPathAt(font, char, fontSize, originX, baselineY) {
   const scale = fontSize / font.unitsPerEm
   const advance = glyph.advanceWidth * scale
 
-  const toSvgPoint = (x, y) => `${(originX + x * scale).toFixed(2)},${(baselineY - y * scale).toFixed(2)}`
+  const toSvgPoint = (x, y) =>
+    `${(originX + x * scale).toFixed(2)},${(baselineY - y * scale).toFixed(2)}`
 
   const commands = glyph.path.commands.map((cmd) => {
     switch (cmd.command) {

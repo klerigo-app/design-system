@@ -9,10 +9,13 @@ describe('LogoMark', () => {
     expect(screen.getByRole('img', { name: 'EspañoLenka' })).toBeInTheDocument()
   })
 
-  it.each(['coral', 'knockout', 'outline'] as const)('renders the %s variant without throwing', (variant) => {
-    render(<LogoMark variant={variant} />)
-    expect(screen.getByRole('img')).toBeInTheDocument()
-  })
+  it.each(['coral', 'knockout', 'outline'] as const)(
+    'renders the %s variant without throwing',
+    (variant) => {
+      render(<LogoMark variant={variant} />)
+      expect(screen.getByRole('img')).toBeInTheDocument()
+    },
+  )
 })
 
 describe('Logo', () => {
@@ -22,8 +25,11 @@ describe('Logo', () => {
     expect(screen.getByText('Lenka')).toBeInTheDocument()
   })
 
-  it.each(['horizontal', 'stacked'] as const)('renders the %s orientation without throwing', (orientation) => {
-    render(<Logo orientation={orientation} />)
-    expect(screen.getByText('Españo')).toBeInTheDocument()
-  })
+  it.each(['horizontal', 'stacked'] as const)(
+    'renders the %s orientation without throwing',
+    (orientation) => {
+      render(<Logo orientation={orientation} />)
+      expect(screen.getByText('Españo')).toBeInTheDocument()
+    },
+  )
 })

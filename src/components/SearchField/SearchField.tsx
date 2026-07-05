@@ -2,7 +2,10 @@ import { forwardRef, type InputHTMLAttributes } from 'react'
 import { MagnifyingGlassIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 
-export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type' | 'placeholder'> {
+export interface SearchFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'id' | 'type' | 'placeholder'
+> {
   id: string
   'aria-label': string
   placeholder: string

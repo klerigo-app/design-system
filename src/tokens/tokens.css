@@ -4,43 +4,43 @@
 
 :root {
   /* Coral */
-  --color-coral-50: #FEECE8;
-  --color-coral-100: #FBC7BC;
-  --color-coral-300: #F79684;
-  --color-coral-500: #F14E3A;
-  --color-coral-700: #C63823;
-  --color-coral-900: #8A2415;
+  --color-coral-50: #feece8;
+  --color-coral-100: #fbc7bc;
+  --color-coral-300: #f79684;
+  --color-coral-500: #f14e3a;
+  --color-coral-700: #c63823;
+  --color-coral-900: #8a2415;
 
   /* Sunshine */
-  --color-sun-50: #FFF6E1;
-  --color-sun-100: #FFE7AE;
-  --color-sun-300: #FFD574;
-  --color-sun-500: #FFC23C;
-  --color-sun-700: #C98A16;
-  --color-sun-900: #8A5C09;
+  --color-sun-50: #fff6e1;
+  --color-sun-100: #ffe7ae;
+  --color-sun-300: #ffd574;
+  --color-sun-500: #ffc23c;
+  --color-sun-700: #c98a16;
+  --color-sun-900: #8a5c09;
 
   /* Teal */
-  --color-teal-50: #E1F3F3;
-  --color-teal-100: #B3E0E0;
-  --color-teal-300: #5CBFBF;
-  --color-teal-500: #17A2A2;
-  --color-teal-700: #0F7373;
-  --color-teal-900: #0A4A4A;
+  --color-teal-50: #e1f3f3;
+  --color-teal-100: #b3e0e0;
+  --color-teal-300: #5cbfbf;
+  --color-teal-500: #17a2a2;
+  --color-teal-700: #0f7373;
+  --color-teal-900: #0a4a4a;
 
   /* Neutrals */
-  --color-paper: #FFFDF7;
-  --color-surface: #FFF9EE;
-  --color-border: #F0E6D0;
-  --color-border-input: #E4D9C4;
-  --color-muted: #A79C89;
-  --color-slate: #5C6670;
-  --color-ink: #1F2933;
+  --color-paper: #fffdf7;
+  --color-surface: #fff9ee;
+  --color-border: #f0e6d0;
+  --color-border-input: #e4d9c4;
+  --color-muted: #a79c89;
+  --color-slate: #5c6670;
+  --color-ink: #1f2933;
 
   /* Semantic */
-  --color-success: #3DAE6B;
-  --color-warning: #F5A623;
-  --color-error: #E23B3B;
-  --color-info: #17A2A2;
+  --color-success: #3dae6b;
+  --color-warning: #f5a623;
+  --color-error: #e23b3b;
+  --color-info: #17a2a2;
 
   /* Radii */
   --radius-sm: 8px;
@@ -52,12 +52,12 @@
   --radius-card: 22px;
 
   /* Shadows */
-  --shadow-button-lift-coral: 0 4px 0 #C63823;
-  --shadow-button-lift-sun: 0 4px 0 #D99A18;
+  --shadow-button-lift-coral: 0 4px 0 #c63823;
+  --shadow-button-lift-sun: 0 4px 0 #d99a18;
   --shadow-card-elevated: 0 14px 30px -18px rgba(90, 60, 30, 0.45);
   --shadow-device: 0 30px 60px -30px rgba(90, 60, 30, 0.5);
 
   /* Focus rings */
-  --focus-ring-teal: 0 0 0 3px #D6EFEF;
-  --focus-ring-error: 0 0 0 3px #FBDCDC;
+  --focus-ring-teal: 0 0 0 3px #d6efef;
+  --focus-ring-error: 0 0 0 3px #fbdcdc;
 }

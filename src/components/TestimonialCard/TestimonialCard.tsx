@@ -16,18 +16,34 @@ export interface TestimonialCardProps {
 
 const MAX_RATING = 5
 
-export function TestimonialCard({ rating = 5, quote, avatar, name, role, className }: TestimonialCardProps) {
+export function TestimonialCard({
+  rating = 5,
+  quote,
+  avatar,
+  name,
+  role,
+  className,
+}: TestimonialCardProps) {
   const filled = Math.max(0, Math.min(MAX_RATING, Math.round(rating)))
 
   return (
-    <Card variant="elevated" className={clsx('!rounded-[var(--radius-card)] !p-7 flex flex-col gap-4', className)}>
+    <Card
+      variant="elevated"
+      className={clsx('!rounded-[var(--radius-card)] !p-7 flex flex-col gap-4', className)}
+    >
       <div>
         <div className="flex items-center gap-1" data-testid="testimonial-stars" aria-hidden>
           {Array.from({ length: MAX_RATING }, (_, i) => (
-            <StarIcon key={i} weight="fill" className={clsx('w-4 h-4', i < filled ? 'text-sun-500' : 'text-border')} />
+            <StarIcon
+              key={i}
+              weight="fill"
+              className={clsx('w-4 h-4', i < filled ? 'text-sun-500' : 'text-border')}
+            />
           ))}
         </div>
-        <span className="sr-only">Valoración: {filled} de {MAX_RATING} estrellas</span>
+        <span className="sr-only">
+          Valoración: {filled} de {MAX_RATING} estrellas
+        </span>
       </div>
 
       <p className="font-body text-base leading-relaxed text-[#3A454F]">&ldquo;{quote}&rdquo;</p>

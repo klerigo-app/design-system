@@ -46,7 +46,7 @@ README, grouped as:
 - **Semantic:** `--color-success`, `--color-warning`, `--color-error`, `--color-info`.
 - **Radii:** `--radius-sm` (8px) through `--radius-2xl` (24px), `--radius-pill` (9999px).
 - **Shadows:** `--shadow-button-lift-coral`, `--shadow-button-lift-sun` (the `0 4px 0
-  <700-shade>` press shadows for the two variants that use them), `--shadow-card-elevated`,
+<700-shade>` press shadows for the two variants that use them), `--shadow-card-elevated`,
   `--shadow-device`.
 - **Focus rings:** `--focus-ring-teal`, `--focus-ring-error` as full `box-shadow` values
   (border-color is set separately per component since it isn't expressible in one var).
@@ -89,7 +89,7 @@ those variables being present.
 - `<Logo>` — full wordmark: `<LogoMark>` plus "Españo"/"Lenka" text (this text does use the
   live Baloo 2 font, per the README's wordmark spec — only the monogram itself is
   outlined). Props: `variant` (light/dark coloring), `orientation`: `"horizontal" |
-  "stacked"`.
+"stacked"`.
 - Clear-space (½ icon height) is documented in the component's usage comments but not
   enforced in code — it's a layout guideline for consumers, not a component constraint.
 - "Don't" rules from the README (no recoloring the tile, no gradients on letterforms, no

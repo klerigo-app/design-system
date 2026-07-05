@@ -3,10 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { Card } from './Card'
 
 describe('Card', () => {
-  it.each(['flat', 'elevated', 'feature'] as const)('renders the %s variant with its children', (variant) => {
-    render(<Card variant={variant}>Contenido</Card>)
-    expect(screen.getByText('Contenido')).toBeInTheDocument()
-  })
+  it.each(['flat', 'elevated', 'feature'] as const)(
+    'renders the %s variant with its children',
+    (variant) => {
+      render(<Card variant={variant}>Contenido</Card>)
+      expect(screen.getByText('Contenido')).toBeInTheDocument()
+    },
+  )
 
   it('does not render a decorative circle by default', () => {
     render(

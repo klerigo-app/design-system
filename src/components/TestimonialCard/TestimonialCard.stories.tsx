@@ -16,7 +16,8 @@ type Story = StoryObj<typeof TestimonialCard>
 export const Default: Story = {
   args: {
     rating: 5,
-    quote: 'Con Lenka empecé a hablar en seis meses más que en años en la escuela. Las clases son divertidas y personalizadas.',
+    quote:
+      'Con Lenka empecé a hablar en seis meses más que en años en la escuela. Las clases son divertidas y personalizadas.',
     name: 'Jana K.',
     role: 'nivel B1',
   },
