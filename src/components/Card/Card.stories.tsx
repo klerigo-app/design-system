@@ -6,6 +6,7 @@ const meta: Meta<typeof Card> = {
   component: Card,
   argTypes: {
     variant: { control: 'select', options: ['flat', 'elevated', 'feature'] },
+    interactive: { control: 'boolean' },
     decorativeCircle: { control: 'boolean' },
   },
   args: { children: 'Contenido de la tarjeta' },
@@ -16,4 +17,5 @@ type Story = StoryObj<typeof Card>
 
 export const Flat: Story = { args: { variant: 'flat' } }
 export const Elevated: Story = { args: { variant: 'elevated' } }
+export const StaticElevated: Story = { args: { variant: 'elevated', interactive: false } }
 export const Feature: Story = { args: { variant: 'feature', decorativeCircle: true } }

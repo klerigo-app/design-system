@@ -8,19 +8,31 @@ import clsx from 'clsx'
 // so they're safely omitted here.
 type CardStyleProps = {
   variant?: 'flat' | 'elevated' | 'feature'
+  interactive?: boolean
 }
 
 const cardStyles: (props?: CardStyleProps) => string = cva('rounded-xl', {
   variants: {
     variant: {
       flat: 'bg-white border border-border p-6',
-      elevated:
-        'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
+      elevated: 'bg-white border border-border p-6 shadow-elevated',
       feature: 'bg-ink text-white p-6 relative overflow-hidden',
     },
+    interactive: {
+      true: '',
+      false: '',
+    },
   },
+  compoundVariants: [
+    {
+      variant: 'elevated',
+      interactive: true,
+      class: 'transition-transform hover:-translate-y-1',
+    },
+  ],
   defaultVariants: {
     variant: 'flat',
+    interactive: true,
   },
 })
 
@@ -29,9 +41,16 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement>, VariantProps<
   children?: ReactNode
 }
 
-export function Card({ variant, decorativeCircle, className, children, ...props }: CardProps) {
+export function Card({
+  variant,
+  interactive,
+  decorativeCircle,
+  className,
+  children,
+  ...props
+}: CardProps) {
   return (
-    <div className={clsx(cardStyles({ variant }), className)} {...props}>
+    <div className={clsx(cardStyles({ variant, interactive }), className)} {...props}>
       {variant === 'feature' && decorativeCircle && (
         <span
           aria-hidden
