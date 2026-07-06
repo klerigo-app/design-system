@@ -1,0 +1,17 @@
+# Design Sync Notes
+
+## Known warnings (triaged)
+
+- `[FONT_MISSING] "Trebuchet MS"` — this is a fallback in the `--font-display` stack (`'Baloo 2', 'Trebuchet MS', sans-serif'`), not the intended font. Baloo 2 ships its own `@font-face` via `@fontsource/baloo-2` and is what actually renders. Trebuchet MS is a Windows system-font fallback for the rare case Baloo 2 fails to load — no action needed.
+
+## Config decisions
+
+- No `cfg.cssEntry` set. The package ships CSS as two separate dist files (`dist/index.css` = Tailwind/component styles, `dist/fonts.css` = `@fontsource` imports + `--font-*` custom properties) that are NOT concatenated by the build (`package.json`'s `build` script just copies `fonts.css` into `dist/` — it's a separate export, `./fonts.css`). Storybook's `preview.tsx` imports both, so relying on `[CSS_FROM_STORYBOOK]` (scraping the compiled iframe CSS) captures the full closure correctly, whereas setting `cssEntry` to just `dist/index.css` caused `[TOKENS_MISSING]` for `--font-mono`/`--font-body`/`--font-display`. Leave `cssEntry` unset.
+- `titleMap: {"Overview": null}` — `Tokens/Overview` is a token-showcase story (color ramps, radii), not a real component export; excluded.
+- `overrides.Modal: {cardMode: "single", primaryStory: "TypeToConfirmDelete"}` — Modal renders via a fixed-position overlay/portal (`[GRID_OVERFLOW]`/`[RENDER_THIN]` in validate), so no grid layout can present its stories side-by-side. `TypeToConfirmDelete` was picked as the primary story since it demonstrates the type-to-confirm gating that differentiates this Modal from a generic one.
+- `readmeHeader: ".design-sync/conventions.md"` — authored conventions covering the Tailwind-preset styling idiom (real class names like `bg-coral-500`, `shadow-lift-coral`, `rounded-card`), no-provider-needed setup, and an idiomatic composition example. Validated every named class/prop against the compiled `_ds_bundle.css` and component source before shipping.
+
+## Re-sync risks
+
+- **Modal's compare sheets always show a gated storybook reference.** The storybook side of every Modal story's compare screenshot shows only the "Abrir modal" trigger button on a flat backdrop — never the open dialog — because storybook's capture crops to the story root element's bounding box, while Modal renders its dialog via `createPortal` to `document.body` with `position: fixed`, painting outside that crop. This is independent of `cardMode` (which only fixes the PRODUCT card grid, not this compare capture). Grade Modal by judging the preview's own render against `Modal.tsx`'s actual logic (variant→icon/badge/button color, `onCancel` guard, confirmation-value gating), not by comparing to the reference image — a future re-grade must not mistake this permanent gating for a regression.
+- All 24 components graded `match` on every story on the first sync (2026-07-06) — no owned previews were needed anywhere; the generated story-compiled previews were faithful out of the box. If a future re-sync shows unexpected `mismatch`es on components that were clean here, suspect a build/toolchain change (Vite, esbuild, Tailwind version bump) rather than a story-source issue.
