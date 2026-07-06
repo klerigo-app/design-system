@@ -7,7 +7,17 @@ import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'storybook-static/**', '.storybook/**', 'espanolenka_design_system/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'storybook-static/**',
+      '.storybook/**',
+      'espanolenka_design_system/**',
+      '.design-sync/**',
+      '.ds-sync/**',
+      'ds-bundle/**',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
