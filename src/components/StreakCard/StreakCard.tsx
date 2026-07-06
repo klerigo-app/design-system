@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 import { colors } from '../../tokens/tokens'
 
 export interface StreakCardProps {
@@ -18,10 +18,10 @@ export function StreakCard({
   dayLetters,
 }: StreakCardProps): ReactElement {
   return (
-    <div className="rounded-[var(--radius-card)] bg-ink text-white p-6 flex flex-col gap-5">
+    <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-ink p-6 text-white">
       <div className="flex items-center gap-4">
         <div
-          className="w-[66px] h-[66px] rounded-2xl flex items-center justify-center font-display font-semibold text-white text-2xl shrink-0"
+          className="flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-2xl font-display text-2xl font-semibold text-white"
           style={{
             background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})`,
           }}
@@ -29,7 +29,7 @@ export function StreakCard({
           {days}
         </div>
         <div>
-          <p className="font-display font-medium text-lg">{title}</p>
+          <p className="font-display text-lg font-medium">{title}</p>
           <p className="text-sm text-white/70">{subtitle}</p>
         </div>
       </div>
@@ -37,8 +37,8 @@ export function StreakCard({
         {dayLetters.map((letter, index) => (
           <div
             key={`${letter}-${index}`}
-            className={clsx(
-              'flex-1 h-[34px] rounded-[9px] flex items-center justify-center text-sm font-semibold',
+            className={cn(
+              'flex h-[34px] flex-1 items-center justify-center rounded-[9px] text-sm font-semibold',
               activeDays[index] ? 'bg-sun-500 text-ink' : 'bg-white/[0.14] text-white/50',
             )}
           >

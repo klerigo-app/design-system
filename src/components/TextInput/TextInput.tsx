@@ -1,5 +1,6 @@
 import { forwardRef, type InputHTMLAttributes } from 'react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
+import { FieldLabel, FieldMessage, fieldControlStyles } from '../../internal/field'
 
 export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
   id: string
@@ -13,31 +14,23 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const hasError = Boolean(error)
     return (
       <div className="flex flex-col">
-        <label htmlFor={id} className="font-body text-[13px] font-semibold text-[#3A454F] mb-[7px]">
-          {label}
-        </label>
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
         <input
           ref={ref}
           id={id}
           aria-invalid={hasError}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
-          className={clsx(
-            'font-body text-[15px] bg-white border-[1.5px] rounded-md px-[14px] py-3 outline-none transition-shadow',
-            hasError
-              ? 'border-error shadow-focus-error'
-              : 'border-border-input focus:border-teal-500 focus:shadow-focus-teal',
-            className,
-          )}
+          className={cn(fieldControlStyles({ error: hasError }), 'px-[14px] py-3', className)}
           {...props}
         />
         {error ? (
-          <span id={`${id}-error`} className="text-[12.5px] font-medium text-error mt-1">
+          <FieldMessage id={`${id}-error`} tone="error">
             {error}
-          </span>
+          </FieldMessage>
         ) : helperText ? (
-          <span id={`${id}-helper`} className="text-[12.5px] font-medium text-slate mt-1">
+          <FieldMessage id={`${id}-helper`} tone="helper">
             {helperText}
-          </span>
+          </FieldMessage>
         ) : null}
       </div>
     )

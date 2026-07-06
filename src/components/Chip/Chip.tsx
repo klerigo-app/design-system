@@ -1,6 +1,6 @@
 import { type HTMLAttributes, type ReactNode } from 'react'
 import { CheckIcon } from '@phosphor-icons/react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 
 export type ChipVariant = 'level' | 'category' | 'new' | 'completed' | 'live' | 'dark' | 'outline'
 
@@ -22,15 +22,15 @@ const VARIANT_CLASSES: Record<ChipVariant, string> = {
 export function Chip({ variant, className, children, ...props }: ChipProps) {
   return (
     <span
-      className={clsx(
+      className={cn(
         'inline-flex items-center gap-1 rounded-pill px-[14px] py-[7px] text-[13px] font-semibold',
         VARIANT_CLASSES[variant],
         className,
       )}
       {...props}
     >
-      {variant === 'completed' && <CheckIcon weight="bold" className="w-3.5 h-3.5" />}
-      {variant === 'live' && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-white" />}
+      {variant === 'completed' && <CheckIcon weight="bold" className="h-3.5 w-3.5" />}
+      {variant === 'live' && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-white" />}
       {children}
     </span>
   )

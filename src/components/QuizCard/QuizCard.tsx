@@ -25,7 +25,7 @@ export function QuizCard({
   submitDisabled,
 }: QuizCardProps) {
   return (
-    <Card variant="elevated" className="!rounded-[var(--radius-card)] flex flex-col gap-5">
+    <Card variant="elevated" className="flex flex-col gap-5 !rounded-[var(--radius-card)]">
       <div className="flex items-center gap-3">
         <ProgressBar
           value={current}
@@ -39,10 +39,10 @@ export function QuizCard({
         </span>
       </div>
       <div>
-        <p className="font-body text-[13px] font-semibold uppercase tracking-[0.08em] text-teal-700 mb-2">
+        <p className="mb-2 font-body text-[13px] font-semibold uppercase tracking-[0.08em] text-teal-700">
           {promptLabel}
         </p>
-        <p className="font-display font-medium text-2xl text-ink">{question}</p>
+        <p className="font-display text-2xl font-medium text-ink">{question}</p>
       </div>
       <div className="flex flex-col gap-3">{children}</div>
       <Button variant="primary" fullWidth onClick={onSubmit} disabled={submitDisabled}>

@@ -27,10 +27,10 @@ export function ProgressRing({
       }}
     >
       <div
-        className="absolute rounded-full bg-surface flex flex-col items-center justify-center"
+        className="absolute flex flex-col items-center justify-center rounded-full bg-surface"
         style={{ width: size * 0.727, height: size * 0.727 }}
       >
-        <span className="font-display font-semibold text-[22px] text-ink">
+        <span className="font-display text-[22px] font-semibold text-ink">
           {label ?? `${Math.round(pct)}%`}
         </span>
         {caption && <span className="text-[11px] text-slate">{caption}</span>}

@@ -1,7 +1,10 @@
 import './tokens/tokens.css'
 
 export * from './tokens/tokens'
+export * from './lib/cn'
 export * from './components/Logo'
+export * from './components/Heading'
+export * from './components/Text'
 export * from './components/Button'
 export * from './components/TextInput'
 export * from './components/Select'

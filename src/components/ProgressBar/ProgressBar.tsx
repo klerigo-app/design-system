@@ -1,5 +1,5 @@
 import { type HTMLAttributes } from 'react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 
 export interface ProgressBarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   value: number
@@ -23,12 +23,12 @@ export function ProgressBar({
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
-      className={clsx('w-full rounded-md bg-[#F1E7D2] overflow-hidden', className)}
+      className={cn('w-full overflow-hidden rounded-md bg-[#F1E7D2]', className)}
       style={{ height }}
       {...props}
     >
       <div
-        className={clsx(
+        className={cn(
           'h-full rounded-md transition-[width] duration-300 ease-out',
           variant === 'teal' ? 'bg-teal-500' : 'bg-gradient-to-r from-sun-300 to-sun-500',
         )}

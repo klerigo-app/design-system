@@ -1,10 +1,16 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import clsx from 'clsx'
+import {
+  forwardRef,
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+  type Ref,
+} from 'react'
+import { cva } from 'class-variance-authority'
+import { cn } from '../../lib/cn'
 
 // Explicit return type so declaration emit doesn't need to reference cva's
 // internal (non-exported) `ClassProp` type — see espanolenka-design ADR-less
-// note: `class`/`className` are never passed to this call directly (clsx()
+// note: `class`/`className` are never passed to this call directly (cn()
 // merges className afterwards instead), so they're safely omitted here.
 type ButtonStyleProps = {
   variant?: 'primary' | 'reward' | 'secondary' | 'ghost' | 'disabled'
@@ -18,17 +24,17 @@ const buttonStyles: (props?: ButtonStyleProps) => string = cva(
     variants: {
       variant: {
         primary:
-          'bg-coral-500 text-white shadow-lift-coral hover:bg-[#E0402D] active:translate-y-[3px] active:shadow-[0_1px_0_var(--color-coral-700)]',
+          'bg-coral-500 text-white shadow-lift-coral hover:bg-coral-hover active:translate-y-[3px] active:shadow-pressed-coral',
         reward:
-          'bg-sun-500 text-ink shadow-lift-sun hover:bg-[#F5B52E] active:translate-y-[3px] active:shadow-[0_1px_0_#D99A18]',
-        secondary: 'bg-white text-teal-500 border-2 border-teal-500 hover:bg-teal-50',
+          'bg-sun-500 text-ink shadow-lift-sun hover:bg-sun-hover active:translate-y-[3px] active:shadow-pressed-sun',
+        secondary: 'border-2 border-teal-500 bg-white text-teal-500 hover:bg-teal-50',
         ghost: 'bg-transparent text-slate hover:bg-border hover:text-ink',
-        disabled: 'bg-[#E9EDEE] text-[#A6ADB3]',
+        disabled: 'bg-disabled-bg text-disabled-text',
       },
       size: {
-        sm: 'text-[13px] px-4 py-2 rounded-md',
-        md: 'text-base px-[26px] py-[14px] rounded-lg',
-        lg: 'text-lg px-[34px] py-[18px] rounded-xl',
+        sm: 'rounded-md px-4 py-2 text-[13px]',
+        md: 'rounded-lg px-[26px] py-[14px] text-base',
+        lg: 'rounded-xl px-[34px] py-[18px] text-lg',
       },
       fullWidth: {
         true: 'w-full',
@@ -43,31 +49,59 @@ const buttonStyles: (props?: ButtonStyleProps) => string = cva(
   },
 )
 
-export interface ButtonProps
-  extends
-    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
-    Omit<VariantProps<typeof buttonStyles>, 'variant'> {
+type ButtonOwnProps = {
   variant?: 'primary' | 'reward' | 'secondary' | 'ghost'
+  size?: 'sm' | 'md' | 'lg'
+  fullWidth?: boolean
   icon?: ReactNode
   disabled?: boolean
+  className?: string
+  children?: ReactNode
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export type ButtonProps = ButtonOwnProps &
   (
-    { variant, size, fullWidth, icon, disabled, className, children, type = 'button', ...props },
+    | ({ as?: 'button' } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonOwnProps>)
+    | ({ as: 'a' } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonOwnProps>)
+  )
+
+export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+  (
+    { variant, size, fullWidth, icon, disabled, className, children, as = 'button', ...props },
     ref,
   ) => {
     const resolvedVariant = disabled ? 'disabled' : variant
+    const classes = cn(buttonStyles({ variant: resolvedVariant, size, fullWidth }), className)
+    const content = (
+      <>
+        {icon && <span className="h-5 w-5 shrink-0">{icon}</span>}
+        {children}
+      </>
+    )
+
+    if (as === 'a') {
+      return (
+        <a
+          ref={ref as Ref<HTMLAnchorElement>}
+          className={classes}
+          aria-disabled={disabled || undefined}
+          {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
+        >
+          {content}
+        </a>
+      )
+    }
+
+    const { type = 'button', ...buttonProps } = props as ButtonHTMLAttributes<HTMLButtonElement>
     return (
       <button
-        ref={ref}
+        ref={ref as Ref<HTMLButtonElement>}
         type={type}
         disabled={disabled}
-        className={clsx(buttonStyles({ variant: resolvedVariant, size, fullWidth }), className)}
-        {...props}
+        className={classes}
+        {...buttonProps}
       >
-        {icon && <span className="w-5 h-5 shrink-0">{icon}</span>}
-        {children}
+        {content}
       </button>
     )
   },

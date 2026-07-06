@@ -26,6 +26,21 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
+      // Raw hex colors in class strings bypass the design tokens; add a
+      // token to tokens.css + tailwind-preset.js instead.
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: 'Literal[value=/\\[#[0-9a-fA-F]{3,8}\\]/]',
+          message:
+            'Arbitrary hex color in a Tailwind class. Use a design token (tokens.css + tailwind-preset.js) instead.',
+        },
+        {
+          selector: 'TemplateElement[value.raw=/\\[#[0-9a-fA-F]{3,8}\\]/]',
+          message:
+            'Arbitrary hex color in a Tailwind class. Use a design token (tokens.css + tailwind-preset.js) instead.',
+        },
+      ],
     },
     settings: { react: { version: 'detect' } },
   },

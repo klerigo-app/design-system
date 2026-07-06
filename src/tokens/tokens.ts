@@ -36,14 +36,29 @@ export const colors = {
   info: '#17A2A2',
 } as const
 
+/**
+ * Numeric radius scale (device-independent pixels). This is the source of
+ * truth — `radii` (px strings, for CSS) is derived from it. React Native
+ * consumers (which need numbers, not "16px") use this directly.
+ */
+export const radiusValue = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  '2xl': 24,
+  pill: 9999,
+  card: 22,
+} as const
+
 export const radii = {
-  sm: '8px',
-  md: '12px',
-  lg: '16px',
-  xl: '20px',
-  '2xl': '24px',
-  pill: '9999px',
-  card: '22px',
+  sm: `${radiusValue.sm}px`,
+  md: `${radiusValue.md}px`,
+  lg: `${radiusValue.lg}px`,
+  xl: `${radiusValue.xl}px`,
+  '2xl': `${radiusValue['2xl']}px`,
+  pill: `${radiusValue.pill}px`,
+  card: `${radiusValue.card}px`,
 } as const
 
 export const shadows = {

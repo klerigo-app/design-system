@@ -1115,14 +1115,14 @@ const buttonStyles = cva(
           'bg-coral-500 text-white shadow-lift-coral hover:bg-[#E0402D] active:translate-y-[3px] active:shadow-[0_1px_0_var(--color-coral-700)]',
         reward:
           'bg-sun-500 text-ink shadow-lift-sun hover:bg-[#F5B52E] active:translate-y-[3px] active:shadow-[0_1px_0_#D99A18]',
-        secondary: 'bg-white text-teal-500 border-2 border-teal-500 hover:bg-teal-50',
+        secondary: 'border-2 border-teal-500 bg-white text-teal-500 hover:bg-teal-50',
         ghost: 'bg-transparent text-slate hover:bg-border hover:text-ink',
         disabled: 'bg-[#E9EDEE] text-[#A6ADB3]',
       },
       size: {
-        sm: 'text-[13px] px-4 py-2 rounded-md',
-        md: 'text-base px-[26px] py-[14px] rounded-lg',
-        lg: 'text-lg px-[34px] py-[18px] rounded-xl',
+        sm: 'rounded-md px-4 py-2 text-[13px]',
+        md: 'rounded-lg px-[26px] py-[14px] text-base',
+        lg: 'rounded-xl px-[34px] py-[18px] text-lg',
       },
       fullWidth: {
         true: 'w-full',
@@ -1160,7 +1160,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={clsx(buttonStyles({ variant: resolvedVariant, size, fullWidth }), className)}
         {...props}
       >
-        {icon && <span className="w-5 h-5 shrink-0">{icon}</span>}
+        {icon && <span className="h-5 w-5 shrink-0">{icon}</span>}
         {children}
       </button>
     )
@@ -1302,7 +1302,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const hasError = Boolean(error)
     return (
       <div className="flex flex-col">
-        <label htmlFor={id} className="font-body text-[13px] font-semibold text-[#3A454F] mb-[7px]">
+        <label htmlFor={id} className="mb-[7px] font-body text-[13px] font-semibold text-[#3A454F]">
           {label}
         </label>
         <input
@@ -1311,7 +1311,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           aria-invalid={hasError}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
           className={clsx(
-            'font-body text-[15px] bg-white border-[1.5px] rounded-md px-[14px] py-3 outline-none transition-shadow',
+            'rounded-md border-[1.5px] bg-white px-[14px] py-3 font-body text-[15px] outline-none transition-shadow',
             hasError
               ? 'border-error shadow-focus-error'
               : 'border-border-input focus:border-teal-500 focus:shadow-focus-teal',
@@ -1320,11 +1320,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           {...props}
         />
         {error ? (
-          <span id={`${id}-error`} className="text-[12.5px] font-medium text-error mt-1">
+          <span id={`${id}-error`} className="mt-1 text-[12.5px] font-medium text-error">
             {error}
           </span>
         ) : helperText ? (
-          <span id={`${id}-helper`} className="text-[12.5px] font-medium text-slate mt-1">
+          <span id={`${id}-helper`} className="mt-1 text-[12.5px] font-medium text-slate">
             {helperText}
           </span>
         ) : null}
@@ -1468,7 +1468,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasError = Boolean(error)
     return (
       <div className="flex flex-col">
-        <label htmlFor={id} className="font-body text-[13px] font-semibold text-[#3A454F] mb-[7px]">
+        <label htmlFor={id} className="mb-[7px] font-body text-[13px] font-semibold text-[#3A454F]">
           {label}
         </label>
         <div className="relative">
@@ -1478,7 +1478,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             aria-invalid={hasError}
             aria-describedby={error ? `${id}-error` : undefined}
             className={clsx(
-              'appearance-none w-full font-body text-[15px] bg-white border-[1.5px] rounded-md pl-[14px] pr-10 py-3 outline-none transition-shadow',
+              'w-full appearance-none rounded-md border-[1.5px] bg-white py-3 pl-[14px] pr-10 font-body text-[15px] outline-none transition-shadow',
               hasError
                 ? 'border-error shadow-focus-error'
                 : 'border-border-input focus:border-teal-500 focus:shadow-focus-teal',
@@ -1492,10 +1492,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
         </div>
         {error && (
-          <span id={`${id}-error`} className="text-[12.5px] font-medium text-error mt-1">
+          <span id={`${id}-error`} className="mt-1 text-[12.5px] font-medium text-error">
             {error}
           </span>
         )}
@@ -1636,21 +1636,21 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ id, label, className, ...props }, ref) => {
     return (
-      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-        <span className="relative inline-flex w-6 h-6 shrink-0">
+      <label htmlFor={id} className="inline-flex cursor-pointer select-none items-center gap-2">
+        <span className="relative inline-flex h-6 w-6 shrink-0">
           <input
             ref={ref}
             id={id}
             type="checkbox"
             className={clsx(
-              'peer appearance-none w-6 h-6 rounded-sm border-2 border-border-input checked:bg-coral-500 checked:border-coral-500',
+              'peer h-6 w-6 appearance-none rounded-sm border-2 border-border-input checked:border-coral-500 checked:bg-coral-500',
               className,
             )}
             {...props}
           />
           <CheckIcon
             weight="bold"
-            className="pointer-events-none absolute inset-0 w-6 h-6 p-1 text-white opacity-0 peer-checked:opacity-100"
+            className="pointer-events-none absolute inset-0 h-6 w-6 p-1 text-white opacity-0 peer-checked:opacity-100"
           />
         </span>
         <span className="font-body text-base text-ink">{label}</span>
@@ -1791,19 +1791,19 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   ({ id, label, className, ...props }, ref) => {
     return (
-      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-        <span className="relative inline-flex w-6 h-6 shrink-0">
+      <label htmlFor={id} className="inline-flex cursor-pointer select-none items-center gap-2">
+        <span className="relative inline-flex h-6 w-6 shrink-0">
           <input
             ref={ref}
             id={id}
             type="radio"
             className={clsx(
-              'peer appearance-none w-6 h-6 rounded-full border-2 border-border-input checked:border-teal-500',
+              'peer h-6 w-6 appearance-none rounded-full border-2 border-border-input checked:border-teal-500',
               className,
             )}
             {...props}
           />
-          <span className="pointer-events-none absolute inset-0 m-auto w-3 h-3 rounded-full bg-teal-500 opacity-0 peer-checked:opacity-100" />
+          <span className="pointer-events-none absolute inset-0 m-auto h-3 w-3 rounded-full bg-teal-500 opacity-0 peer-checked:opacity-100" />
         </span>
         <span className="font-body text-base text-ink">{label}</span>
       </label>
@@ -1939,8 +1939,8 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
 export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
   ({ id, label, className, ...props }, ref) => {
     return (
-      <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
-        <span className="relative inline-flex w-12 h-7 shrink-0">
+      <label htmlFor={id} className="inline-flex cursor-pointer select-none items-center gap-2">
+        <span className="relative inline-flex h-7 w-12 shrink-0">
           <input
             ref={ref}
             id={id}
@@ -1950,7 +1950,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
             {...props}
           />
           <span className="absolute inset-0 rounded-pill bg-border-input transition-colors peer-checked:bg-teal-500" />
-          <span className="absolute top-[3px] left-[3px] w-[22px] h-[22px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-5" />
+          <span className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.2)] transition-transform peer-checked:translate-x-5" />
         </span>
         <span className="font-body text-base text-ink">{label}</span>
       </label>
@@ -2091,14 +2091,14 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   ({ id, className, placeholder, ...props }, ref) => {
     return (
       <div className="relative">
-        <MagnifyingGlassIcon className="pointer-events-none absolute left-[14px] top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+        <MagnifyingGlassIcon className="pointer-events-none absolute left-[14px] top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
         <input
           ref={ref}
           id={id}
           type="search"
           placeholder={placeholder}
           className={clsx(
-            'w-full font-body text-[15px] bg-white border-[1.5px] border-border-input rounded-md pl-11 pr-[14px] py-3 outline-none placeholder:text-muted focus:border-teal-500 focus:shadow-focus-teal transition-shadow',
+            'w-full rounded-md border-[1.5px] border-border-input bg-white py-3 pl-11 pr-[14px] font-body text-[15px] outline-none transition-shadow placeholder:text-muted focus:border-teal-500 focus:shadow-focus-teal',
             className,
           )}
           {...props}
@@ -2240,10 +2240,10 @@ import clsx from 'clsx'
 const cardStyles = cva('rounded-xl', {
   variants: {
     variant: {
-      flat: 'bg-white border border-border p-6',
+      flat: 'border border-border bg-white p-6',
       elevated:
-        'bg-white border border-border p-6 shadow-elevated transition-transform hover:-translate-y-1',
-      feature: 'bg-ink text-white p-6 relative overflow-hidden',
+        'border border-border bg-white p-6 shadow-elevated transition-transform hover:-translate-y-1',
+      feature: 'relative overflow-hidden bg-ink p-6 text-white',
     },
   },
   defaultVariants: {
@@ -2262,7 +2262,7 @@ export function Card({ variant, decorativeCircle, className, children, ...props 
       {variant === 'feature' && decorativeCircle && (
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-8 -top-8 w-40 h-40 rounded-full bg-sun-500 opacity-[0.17]"
+          className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-sun-500 opacity-[0.17]"
         />
       )}
       {children}
@@ -2419,8 +2419,8 @@ export function Chip({ variant, className, children, ...props }: ChipProps) {
       )}
       {...props}
     >
-      {variant === 'completed' && <CheckIcon weight="bold" className="w-3.5 h-3.5" />}
-      {variant === 'live' && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-white" />}
+      {variant === 'completed' && <CheckIcon weight="bold" className="h-3.5 w-3.5" />}
+      {variant === 'live' && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-white" />}
       {children}
     </span>
   )
@@ -2577,7 +2577,7 @@ export function ProgressBar({
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
-      className={clsx('w-full rounded-md bg-[#F1E7D2] overflow-hidden', className)}
+      className={clsx('w-full overflow-hidden rounded-md bg-[#F1E7D2]', className)}
       style={{ height }}
       {...props}
     >
@@ -2737,10 +2737,10 @@ export function ProgressRing({ percent, size = 88, label, caption }: ProgressRin
       }}
     >
       <div
-        className="absolute rounded-full bg-surface flex flex-col items-center justify-center"
+        className="absolute flex flex-col items-center justify-center rounded-full bg-surface"
         style={{ width: size * 0.727, height: size * 0.727 }}
       >
-        <span className="font-display font-semibold text-[22px] text-ink">
+        <span className="font-display text-[22px] font-semibold text-ink">
           {label ?? `${Math.round(pct)}%`}
         </span>
         {caption && <span className="text-[11px] text-slate">{caption}</span>}
@@ -2885,39 +2885,39 @@ function Connector({ fromState, toState }: { fromState: UnitNodeState; toState: 
     return (
       <div
         data-connector
-        className="flex-1 h-1 rounded-md"
+        className="h-1 flex-1 rounded-md"
         style={{ background: `linear-gradient(90deg, ${colors.teal[500]} 50%, #E7EFEF 50%)` }}
       />
     )
   }
   if (fromState === 'completed') {
-    return <div data-connector className="flex-1 h-1 rounded-md bg-teal-500" />
+    return <div data-connector className="h-1 flex-1 rounded-md bg-teal-500" />
   }
-  return <div data-connector className="flex-1 h-1 rounded-md bg-[#E7EFEF]" />
+  return <div data-connector className="h-1 flex-1 rounded-md bg-[#E7EFEF]" />
 }
 
 export function UnitPath({ nodes }: UnitPathProps) {
   return (
-    <div className="flex items-center w-full">
+    <div className="flex w-full items-center">
       {nodes.map((node, index) => (
-        <div key={`${node.label}-${index}`} className="flex items-center flex-1 last:flex-none">
+        <div key={`${node.label}-${index}`} className="flex flex-1 items-center last:flex-none">
           <div
             data-testid={`unit-node-${node.state}`}
             className={clsx(
-              'flex items-center justify-center rounded-full shrink-0 font-display',
-              node.state === 'completed' && 'w-14 h-14 bg-teal-500',
-              node.state === 'current' && 'w-16 h-16 bg-coral-500 shadow-[0_0_0_5px_#FBD3CB]',
+              'flex shrink-0 items-center justify-center rounded-full font-display',
+              node.state === 'completed' && 'h-14 w-14 bg-teal-500',
+              node.state === 'current' && 'h-16 w-16 bg-coral-500 shadow-[0_0_0_5px_#FBD3CB]',
               node.state === 'locked' &&
-                'w-14 h-14 bg-white border-2 border-dashed border-[#D8CDB6] opacity-[0.55]',
+                'h-14 w-14 border-2 border-dashed border-[#D8CDB6] bg-white opacity-[0.55]',
             )}
           >
             {node.state === 'completed' && (
-              <CheckIcon weight="bold" className="w-6 h-6 text-white" />
+              <CheckIcon weight="bold" className="h-6 w-6 text-white" />
             )}
             {node.state === 'current' && (
-              <span className="text-white font-semibold">{node.label}</span>
+              <span className="font-semibold text-white">{node.label}</span>
             )}
-            {node.state === 'locked' && <LockIcon className="w-5 h-5 text-muted" />}
+            {node.state === 'locked' && <LockIcon className="h-5 w-5 text-muted" />}
           </div>
           {index < nodes.length - 1 && (
             <Connector fromState={node.state} toState={nodes[index + 1].state} />
@@ -3107,24 +3107,24 @@ export function LessonCard({
   actionSlot,
 }: LessonCardProps) {
   return (
-    <div className="rounded-[var(--radius-card)] bg-white border border-border shadow-elevated p-6 flex gap-5">
+    <div className="flex gap-5 rounded-[var(--radius-card)] border border-border bg-white p-6 shadow-elevated">
       <div
-        className="w-[70px] h-[70px] rounded-[18px] flex items-center justify-center font-display font-semibold text-white text-[28px] shrink-0"
+        className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-[18px] font-display text-[28px] font-semibold text-white"
         style={{ background: 'linear-gradient(135deg, #FFC23C, #F14E3A)' }}
       >
         {number}
       </div>
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2">
         <div className="flex items-center gap-2">
           <Chip variant={levelVariant}>{levelLabel}</Chip>
           <Chip variant="category">{categoryLabel}</Chip>
-          <span className="text-[13px] text-muted ml-auto">{duration}</span>
+          <span className="ml-auto text-[13px] text-muted">{duration}</span>
         </div>
-        <p className="font-display font-medium text-xl text-ink">{title}</p>
+        <p className="font-display text-xl font-medium text-ink">{title}</p>
         <p className="font-body text-sm text-slate">{subtitle}</p>
-        <div className="flex items-center gap-3 mt-1">
+        <div className="mt-1 flex items-center gap-3">
           <ProgressBar value={progress} max={progressMax} className="flex-1" />
-          <span className="font-body text-[13px] text-slate whitespace-nowrap">
+          <span className="whitespace-nowrap font-body text-[13px] text-slate">
             {progress} / {progressMax}
           </span>
           {actionSlot ?? (
@@ -3297,20 +3297,20 @@ export function AnswerOption({ status = 'default', onSelect, children }: AnswerO
       type="button"
       onClick={onSelect}
       className={clsx(
-        'w-full flex items-center justify-between text-left rounded-[14px] border-2 px-[15px] py-[14px] font-body text-base transition-colors',
+        'flex w-full items-center justify-between rounded-[14px] border-2 px-[15px] py-[14px] text-left font-body text-base transition-colors',
         STATUS_CLASSES[status],
       )}
     >
       <span>{children}</span>
-      {status === 'selected' && <span className="w-3 h-3 rounded-full bg-teal-500 shrink-0" />}
+      {status === 'selected' && <span className="h-3 w-3 shrink-0 rounded-full bg-teal-500" />}
       {status === 'correct' && (
-        <span className="w-6 h-6 rounded-full bg-success flex items-center justify-center shrink-0">
-          <CheckIcon weight="bold" className="w-4 h-4 text-white" />
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success">
+          <CheckIcon weight="bold" className="h-4 w-4 text-white" />
         </span>
       )}
       {status === 'wrong' && (
-        <span className="w-6 h-6 rounded-full bg-error flex items-center justify-center shrink-0">
-          <XIcon weight="bold" className="w-4 h-4 text-white" />
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-error">
+          <XIcon weight="bold" className="h-4 w-4 text-white" />
         </span>
       )}
     </button>
@@ -3476,7 +3476,7 @@ export function QuizCard({
   submitDisabled,
 }: QuizCardProps) {
   return (
-    <Card variant="elevated" className="!rounded-[var(--radius-card)] flex flex-col gap-5">
+    <Card variant="elevated" className="flex flex-col gap-5 !rounded-[var(--radius-card)]">
       <div className="flex items-center gap-3">
         <ProgressBar
           value={current}
@@ -3490,10 +3490,10 @@ export function QuizCard({
         </span>
       </div>
       <div>
-        <p className="font-body text-[13px] font-semibold uppercase tracking-[0.08em] text-teal-700 mb-2">
+        <p className="mb-2 font-body text-[13px] font-semibold uppercase tracking-[0.08em] text-teal-700">
           {promptLabel}
         </p>
-        <p className="font-display font-medium text-2xl text-ink">{question}</p>
+        <p className="font-display text-2xl font-medium text-ink">{question}</p>
       </div>
       <div className="flex flex-col gap-3">{children}</div>
       <Button variant="primary" fullWidth onClick={onSubmit} disabled={submitDisabled}>
@@ -3681,16 +3681,16 @@ export interface StreakCardProps {
 
 export function StreakCard({ days, title, subtitle, activeDays, dayLetters }: StreakCardProps) {
   return (
-    <div className="rounded-[var(--radius-card)] bg-ink text-white p-6 flex flex-col gap-5">
+    <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-ink p-6 text-white">
       <div className="flex items-center gap-4">
         <div
-          className="w-[66px] h-[66px] rounded-2xl flex items-center justify-center font-display font-semibold text-white text-2xl shrink-0"
+          className="flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-2xl font-display text-2xl font-semibold text-white"
           style={{ background: 'linear-gradient(135deg, #FFC23C, #F14E3A)' }}
         >
           {days}
         </div>
         <div>
-          <p className="font-display font-medium text-lg">{title}</p>
+          <p className="font-display text-lg font-medium">{title}</p>
           <p className="text-sm text-white/70">{subtitle}</p>
         </div>
       </div>
@@ -3699,7 +3699,7 @@ export function StreakCard({ days, title, subtitle, activeDays, dayLetters }: St
           <div
             key={`${letter}-${index}`}
             className={clsx(
-              'flex-1 h-[34px] rounded-[9px] flex items-center justify-center text-sm font-semibold',
+              'flex h-[34px] flex-1 items-center justify-center rounded-[9px] text-sm font-semibold',
               activeDays[index] ? 'bg-sun-500 text-ink' : 'bg-white/[0.14] text-white/50',
             )}
           >
@@ -3834,12 +3834,12 @@ export interface RewardBannerProps {
 
 export function RewardBanner({ title, subtitle }: RewardBannerProps) {
   return (
-    <div className="rounded-[18px] bg-[#EAF6EF] border border-[#C9E8D5] p-5 flex items-center gap-4">
-      <div className="w-12 h-12 rounded-2xl bg-success flex items-center justify-center shrink-0">
-        <CheckIcon weight="bold" className="w-6 h-6 text-white" />
+    <div className="flex items-center gap-4 rounded-[18px] border border-[#C9E8D5] bg-[#EAF6EF] p-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-success">
+        <CheckIcon weight="bold" className="h-6 w-6 text-white" />
       </div>
       <div>
-        <p className="font-display font-medium text-lg text-ink">{title}</p>
+        <p className="font-display text-lg font-medium text-ink">{title}</p>
         <p className="text-sm text-[#3E7C58]">{subtitle}</p>
       </div>
     </div>

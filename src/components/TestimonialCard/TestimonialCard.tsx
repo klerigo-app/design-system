@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { StarIcon } from '@phosphor-icons/react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 import { Card } from '../Card/Card'
 
 export interface TestimonialCardProps {
@@ -29,7 +29,7 @@ export function TestimonialCard({
   return (
     <Card
       variant="elevated"
-      className={clsx('!rounded-[var(--radius-card)] !p-7 flex flex-col gap-4', className)}
+      className={cn('flex flex-col gap-4 !rounded-[var(--radius-card)] !p-7', className)}
     >
       <div>
         <div className="flex items-center gap-1" data-testid="testimonial-stars" aria-hidden>
@@ -37,7 +37,7 @@ export function TestimonialCard({
             <StarIcon
               key={i}
               weight="fill"
-              className={clsx('w-4 h-4', i < filled ? 'text-sun-500' : 'text-border')}
+              className={cn('h-4 w-4', i < filled ? 'text-sun-500' : 'text-border')}
             />
           ))}
         </div>
@@ -46,18 +46,18 @@ export function TestimonialCard({
         </span>
       </div>
 
-      <p className="font-body text-base leading-relaxed text-[#3A454F]">&ldquo;{quote}&rdquo;</p>
+      <p className="font-body text-base leading-relaxed text-label">&ldquo;{quote}&rdquo;</p>
 
-      <div className="flex items-center gap-3 mt-1">
+      <div className="mt-1 flex items-center gap-3">
         <div
-          className="w-[46px] h-[46px] rounded-full overflow-hidden shrink-0 bg-surface flex items-center justify-center"
+          className="flex h-[46px] w-[46px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface"
           data-testid="testimonial-avatar"
         >
           {avatar}
         </div>
         <div className="flex flex-col">
-          <span className="font-display font-medium text-[15.5px] text-ink">{name}</span>
-          <span className="font-body font-semibold text-[12.5px] text-muted">{role}</span>
+          <span className="font-display text-[15.5px] font-medium text-ink">{name}</span>
+          <span className="font-body text-[12.5px] font-semibold text-muted">{role}</span>
         </div>
       </div>
     </Card>

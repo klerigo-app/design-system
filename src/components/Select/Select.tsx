@@ -1,6 +1,7 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react'
 import { CaretDownIcon } from '@phosphor-icons/react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
+import { FieldLabel, FieldMessage, fieldControlStyles } from '../../internal/field'
 
 export interface SelectOption {
   value: string
@@ -19,20 +20,16 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const hasError = Boolean(error)
     return (
       <div className="flex flex-col">
-        <label htmlFor={id} className="font-body text-[13px] font-semibold text-[#3A454F] mb-[7px]">
-          {label}
-        </label>
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
         <div className="relative">
           <select
             ref={ref}
             id={id}
             aria-invalid={hasError}
             aria-describedby={error ? `${id}-error` : undefined}
-            className={clsx(
-              'appearance-none w-full font-body text-[15px] bg-white border-[1.5px] rounded-md pl-[14px] pr-10 py-3 outline-none transition-shadow',
-              hasError
-                ? 'border-error shadow-focus-error'
-                : 'border-border-input focus:border-teal-500 focus:shadow-focus-teal',
+            className={cn(
+              fieldControlStyles({ error: hasError }),
+              'w-full appearance-none py-3 pl-[14px] pr-10',
               className,
             )}
             {...props}
@@ -43,12 +40,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted" />
+          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
         </div>
         {error && (
-          <span id={`${id}-error`} className="text-[12.5px] font-medium text-error mt-1">
+          <FieldMessage id={`${id}-error`} tone="error">
             {error}
-          </span>
+          </FieldMessage>
         )}
       </div>
     )

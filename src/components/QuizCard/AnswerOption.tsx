@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { CheckIcon, XIcon } from '@phosphor-icons/react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 
 export type AnswerOptionStatus = 'default' | 'selected' | 'correct' | 'wrong'
 
@@ -22,21 +22,21 @@ export function AnswerOption({ status = 'default', onSelect, children }: AnswerO
     <button
       type="button"
       onClick={onSelect}
-      className={clsx(
-        'w-full flex items-center justify-between text-left rounded-[14px] border-2 px-[15px] py-[14px] font-body text-base transition-colors',
+      className={cn(
+        'flex w-full items-center justify-between rounded-[14px] border-2 px-[15px] py-[14px] text-left font-body text-base transition-colors',
         STATUS_CLASSES[status],
       )}
     >
       <span>{children}</span>
-      {status === 'selected' && <span className="w-3 h-3 rounded-full bg-teal-500 shrink-0" />}
+      {status === 'selected' && <span className="h-3 w-3 shrink-0 rounded-full bg-teal-500" />}
       {status === 'correct' && (
-        <span className="w-6 h-6 rounded-full bg-success flex items-center justify-center shrink-0">
-          <CheckIcon weight="bold" className="w-4 h-4 text-white" />
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success">
+          <CheckIcon weight="bold" className="h-4 w-4 text-white" />
         </span>
       )}
       {status === 'wrong' && (
-        <span className="w-6 h-6 rounded-full bg-error flex items-center justify-center shrink-0">
-          <XIcon weight="bold" className="w-4 h-4 text-white" />
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-error">
+          <XIcon weight="bold" className="h-4 w-4 text-white" />
         </span>
       )}
     </button>

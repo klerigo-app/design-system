@@ -39,4 +39,22 @@ describe('Button', () => {
     render(<Button icon={<svg data-testid="icon" />}>Click me</Button>)
     expect(screen.getByTestId('icon')).toBeInTheDocument()
   })
+
+  it('renders an anchor with as="a"', () => {
+    render(
+      <Button as="a" href="#contacto" size="lg">
+        Empieza ahora
+      </Button>,
+    )
+    const link = screen.getByRole('link', { name: 'Empieza ahora' })
+    expect(link).toHaveAttribute('href', '#contacto')
+    expect(link).toHaveClass('bg-coral-500')
+  })
+
+  it('lets className override conflicting variant classes', () => {
+    render(<Button className="bg-teal-500">Click me</Button>)
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('bg-teal-500')
+    expect(button).not.toHaveClass('bg-coral-500')
+  })
 })

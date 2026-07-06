@@ -33,6 +33,53 @@ Then use components:
       )
     }
 
+### Tailwind setup in consuming apps
+
+Do NOT copy the theme block into your app's Tailwind config. Use the shared
+preset — it is the single source of truth mapping the design tokens to
+Tailwind utilities (`bg-coral-500`, `rounded-card`, `shadow-lift-coral`, …):
+
+    // tailwind.config.js
+    import espanolenkaPreset from '@espanolenka/design-system/tailwind-preset'
+
+    export default {
+      presets: [espanolenkaPreset],
+      content: [
+        './src/**/*.{ts,tsx}',
+        './node_modules/@espanolenka/design-system/dist/**/*.js',
+      ],
+    }
+
+### React Native / Expo apps
+
+React Native can't import the main entry (it starts with `import './tokens.css'`,
+a DOM-only side effect that breaks Metro). Use the dedicated subpaths instead:
+
+    // Tokens only — side-effect-free, safe in Metro and in a CJS tailwind.config.js
+    import { colors, radiusValue } from '@espanolenka/design-system/tokens'
+
+    // Shared RN components (StyleSheet-based, driven by the tokens above)
+    import { Screen, Heading, Text, Field, PrimaryButton } from '@espanolenka/design-system/native'
+
+`@espanolenka/design-system/tokens` is the single source of truth for the
+palette and radius scale — apps must import it rather than hand-copying hex
+values into `theme/tokens.ts` or `tailwind.config.js`.
+
+### Styling conventions
+
+- **Check here first.** Before styling something in an app, look for an
+  existing component or variant (Storybook: `pnpm dev`). Typography goes
+  through `Heading` / `Text`, not hand-typed `font-display …` stacks.
+- **Rule of three.** The third time you type the same combination of classes,
+  extract it — as a component variant here if it's part of the design
+  language, or as a local component in the app if it's app-specific.
+- **No raw hex colors in classes.** `text-[#3A454F]`-style arbitrary values
+  bypass the tokens; add a CSS variable to `src/tokens/tokens.css` and map it
+  in `tailwind-preset.js` instead (ESLint warns on this).
+- **Merge classes with `cn`** (exported from this package). It is
+  Tailwind-aware, so a consumer's `className` cleanly overrides component
+  defaults — never use `!important` to fight a component's styles.
+
 ## Development
 
     pnpm install

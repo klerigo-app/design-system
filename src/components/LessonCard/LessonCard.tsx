@@ -34,24 +34,24 @@ export function LessonCard({
   actionSlot,
 }: LessonCardProps) {
   return (
-    <div className="rounded-[var(--radius-card)] bg-white border border-border shadow-elevated p-6 flex gap-5">
+    <div className="flex gap-5 rounded-[var(--radius-card)] border border-border bg-white p-6 shadow-elevated">
       <div
-        className="w-[70px] h-[70px] rounded-[18px] flex items-center justify-center font-display font-semibold text-white text-[28px] shrink-0"
+        className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-[18px] font-display text-[28px] font-semibold text-white"
         style={{ background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})` }}
       >
         {number}
       </div>
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2">
         <div className="flex items-center gap-2">
           <Chip variant={levelVariant}>{levelLabel}</Chip>
           <Chip variant="category">{categoryLabel}</Chip>
-          <span className="text-[13px] text-muted ml-auto">{duration}</span>
+          <span className="ml-auto text-[13px] text-muted">{duration}</span>
         </div>
-        <p className="font-display font-medium text-xl text-ink">{title}</p>
+        <p className="font-display text-xl font-medium text-ink">{title}</p>
         <p className="font-body text-sm text-slate">{subtitle}</p>
-        <div className="flex items-center gap-3 mt-1">
+        <div className="mt-1 flex items-center gap-3">
           <ProgressBar value={progress} max={progressMax} className="flex-1" />
-          <span className="font-body text-[13px] text-slate whitespace-nowrap">
+          <span className="whitespace-nowrap font-body text-[13px] text-slate">
             {progress} / {progressMax}
           </span>
           {actionSlot ?? (

@@ -11,11 +11,23 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./tokens": {
+      "types": "./dist/tokens/tokens.d.ts",
+      "import": "./dist/tokens.js",
+      "require": "./dist/tokens.cjs"
+    },
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "import": "./dist/native.js",
+      "require": "./dist/native.cjs"
+    },
     "./tokens.css": "./dist/index.css",
-    "./fonts.css": "./dist/fonts.css"
+    "./fonts.css": "./dist/fonts.css",
+    "./tailwind-preset": "./tailwind-preset.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "tailwind-preset.js"
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
@@ -48,7 +60,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "tailwind-merge": "^2.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -70,6 +83,8 @@
     "jsdom": "^29.1.1",
     "postcss": "^8.5.16",
     "prettier": "^3.9.4",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "react-native": "0.86.0",
     "storybook": "^10.4.6",
     "tailwindcss": "^3.4.19",
     "typescript": "6.0.3",

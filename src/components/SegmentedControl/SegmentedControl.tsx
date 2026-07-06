@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import clsx from 'clsx'
+import { cn } from '../../lib/cn'
 
 export interface SegmentedControlOption {
   value: string
@@ -22,7 +22,7 @@ export function SegmentedControl({
   return (
     <div
       role="tablist"
-      className={clsx(
+      className={cn(
         'inline-flex items-center gap-[3px] rounded-[16px] bg-[#F3EADB] p-[3px]',
         className,
       )}
@@ -36,7 +36,7 @@ export function SegmentedControl({
             role="tab"
             aria-selected={isActive}
             onClick={() => onChange(option.value)}
-            className={clsx(
+            className={cn(
               'rounded-[14px] px-3 py-[6px] font-body text-[13px] font-bold transition-all duration-150',
               isActive ? 'bg-coral-500 text-white' : 'bg-transparent text-slate',
             )}

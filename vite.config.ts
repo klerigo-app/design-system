@@ -14,12 +14,24 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      formats: ['es'],
-      fileName: 'index',
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        // Side-effect-free token export (no tokens.css import) so React Native
+        // / Metro can consume it. Built in CJS too for CommonJS Tailwind configs.
+        tokens: resolve(__dirname, 'src/tokens/tokens.ts'),
+        // React Native component entry.
+        native: resolve(__dirname, 'src/native/index.ts'),
+      },
+      formats: ['es', 'cjs'],
+      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react-native'],
+      // Keep the emitted stylesheet at dist/index.css (the "./tokens.css"
+      // export path); multi-entry builds otherwise name it after the package.
+      output: {
+        assetFileNames: 'index.[ext]',
+      },
     },
     sourcemap: true,
     emptyOutDir: true,
