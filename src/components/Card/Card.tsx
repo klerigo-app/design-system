@@ -32,7 +32,7 @@ const cardStyles: (props?: CardStyleProps) => string = cva('rounded-xl', {
   ],
   defaultVariants: {
     variant: 'flat',
-    interactive: true,
+    interactive: false,
   },
 })
 

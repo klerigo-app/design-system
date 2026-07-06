@@ -17,5 +17,5 @@ type Story = StoryObj<typeof Card>
 
 export const Flat: Story = { args: { variant: 'flat' } }
 export const Elevated: Story = { args: { variant: 'elevated' } }
-export const StaticElevated: Story = { args: { variant: 'elevated', interactive: false } }
+export const InteractiveElevated: Story = { args: { variant: 'elevated', interactive: true } }
 export const Feature: Story = { args: { variant: 'feature', decorativeCircle: true } }

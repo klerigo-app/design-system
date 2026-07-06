@@ -11,22 +11,22 @@ describe('Card', () => {
     },
   )
 
-  it('lifts on hover by default for the elevated variant', () => {
+  it('does not lift on hover by default for the elevated variant', () => {
     render(
       <Card variant="elevated" data-testid="card">
         Contenido
       </Card>,
     )
-    expect(screen.getByTestId('card').className).toContain('hover:-translate-y-1')
+    expect(screen.getByTestId('card').className).not.toContain('hover:-translate-y-1')
   })
 
-  it('does not lift on hover when interactive is false', () => {
+  it('lifts on hover when interactive is true', () => {
     render(
-      <Card variant="elevated" interactive={false} data-testid="card">
+      <Card variant="elevated" interactive data-testid="card">
         Contenido
       </Card>,
     )
-    expect(screen.getByTestId('card').className).not.toContain('hover:-translate-y-1')
+    expect(screen.getByTestId('card').className).toContain('hover:-translate-y-1')
   })
 
   it('does not render a decorative circle by default', () => {
