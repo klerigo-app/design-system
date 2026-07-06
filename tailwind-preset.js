@@ -53,9 +53,16 @@ export default {
         slate: 'var(--color-slate)',
         ink: 'var(--color-ink)',
         label: 'var(--color-label)',
-        success: 'var(--color-success)',
+        success: {
+          DEFAULT: 'var(--color-success)',
+          tint: 'var(--color-success-tint)',
+        },
         warning: 'var(--color-warning)',
-        error: 'var(--color-error)',
+        error: {
+          DEFAULT: 'var(--color-error)',
+          hover: 'var(--color-error-hover)',
+          tint: 'var(--color-error-tint)',
+        },
         info: 'var(--color-info)',
         disabled: {
           bg: 'var(--color-disabled-bg)',

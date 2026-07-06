@@ -42,12 +42,17 @@
   --color-error: #e23b3b;
   --color-info: #17a2a2;
 
+  /* Semantic soft-tint backgrounds (status badges, banners) */
+  --color-success-tint: #eaf6ef;
+  --color-error-tint: #fdece9;
+
   /* Text on form/field labels — between slate and ink */
   --color-label: #3a454f;
 
   /* Interaction states */
   --color-coral-hover: #e0402d;
   --color-sun-hover: #f5b52e;
+  --color-error-hover: #c92f2f;
   --color-disabled-bg: #e9edee;
   --color-disabled-text: #a6adb3;
 

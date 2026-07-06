@@ -13,7 +13,7 @@ import { cn } from '../../lib/cn'
 // note: `class`/`className` are never passed to this call directly (cn()
 // merges className afterwards instead), so they're safely omitted here.
 type ButtonStyleProps = {
-  variant?: 'primary' | 'reward' | 'secondary' | 'ghost' | 'disabled'
+  variant?: 'primary' | 'reward' | 'secondary' | 'ghost' | 'danger' | 'disabled'
   size?: 'sm' | 'md' | 'lg'
   fullWidth?: boolean
 }
@@ -29,6 +29,7 @@ const buttonStyles: (props?: ButtonStyleProps) => string = cva(
           'bg-sun-500 text-ink shadow-lift-sun hover:bg-sun-hover active:translate-y-[3px] active:shadow-pressed-sun',
         secondary: 'border-2 border-teal-500 bg-white text-teal-500 hover:bg-teal-50',
         ghost: 'bg-transparent text-slate hover:bg-border hover:text-ink',
+        danger: 'bg-error text-white hover:bg-error-hover active:translate-y-[1px]',
         disabled: 'bg-disabled-bg text-disabled-text',
       },
       size: {
@@ -50,7 +51,7 @@ const buttonStyles: (props?: ButtonStyleProps) => string = cva(
 )
 
 type ButtonOwnProps = {
-  variant?: 'primary' | 'reward' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'reward' | 'secondary' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   fullWidth?: boolean
   icon?: ReactNode

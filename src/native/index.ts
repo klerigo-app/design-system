@@ -17,6 +17,7 @@ export * from './Text'
 export * from './Field'
 export * from './PrimaryButton'
 export * from './SecondaryButton'
+export * from './Modal'
 
 // Re-export tokens so RN consumers have one import site.
 export { colors, radii, radiusValue, shadows } from '../tokens/tokens'

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { Button } from './Button'
 
 describe('Button', () => {
-  it.each(['primary', 'reward', 'secondary', 'ghost'] as const)(
+  it.each(['primary', 'reward', 'secondary', 'ghost', 'danger'] as const)(
     'renders the %s variant',
     (variant) => {
       render(<Button variant={variant}>Click me</Button>)
