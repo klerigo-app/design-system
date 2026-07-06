@@ -45,6 +45,17 @@
   /* Semantic soft-tint backgrounds (status badges, banners) */
   --color-success-tint: #eaf6ef;
   --color-error-tint: #fdece9;
+  --color-success-border: #c9e8d5;
+  --color-error-border: #f4c7c1;
+  --color-success-text: #2e8b54;
+  --color-success-subtitle: #3e7c58;
+
+  /* Component surfaces & tracks */
+  --color-surface-selected: #f3fafa;
+  --color-progress-track: #f1e7d2;
+  --color-segmented-track: #f3eadb;
+  --color-connector-locked: #e7efef;
+  --color-node-locked-border: #d8cdb6;
 
   /* Text on form/field labels — between slate and ink */
   --color-label: #3a454f;

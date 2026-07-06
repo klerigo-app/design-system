@@ -34,6 +34,8 @@ export const colors = {
   warning: '#F5A623',
   error: '#E23B3B',
   info: '#17A2A2',
+  // Locked-state connector line in UnitPath — matches --color-connector-locked.
+  connectorLocked: '#E7EFEF',
 } as const
 
 /**

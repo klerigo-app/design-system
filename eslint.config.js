@@ -29,7 +29,7 @@ export default tseslint.config(
       // Raw hex colors in class strings bypass the design tokens; add a
       // token to tokens.css + tailwind-preset.js instead.
       'no-restricted-syntax': [
-        'warn',
+        'error',
         {
           selector: 'Literal[value=/\\[#[0-9a-fA-F]{3,8}\\]/]',
           message:

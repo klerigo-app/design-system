@@ -11,10 +11,10 @@ export interface AnswerOptionProps {
 }
 
 const STATUS_CLASSES: Record<AnswerOptionStatus, string> = {
-  default: 'border-border-input bg-white hover:border-teal-500 hover:bg-[#F3FAFA]',
-  selected: 'border-teal-500 bg-[#F3FAFA]',
-  correct: 'border-success bg-[#EAF6EF]',
-  wrong: 'border-[#F4C7C1] bg-[#FDECE9]',
+  default: 'border-border-input bg-white hover:border-teal-500 hover:bg-surface-selected',
+  selected: 'border-teal-500 bg-surface-selected',
+  correct: 'border-success bg-success-tint',
+  wrong: 'border-error-border bg-error-tint',
 }
 
 export function AnswerOption({ status = 'default', onSelect, children }: AnswerOptionProps) {

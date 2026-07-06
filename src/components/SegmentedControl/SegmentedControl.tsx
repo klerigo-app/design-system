@@ -23,7 +23,7 @@ export function SegmentedControl({
     <div
       role="tablist"
       className={cn(
-        'inline-flex items-center gap-[3px] rounded-[16px] bg-[#F3EADB] p-[3px]',
+        'inline-flex items-center gap-[3px] rounded-[16px] bg-segmented-track p-[3px]',
         className,
       )}
     >

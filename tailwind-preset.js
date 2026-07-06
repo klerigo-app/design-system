@@ -56,18 +56,27 @@ export default {
         success: {
           DEFAULT: 'var(--color-success)',
           tint: 'var(--color-success-tint)',
+          border: 'var(--color-success-border)',
+          text: 'var(--color-success-text)',
+          subtitle: 'var(--color-success-subtitle)',
         },
         warning: 'var(--color-warning)',
         error: {
           DEFAULT: 'var(--color-error)',
           hover: 'var(--color-error-hover)',
           tint: 'var(--color-error-tint)',
+          border: 'var(--color-error-border)',
         },
         info: 'var(--color-info)',
         disabled: {
           bg: 'var(--color-disabled-bg)',
           text: 'var(--color-disabled-text)',
         },
+        'surface-selected': 'var(--color-surface-selected)',
+        'progress-track': 'var(--color-progress-track)',
+        'segmented-track': 'var(--color-segmented-track)',
+        'connector-locked': 'var(--color-connector-locked)',
+        'node-locked-border': 'var(--color-node-locked-border)',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

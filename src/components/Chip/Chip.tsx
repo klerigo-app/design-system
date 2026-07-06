@@ -13,7 +13,7 @@ const VARIANT_CLASSES: Record<ChipVariant, string> = {
   level: 'bg-teal-50 text-teal-700',
   category: 'bg-coral-50 text-coral-700',
   new: 'bg-sun-50 text-sun-700',
-  completed: 'bg-[#EAF6EF] text-[#2E8B54]',
+  completed: 'bg-success-tint text-success-text',
   live: 'bg-coral-500 text-white',
   dark: 'bg-ink text-white',
   outline: 'bg-transparent text-slate border-[1.5px] border-border-input',

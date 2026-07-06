@@ -23,7 +23,7 @@ export function ProgressBar({
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
-      className={cn('w-full overflow-hidden rounded-md bg-[#F1E7D2]', className)}
+      className={cn('w-full overflow-hidden rounded-md bg-progress-track', className)}
       style={{ height }}
       {...props}
     >
