@@ -1,0 +1,91 @@
+/*
+ * Storybook-preview-only shim. NOT imported from src/index.ts, so it never
+ * reaches dist/index.css or the published @espanolenka/design-system package
+ * — it only flows into the Storybook-compiled preview CSS that /design-sync
+ * scrapes as _ds_bundle.css.
+ *
+ * Tailwind's preflight/core plugins emit --tw-* engine variables on
+ * selectors the claude.ai/design token scanner doesn't recognize as token
+ * scopes (only :root, a single lowercase class, or a [data-*] attribute
+ * count — see the universal reset, :hover/:active/:focus-qualified utility
+ * classes, and arbitrary-value classes in the compiled output). Redeclaring
+ * them here under :root fixes the scope problem, and each is annotated with
+ * a "kind" comment so the scanner doesn't have to guess. Values below are copied
+ * verbatim from Tailwind's own preflight defaults (or "initial" where
+ * preflight sets none) — purely additive, they change nothing visually.
+ *
+ * Re-diff this list against dist/index.css's `*,:before,:after,::backdrop`
+ * rule after any Tailwind version bump.
+ */
+:root {
+  /* transform */
+  --tw-translate-x: 0; /* @kind other */
+  --tw-translate-y: 0; /* @kind other */
+  --tw-rotate: 0; /* @kind other */
+  --tw-skew-x: 0; /* @kind other */
+  --tw-skew-y: 0; /* @kind other */
+  --tw-scale-x: 1; /* @kind other */
+  --tw-scale-y: 1; /* @kind other */
+  --tw-pan-x: initial; /* @kind other */
+  --tw-pan-y: initial; /* @kind other */
+  --tw-pinch-zoom: initial; /* @kind other */
+  --tw-scroll-snap-strictness: proximity; /* @kind other */
+
+  /* gradients */
+  --tw-gradient-from: initial; /* @kind other */
+  --tw-gradient-to: initial; /* @kind other */
+  --tw-gradient-stops: initial; /* @kind other */
+  --tw-gradient-from-position: initial; /* @kind other */
+  --tw-gradient-via-position: initial; /* @kind other */
+  --tw-gradient-to-position: initial; /* @kind other */
+
+  /* font-variant plumbing */
+  --tw-ordinal: initial; /* @kind other */
+  --tw-slashed-zero: initial; /* @kind other */
+  --tw-numeric-figure: initial; /* @kind other */
+  --tw-numeric-spacing: initial; /* @kind other */
+  --tw-numeric-fraction: initial; /* @kind other */
+
+  /* rings */
+  --tw-ring-inset: initial; /* @kind other */
+  --tw-ring-offset-width: 0px; /* @kind other */
+  --tw-ring-offset-color: #fff; /* @kind color */
+  --tw-ring-color: #3b82f680; /* @kind color */
+  --tw-ring-offset-shadow: 0 0 #0000; /* @kind shadow */
+  --tw-ring-shadow: 0 0 #0000; /* @kind shadow */
+
+  /* shadows */
+  --tw-shadow: 0 0 #0000; /* @kind shadow */
+  --tw-shadow-colored: 0 0 #0000; /* @kind shadow */
+  --tw-drop-shadow: initial; /* @kind shadow */
+
+  /* filters */
+  --tw-blur: initial; /* @kind other */
+  --tw-brightness: initial; /* @kind other */
+  --tw-contrast: initial; /* @kind other */
+  --tw-grayscale: initial; /* @kind other */
+  --tw-hue-rotate: initial; /* @kind other */
+  --tw-invert: initial; /* @kind other */
+  --tw-saturate: initial; /* @kind other */
+  --tw-sepia: initial; /* @kind other */
+  --tw-backdrop-blur: initial; /* @kind other */
+  --tw-backdrop-brightness: initial; /* @kind other */
+  --tw-backdrop-contrast: initial; /* @kind other */
+  --tw-backdrop-grayscale: initial; /* @kind other */
+  --tw-backdrop-hue-rotate: initial; /* @kind other */
+  --tw-backdrop-invert: initial; /* @kind other */
+  --tw-backdrop-opacity: initial; /* @kind other */
+  --tw-backdrop-saturate: initial; /* @kind other */
+  --tw-backdrop-sepia: initial; /* @kind other */
+
+  /* misc layout/opacity plumbing */
+  --tw-border-spacing-x: 0; /* @kind other */
+  --tw-border-spacing-y: 0; /* @kind other */
+  --tw-contain-size: initial; /* @kind other */
+  --tw-contain-layout: initial; /* @kind other */
+  --tw-contain-paint: initial; /* @kind other */
+  --tw-contain-style: initial; /* @kind other */
+  --tw-content: ''; /* @kind other */
+  --tw-bg-opacity: 1; /* @kind other */
+  --tw-text-opacity: 1; /* @kind other */
+}

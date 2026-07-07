@@ -1,5 +1,6 @@
 import '../src/tokens/tokens.css'
 import '../src/tokens/fonts.css'
+import './tailwind-scanner-shim.css'
 
 import type { Preview } from '@storybook/react-vite'
 
