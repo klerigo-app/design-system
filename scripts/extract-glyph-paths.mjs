@@ -60,4 +60,6 @@ const k = glyphPathAt(fontK, 'K', K_FONT_SIZE, startX, BASELINE_Y)
 
 console.log('// Paste into src/components/Logo/glyphPaths.ts')
 console.log(`export const LETTER_K_PATH = '${k.d}'`)
-console.log(`// bbox: top=${k.top.toFixed(1)} bottom=${k.bottom.toFixed(1)} left=${k.left.toFixed(1)} right=${k.right.toFixed(1)}`)
+console.log(
+  `// bbox: top=${k.top.toFixed(1)} bottom=${k.bottom.toFixed(1)} left=${k.left.toFixed(1)} right=${k.right.toFixed(1)}`,
+)
