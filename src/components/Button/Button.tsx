@@ -9,7 +9,7 @@ import { cva } from 'class-variance-authority'
 import { cn } from '../../lib/cn'
 
 // Explicit return type so declaration emit doesn't need to reference cva's
-// internal (non-exported) `ClassProp` type — see espanolenka-design ADR-less
+// internal (non-exported) `ClassProp` type — see klerigo-design ADR-less
 // note: `class`/`className` are never passed to this call directly (cn()
 // merges className afterwards instead), so they're safely omitted here.
 type ButtonStyleProps = {

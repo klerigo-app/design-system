@@ -1,7 +1,5 @@
 import type { ReactElement } from 'react'
-import { LETTER_E_PATH, LETTER_L_PATH } from './glyphPaths'
-
-const TILDE_PATH = 'M6 18 C 16 2, 30 2, 43 14 C 56 26, 70 26, 80 10'
+import { LETTER_K_PATH } from './glyphPaths'
 
 export type LogoMarkVariant = 'coral' | 'knockout' | 'outline'
 
@@ -23,11 +21,8 @@ const LETTER_FILL: Record<LogoMarkVariant, string> = {
   outline: '#1F2933',
 }
 
-const STROKE_COLOR: Record<LogoMarkVariant, string> = {
-  coral: '#FFC23C',
-  knockout: '#FFFFFF',
-  outline: '#1F2933',
-}
+const OUTLINE_STROKE_COLOR = '#1F2933'
+const SUN_DOT_FILL = '#FFC23C'
 
 export function LogoMark({
   size = 160,
@@ -40,7 +35,7 @@ export function LogoMark({
       height={size}
       viewBox="0 0 512 512"
       role="img"
-      aria-label="EspañoLenka"
+      aria-label="Klerigo"
       className={className}
     >
       {variant === 'outline' ? (
@@ -51,23 +46,16 @@ export function LogoMark({
           height={504}
           rx={130}
           fill="none"
-          stroke={STROKE_COLOR.outline}
+          stroke={OUTLINE_STROKE_COLOR}
           strokeWidth={8}
         />
       ) : (
         <rect width={512} height={512} rx={132} fill={TILE_FILL[variant]} />
       )}
-      <g
-        transform="translate(161,104) scale(2.21)"
-        fill="none"
-        stroke={STROKE_COLOR[variant]}
-        strokeWidth={11}
-        strokeLinecap="round"
-      >
-        <path d={TILDE_PATH} />
-      </g>
-      <path d={LETTER_E_PATH} fill={LETTER_FILL[variant]} />
-      <path d={LETTER_L_PATH} fill={LETTER_FILL[variant]} />
+      {/* Real Baloo 2 bold 'K' glyph outline (see scripts/extract-glyph-paths.mjs),
+          matching the wordmark's typeface/weight rather than a hand-drawn shape. */}
+      <path d={LETTER_K_PATH} fill={LETTER_FILL[variant]} />
+      <circle cx={382} cy={140} r={30} fill={SUN_DOT_FILL} />
     </svg>
   )
 }

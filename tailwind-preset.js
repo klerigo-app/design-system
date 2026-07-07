@@ -1,14 +1,14 @@
 /**
- * Shared Tailwind preset for the Espanolenka design system.
+ * Shared Tailwind preset for the Klerigo design system.
  *
  * This is the single source of truth mapping design tokens (CSS custom
  * properties from tokens.css) to Tailwind utilities. Consuming apps must
  * use it instead of copying the theme:
  *
  *   // tailwind.config.js
- *   import espanolenkaPreset from '@espanolenka/design-system/tailwind-preset'
+ *   import klerigoPreset from '@klerigo/design-system/tailwind-preset'
  *   export default {
- *     presets: [espanolenkaPreset],
+ *     presets: [klerigoPreset],
  *     content: [...],
  *   }
  *

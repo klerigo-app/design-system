@@ -1,8 +1,8 @@
-import espanolenkaPreset from './tailwind-preset.js'
+import klerigoPreset from './tailwind-preset.js'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  presets: [espanolenkaPreset],
+  presets: [klerigoPreset],
   content: ['./src/**/*.{ts,tsx}', './.storybook/**/*.{ts,tsx}'],
   plugins: [],
 }

@@ -10,16 +10,10 @@ export interface LogoProps {
   className?: string
 }
 
-const ESPANO_COLOR: Record<LogoMarkVariant, string> = {
+const WORDMARK_COLOR: Record<LogoMarkVariant, string> = {
   coral: '#1F2933',
   knockout: '#FFFFFF',
   outline: '#1F2933',
-}
-
-const LENKA_COLOR: Record<LogoMarkVariant, string> = {
-  coral: '#F14E3A',
-  knockout: '#FFC23C',
-  outline: '#F14E3A',
 }
 
 export function Logo({
@@ -43,14 +37,13 @@ export function Logo({
       <span
         style={{
           fontFamily: 'var(--font-display)',
-          fontWeight: 600,
+          fontWeight: 700,
           fontSize: markSize * 0.46,
-          color: ESPANO_COLOR[variant],
+          color: WORDMARK_COLOR[variant],
           whiteSpace: 'nowrap',
         }}
       >
-        Españo
-        <span style={{ color: LENKA_COLOR[variant] }}>Lenka</span>
+        Klerigo
       </span>
     </div>
   )

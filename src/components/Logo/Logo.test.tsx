@@ -6,7 +6,7 @@ import { Logo } from './Logo'
 describe('LogoMark', () => {
   it('renders with an accessible label', () => {
     render(<LogoMark />)
-    expect(screen.getByRole('img', { name: 'EspañoLenka' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'Klerigo' })).toBeInTheDocument()
   })
 
   it.each(['coral', 'knockout', 'outline'] as const)(
@@ -19,17 +19,16 @@ describe('LogoMark', () => {
 })
 
 describe('Logo', () => {
-  it('renders both parts of the wordmark', () => {
+  it('renders the wordmark', () => {
     render(<Logo />)
-    expect(screen.getByText('Españo')).toBeInTheDocument()
-    expect(screen.getByText('Lenka')).toBeInTheDocument()
+    expect(screen.getByText('Klerigo')).toBeInTheDocument()
   })
 
   it.each(['horizontal', 'stacked'] as const)(
     'renders the %s orientation without throwing',
     (orientation) => {
       render(<Logo orientation={orientation} />)
-      expect(screen.getByText('Españo')).toBeInTheDocument()
+      expect(screen.getByText('Klerigo')).toBeInTheDocument()
     },
   )
 })

@@ -1,6 +1,6 @@
 /*
  * Storybook-preview-only shim. NOT imported from src/index.ts, so it never
- * reaches dist/index.css or the published @espanolenka/design-system package
+ * reaches dist/index.css or the published @klerigo/design-system package
  * — it only flows into the Storybook-compiled preview CSS that /design-sync
  * scrapes as _ds_bundle.css.
  *

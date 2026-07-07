@@ -1,8 +1,8 @@
 {
   "projectId": "a39889db-9836-4489-8580-754adc212826",
   "shape": "storybook",
-  "pkg": "@espanolenka/design-system",
-  "globalName": "EspanolenkaDesignSystem",
+  "pkg": "@klerigo/design-system",
+  "globalName": "KlerigoDesignSystem",
   "storybookStatic": ".design-sync/sb-reference",
   "storybookConfigDir": ".storybook",
   "buildCmd": "pnpm run build",

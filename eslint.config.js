@@ -12,7 +12,7 @@ export default tseslint.config(
       'dist/**',
       'storybook-static/**',
       '.storybook/**',
-      'espanolenka_design_system/**',
+      'klerigo_design_system/**',
       '.design-sync/**',
       '.ds-sync/**',
       'ds-bundle/**',

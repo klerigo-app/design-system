@@ -10,7 +10,7 @@
  * Import from the dedicated subpath so Metro never pulls in the DOM entry
  * (which imports tokens.css and breaks bundling):
  *
- *   import { Screen, Field, PrimaryButton } from '@espanolenka/design-system/native'
+ *   import { Screen, Field, PrimaryButton } from '@klerigo/design-system/native'
  */
 export * from './Screen'
 export * from './Text'

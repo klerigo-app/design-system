@@ -1,20 +1,17 @@
-// One-off dev script: extracts 'e' (weight 500) and 'L' (weight 600) glyph
-// outlines from the Baloo 2 font and prints ready-to-paste path constants
-// for src/components/Logo/glyphPaths.ts.
+// One-off dev script: extracts the 'K' glyph outline (weight 700, bold — same
+// weight as the Klerigo wordmark) from the Baloo 2 font and prints a
+// ready-to-paste path constant for src/components/Logo/glyphPaths.ts.
 // Run with: node scripts/extract-glyph-paths.mjs
 import { openSync } from 'fontkit'
 import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 
-// Matches the reference logo-mark-*.svg construction: 512x512 tile,
-// text anchored at x=256 (text-anchor: middle), baseline y=360,
-// 'e' at font-size 250 (weight 500), 'L' at font-size 280 (weight 600), dx=-10 before 'L'.
+// 512x512 tile, glyph centered at x=256 (equivalent to text-anchor: middle),
+// baseline y=360, font-size 320 (weight 700).
 const TILE_CENTER_X = 256
 const BASELINE_Y = 360
-const E_FONT_SIZE = 250
-const L_FONT_SIZE = 280
-const L_DX = -10
+const K_FONT_SIZE = 320
 
 function glyphPathAt(font, char, fontSize, originX, baselineY) {
   const glyph = font.glyphForCodePoint(char.codePointAt(0))
@@ -41,23 +38,26 @@ function glyphPathAt(font, char, fontSize, originX, baselineY) {
     }
   })
 
-  return { d: commands.join(' '), advance }
+  const bbox = glyph.bbox
+  return {
+    d: commands.join(' '),
+    advance,
+    top: baselineY - bbox.maxY * scale,
+    bottom: baselineY - bbox.minY * scale,
+    left: originX + bbox.minX * scale,
+    right: originX + bbox.maxX * scale,
+  }
 }
 
-const fontE = openSync(require.resolve('@fontsource/baloo-2/files/baloo-2-latin-500-normal.woff2'))
-const fontL = openSync(require.resolve('@fontsource/baloo-2/files/baloo-2-latin-600-normal.woff2'))
+const fontK = openSync(require.resolve('@fontsource/baloo-2/files/baloo-2-latin-700-normal.woff2'))
 
-// First pass (at origin 0,0) just to read advance widths, so the "eL" pair
-// can be centered as one block around TILE_CENTER_X, matching the source SVG's
-// single <text text-anchor="middle"> behavior.
-const eProbe = glyphPathAt(fontE, 'e', E_FONT_SIZE, 0, 0)
-const lProbe = glyphPathAt(fontL, 'L', L_FONT_SIZE, 0, 0)
-const totalWidth = eProbe.advance + L_DX + lProbe.advance
-const startX = TILE_CENTER_X - totalWidth / 2
+// Probe at origin 0,0 just to read the advance width, so the single glyph
+// can be centered around TILE_CENTER_X the same way text-anchor: middle would.
+const probe = glyphPathAt(fontK, 'K', K_FONT_SIZE, 0, 0)
+const startX = TILE_CENTER_X - probe.advance / 2
 
-const e = glyphPathAt(fontE, 'e', E_FONT_SIZE, startX, BASELINE_Y)
-const l = glyphPathAt(fontL, 'L', L_FONT_SIZE, startX + e.advance + L_DX, BASELINE_Y)
+const k = glyphPathAt(fontK, 'K', K_FONT_SIZE, startX, BASELINE_Y)
 
 console.log('// Paste into src/components/Logo/glyphPaths.ts')
-console.log(`export const LETTER_E_PATH = '${e.d}'`)
-console.log(`export const LETTER_L_PATH = '${l.d}'`)
+console.log(`export const LETTER_K_PATH = '${k.d}'`)
+console.log(`// bbox: top=${k.top.toFixed(1)} bottom=${k.bottom.toFixed(1)} left=${k.left.toFixed(1)} right=${k.right.toFixed(1)}`)

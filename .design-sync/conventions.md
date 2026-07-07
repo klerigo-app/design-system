@@ -1,4 +1,4 @@
-## EspañoLenka design system — build conventions
+## Klerigo design system — build conventions
 
 This is a Tailwind-utility design system. There is no theme/context provider to wrap — components style themselves via Tailwind classes generated from a **shared Tailwind preset** (`tailwind-preset.js`), which maps custom design tokens (CSS custom properties in `styles.css`) to Tailwind's color/radius/shadow/font scales. Just link `styles.css` and load `_ds_bundle.js` per the loading snippet below; there is nothing else to set up.
 
@@ -28,7 +28,7 @@ Compose with `class-variance-authority`-style variant classes the way the compon
 A lesson-completion moment built from real DS parts, following the brand's warm/rounded/lifted idiom for supporting layout:
 
 ```jsx
-const { Card, Heading, Text, ProgressBar, Button } = window.EspanolenkaDesignSystem
+const { Card, Heading, Text, ProgressBar, Button } = window.KlerigoDesignSystem
 
 ;<div className="bg-paper p-6 font-body">
   <Card className="mx-auto max-w-sm p-6">

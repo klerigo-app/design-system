@@ -1,19 +1,19 @@
-# @espanolenka/design-system
+# @klerigo/design-system
 
-React + TypeScript component library implementing the EspañoLenka brand and design system.
-Source spec: `espanolenka_design_system/README.md`. Design/plan history:
+React + TypeScript component library implementing the Klerigo brand and design system.
+Source spec: `klerigo_design_system/README.md`. Design/plan history:
 `docs/superpowers/specs/` and `docs/superpowers/plans/`.
 
 ## Install
 
-    pnpm add @espanolenka/design-system
+    pnpm add @klerigo/design-system
 
 ## Usage
 
 Import the token and font stylesheets once, at your app's entry point:
 
-    import '@espanolenka/design-system/tokens.css'
-    import '@espanolenka/design-system/fonts.css'
+    import '@klerigo/design-system/tokens.css'
+    import '@klerigo/design-system/fonts.css'
 
 Note: `fonts.css` contains bare-specifier `@import '@fontsource/...'` statements that
 must be resolved against `node_modules` by your app's own bundler. This works with
@@ -22,7 +22,7 @@ static `<link>` tag with no build step.
 
 Then use components:
 
-    import { Button, Card, Chip } from '@espanolenka/design-system'
+    import { Button, Card, Chip } from '@klerigo/design-system'
 
     function Example() {
       return (
@@ -40,13 +40,13 @@ preset — it is the single source of truth mapping the design tokens to
 Tailwind utilities (`bg-coral-500`, `rounded-card`, `shadow-lift-coral`, …):
 
     // tailwind.config.js
-    import espanolenkaPreset from '@espanolenka/design-system/tailwind-preset'
+    import klerigoPreset from '@klerigo/design-system/tailwind-preset'
 
     export default {
-      presets: [espanolenkaPreset],
+      presets: [klerigoPreset],
       content: [
         './src/**/*.{ts,tsx}',
-        './node_modules/@espanolenka/design-system/dist/**/*.js',
+        './node_modules/@klerigo/design-system/dist/**/*.js',
       ],
     }
 
@@ -56,12 +56,12 @@ React Native can't import the main entry (it starts with `import './tokens.css'`
 a DOM-only side effect that breaks Metro). Use the dedicated subpaths instead:
 
     // Tokens only — side-effect-free, safe in Metro and in a CJS tailwind.config.js
-    import { colors, radiusValue } from '@espanolenka/design-system/tokens'
+    import { colors, radiusValue } from '@klerigo/design-system/tokens'
 
     // Shared RN components (StyleSheet-based, driven by the tokens above)
-    import { Screen, Heading, Text, Field, PrimaryButton } from '@espanolenka/design-system/native'
+    import { Screen, Heading, Text, Field, PrimaryButton } from '@klerigo/design-system/native'
 
-`@espanolenka/design-system/tokens` is the single source of truth for the
+`@klerigo/design-system/tokens` is the single source of truth for the
 palette and radius scale — apps must import it rather than hand-copying hex
 values into `theme/tokens.ts` or `tailwind.config.js`.
 
