@@ -16,6 +16,7 @@ export default tseslint.config(
       '.design-sync/**',
       '.ds-sync/**',
       'ds-bundle/**',
+      '.remember/**',
     ],
   },
   js.configs.recommended,
