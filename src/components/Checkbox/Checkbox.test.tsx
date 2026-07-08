@@ -29,4 +29,9 @@ describe('Checkbox', () => {
     await userEvent.click(screen.getByRole('checkbox'))
     expect(onChange).not.toHaveBeenCalled()
   })
+
+  it('shows a pointer cursor when hovering the checkbox itself', () => {
+    render(<Checkbox id="terms" label="Acepto los términos" />)
+    expect(screen.getByRole('checkbox')).toHaveClass('cursor-pointer')
+  })
 })

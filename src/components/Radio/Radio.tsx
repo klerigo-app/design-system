@@ -17,7 +17,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
             id={id}
             type="radio"
             className={cn(
-              'peer h-6 w-6 appearance-none rounded-full border-2 border-border-input checked:border-teal-500',
+              'peer h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-border-input checked:border-teal-500',
               className,
             )}
             {...props}

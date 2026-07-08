@@ -34,4 +34,9 @@ describe('Radio', () => {
     await userEvent.click(screen.getByRole('radio'))
     expect(onChange).not.toHaveBeenCalled()
   })
+
+  it('shows a pointer cursor when hovering the radio itself', () => {
+    render(<Radio id="online" name="mode" label="En línea" />)
+    expect(screen.getByRole('radio')).toHaveClass('cursor-pointer')
+  })
 })
