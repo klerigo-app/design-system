@@ -10,7 +10,8 @@
     "Overview": null
   },
   "overrides": {
-    "Modal": { "cardMode": "single", "primaryStory": "TypeToConfirmDelete" }
+    "Modal": { "cardMode": "single", "primaryStory": "TypeToConfirmDelete" },
+    "Toast": { "skip": ["feedback-toast--interactive"] }
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
