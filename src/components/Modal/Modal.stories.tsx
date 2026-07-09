@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from '../Button/Button'
+import { TextInput } from '../TextInput/TextInput'
 import { Modal, type ModalProps } from './Modal'
 
 function ModalDemo(props: Omit<ModalProps, 'isOpen' | 'onClose'>) {
@@ -18,6 +19,7 @@ const meta: Meta<typeof Modal> = {
   component: ModalDemo,
   argTypes: {
     variant: { control: 'select', options: ['info', 'warning', 'error', 'success'] },
+    size: { control: 'select', options: ['md', 'lg'] },
   },
   args: {
     title: '¿Eliminar la lección?',
@@ -55,4 +57,25 @@ export const TypeToConfirmDelete: Story = {
     confirmText: 'Eliminar',
     confirmationValue: 'Verbos irregulares',
   },
+}
+
+export const WideWithSideBySideFields: Story = {
+  args: {
+    size: 'lg',
+    title: 'Editar usuario',
+    description: 'Actualiza los datos de este usuario.',
+    confirmText: 'Guardar',
+  },
+  render: (args) => (
+    <Modal {...args} isOpen onClose={() => {}}>
+      <div className="flex gap-3">
+        <div className="min-w-0 flex-1">
+          <TextInput id="story-first-name" label="Nombre" defaultValue="Sam" required />
+        </div>
+        <div className="min-w-0 flex-1">
+          <TextInput id="story-last-name" label="Apellido" defaultValue="Student" />
+        </div>
+      </div>
+    </Modal>
+  ),
 }

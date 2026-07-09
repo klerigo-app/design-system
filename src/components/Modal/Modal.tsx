@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { cva } from 'class-variance-authority'
 import { CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react'
 import { cn } from '../../lib/cn'
 import { Button } from '../Button/Button'
@@ -8,6 +9,7 @@ import { Text } from '../Text/Text'
 import { TextInput } from '../TextInput/TextInput'
 
 export type ModalVariant = 'info' | 'warning' | 'error' | 'success'
+export type ModalSize = 'md' | 'lg'
 
 const VARIANT_ICON = {
   info: InfoIcon,
@@ -23,11 +25,32 @@ const VARIANT_BADGE_CLASSES: Record<ModalVariant, string> = {
   success: 'bg-success-tint text-success',
 }
 
+type ModalPanelStyleProps = {
+  size?: ModalSize
+}
+
+const modalPanelStyles: (props?: ModalPanelStyleProps) => string = cva(
+  'relative flex w-full flex-col gap-4 rounded-2xl bg-white p-6 shadow-elevated outline-none',
+  {
+    variants: {
+      size: {
+        md: 'max-w-md',
+        lg: 'max-w-xl',
+      },
+    },
+    defaultVariants: {
+      size: 'md',
+    },
+  },
+)
+
 export interface ModalProps {
   isOpen: boolean
   /** Called on Escape and overlay click (when enabled). Does not fire from the Confirm/Cancel buttons. */
   onClose: () => void
   variant?: ModalVariant
+  /** Panel width. Defaults to 'md' (max-w-md); use 'lg' for wider forms (max-w-xl). */
+  size?: ModalSize
   title: string
   description?: ReactNode
   children?: ReactNode
@@ -51,6 +74,7 @@ export function Modal({
   isOpen,
   onClose,
   variant = 'info',
+  size = 'md',
   title,
   description,
   children,
@@ -152,7 +176,7 @@ export function Modal({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
-        className="relative flex w-full max-w-md flex-col gap-4 rounded-2xl bg-white p-6 shadow-elevated outline-none"
+        className={modalPanelStyles({ size })}
       >
         <span
           aria-hidden

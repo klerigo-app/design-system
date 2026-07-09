@@ -102,6 +102,18 @@ describe('Modal', () => {
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
+  it('defaults to the md size', () => {
+    render(<Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} />)
+    expect(screen.getByRole('dialog')).toHaveClass('max-w-md')
+  })
+
+  it('applies the lg size when requested', () => {
+    render(<Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} size="lg" />)
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveClass('max-w-xl')
+    expect(dialog).not.toHaveClass('max-w-md')
+  })
+
   it('keeps confirm disabled until the typed text matches confirmationValue', async () => {
     const onConfirm = vi.fn()
     render(

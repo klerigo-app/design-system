@@ -20,7 +20,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           id={id}
           aria-invalid={hasError}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
-          className={cn(fieldControlStyles({ error: hasError }), 'px-[14px] py-3', className)}
+          className={cn(
+            fieldControlStyles({ error: hasError }),
+            'w-full px-[14px] py-3',
+            className,
+          )}
           {...props}
         />
         {error ? (
