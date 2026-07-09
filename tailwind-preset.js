@@ -102,6 +102,23 @@ export default {
         body: 'var(--font-body)',
         mono: 'var(--font-mono)',
       },
+      keyframes: {
+        'toast-in': {
+          '0%': { opacity: '0', transform: 'translateY(-8px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        'toast-drain': {
+          from: { transform: 'scaleX(1)' },
+          to: { transform: 'scaleX(0)' },
+        },
+      },
+      animation: {
+        // Toast drop-in settle. The countdown shelf uses `toast-drain` with an
+        // inline animationDuration/playState so it stays in sync with the
+        // provider's timer (the 5s here is only a placeholder default).
+        'toast-in': 'toast-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+        'toast-drain': 'toast-drain 5s linear forwards',
+      },
     },
   },
 }
