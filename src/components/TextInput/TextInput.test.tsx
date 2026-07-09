@@ -27,4 +27,9 @@ describe('TextInput', () => {
     await userEvent.type(screen.getByLabelText('Email'), 'a')
     expect(onChange).toHaveBeenCalled()
   })
+
+  it('sizes the input to fill its container', () => {
+    render(<TextInput id="email" label="Email" />)
+    expect(screen.getByLabelText('Email')).toHaveClass('w-full')
+  })
 })
