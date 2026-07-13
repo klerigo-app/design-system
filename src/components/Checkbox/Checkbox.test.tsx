@@ -34,4 +34,11 @@ describe('Checkbox', () => {
     render(<Checkbox id="terms" label="Acepto los términos" />)
     expect(screen.getByRole('checkbox')).toHaveClass('cursor-pointer')
   })
+
+  it('renders gray styling when disabled', () => {
+    render(<Checkbox id="terms" label="Acepto los términos" disabled />)
+    const checkbox = screen.getByRole('checkbox')
+    expect(checkbox).toHaveClass('disabled:cursor-not-allowed')
+    expect(checkbox).toHaveClass('disabled:bg-disabled-bg')
+  })
 })
