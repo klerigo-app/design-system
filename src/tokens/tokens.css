@@ -57,6 +57,12 @@
   --color-connector-locked: #e7efef;
   --color-node-locked-border: #d8cdb6;
 
+  /* Raised card/input surface (white in light), inverse hero-panel surface,
+     and modal scrim. Tokenised so they flip in dark; light values preserved. */
+  --color-surface-raised: #ffffff;
+  --color-surface-inverse: #1f2933;
+  --color-scrim: #1f2933;
+
   /* Text on form/field labels — between slate and ink */
   --color-label: #3a454f;
 
@@ -87,4 +93,143 @@
   /* Focus rings */
   --focus-ring-teal: 0 0 0 3px #d6efef;
   --focus-ring-error: 0 0 0 3px #fbdcdc;
+}
+
+/*
+ * Dark theme — CSS custom-property overrides. Values are sourced verbatim from
+ * the TutorConsole [data-theme="dark"] block authored in Claude Design; tokens
+ * that template does not exercise are completed from its accent/shadow palette
+ * (tune in Storybook). Brand 500s stay vivid and the unused inner ramp steps
+ * (*-100/*-300/*-900) stay light — see the design spec.
+ *
+ * Activation is BOTH: the media query follows the OS by default (unless an
+ * explicit [data-theme="light"] opts out), and [data-theme="dark"] forces dark
+ * regardless of OS. The two blocks are kept byte-identical by a token test.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    /* Neutrals */
+    --color-paper: #181310;
+    --color-surface: #241d18;
+    --color-border: #39302a;
+    --color-border-input: #453a32;
+    --color-muted: #8f8578;
+    --color-slate: #b8ad9f;
+    --color-ink: #f4efe7;
+    --color-label: #dcd3c6;
+
+    /* Brand ramp roles that flip (50 → dark bg, 700 → light text) */
+    --color-coral-50: #2c1c17;
+    --color-coral-700: #f0a08d;
+    --color-sun-50: #2a2213;
+    --color-sun-700: #f0c667;
+    --color-teal-50: #122725;
+    --color-teal-700: #63cccc;
+
+    /* Semantic */
+    --color-success: #52c489;
+    --color-warning: #edb54a;
+    --color-error: #f0806e;
+    --color-info: #4fc4c4;
+
+    /* Semantic soft-tint backgrounds */
+    --color-success-tint: #12251a;
+    --color-error-tint: #2c1715;
+    --color-success-border: #245c3d;
+    --color-error-border: #5a2b26;
+    --color-success-text: #79d3a0;
+    --color-success-subtitle: #5fa87f;
+
+    /* Component surfaces & tracks */
+    --color-surface-selected: #2c241d;
+    --color-progress-track: #39302a;
+    --color-segmented-track: #2c241d;
+    --color-connector-locked: #2b3230;
+    --color-node-locked-border: #4a4234;
+    --color-surface-raised: #241d18;
+    --color-surface-inverse: #2c241d;
+    --color-scrim: #000000;
+
+    /* Interaction states */
+    --color-coral-hover: #ff6a55;
+    --color-sun-hover: #ffce5c;
+    --color-error-hover: #e05548;
+    --color-disabled-bg: #2c241d;
+    --color-disabled-text: #6e655a;
+
+    /* Shadows */
+    --shadow-button-lift-coral: 0 4px 0 #7a2e21;
+    --shadow-button-lift-sun: 0 4px 0 #8a6613;
+    --shadow-button-pressed-coral: 0 1px 0 #7a2e21;
+    --shadow-button-pressed-sun: 0 1px 0 #8a6613;
+    --shadow-card-elevated: 0 14px 30px -18px rgba(0, 0, 0, 0.55);
+    --shadow-device: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+
+    /* Focus rings */
+    --focus-ring-teal: 0 0 0 3px rgba(79, 196, 196, 0.35);
+    --focus-ring-error: 0 0 0 3px rgba(240, 128, 110, 0.35);
+  }
+}
+
+:root[data-theme='dark'] {
+  /* Neutrals */
+  --color-paper: #181310;
+  --color-surface: #241d18;
+  --color-border: #39302a;
+  --color-border-input: #453a32;
+  --color-muted: #8f8578;
+  --color-slate: #b8ad9f;
+  --color-ink: #f4efe7;
+  --color-label: #dcd3c6;
+
+  /* Brand ramp roles that flip (50 → dark bg, 700 → light text) */
+  --color-coral-50: #2c1c17;
+  --color-coral-700: #f0a08d;
+  --color-sun-50: #2a2213;
+  --color-sun-700: #f0c667;
+  --color-teal-50: #122725;
+  --color-teal-700: #63cccc;
+
+  /* Semantic */
+  --color-success: #52c489;
+  --color-warning: #edb54a;
+  --color-error: #f0806e;
+  --color-info: #4fc4c4;
+
+  /* Semantic soft-tint backgrounds */
+  --color-success-tint: #12251a;
+  --color-error-tint: #2c1715;
+  --color-success-border: #245c3d;
+  --color-error-border: #5a2b26;
+  --color-success-text: #79d3a0;
+  --color-success-subtitle: #5fa87f;
+
+  /* Component surfaces & tracks */
+  --color-surface-selected: #2c241d;
+  --color-progress-track: #39302a;
+  --color-segmented-track: #2c241d;
+  --color-connector-locked: #2b3230;
+  --color-node-locked-border: #4a4234;
+  --color-surface-raised: #241d18;
+  --color-surface-inverse: #2c241d;
+  --color-scrim: #000000;
+
+  /* Interaction states */
+  --color-coral-hover: #ff6a55;
+  --color-sun-hover: #ffce5c;
+  --color-error-hover: #e05548;
+  --color-disabled-bg: #2c241d;
+  --color-disabled-text: #6e655a;
+
+  /* Shadows */
+  --shadow-button-lift-coral: 0 4px 0 #7a2e21;
+  --shadow-button-lift-sun: 0 4px 0 #8a6613;
+  --shadow-button-pressed-coral: 0 1px 0 #7a2e21;
+  --shadow-button-pressed-sun: 0 1px 0 #8a6613;
+  --shadow-card-elevated: 0 14px 30px -18px rgba(0, 0, 0, 0.55);
+  --shadow-device: 0 30px 60px -30px rgba(0, 0, 0, 0.6);
+
+  /* Focus rings */
+  --focus-ring-teal: 0 0 0 3px rgba(79, 196, 196, 0.35);
+  --focus-ring-error: 0 0 0 3px rgba(240, 128, 110, 0.35);
 }

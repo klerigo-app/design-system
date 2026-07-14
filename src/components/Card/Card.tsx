@@ -14,9 +14,9 @@ type CardStyleProps = {
 const cardStyles: (props?: CardStyleProps) => string = cva('rounded-xl', {
   variants: {
     variant: {
-      flat: 'border border-border bg-white p-6',
-      elevated: 'border border-border bg-white p-6 shadow-elevated',
-      feature: 'relative overflow-hidden bg-ink p-6 text-white',
+      flat: 'border border-border bg-surface-raised p-6',
+      elevated: 'border border-border bg-surface-raised p-6 shadow-elevated',
+      feature: 'relative overflow-hidden bg-surface-inverse p-6 text-white',
     },
     interactive: {
       true: '',

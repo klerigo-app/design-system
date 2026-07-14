@@ -74,7 +74,7 @@ export function Toast({
       role={assertive ? 'alert' : 'status'}
       aria-live={assertive ? 'assertive' : 'polite'}
       className={cn(
-        'pointer-events-auto relative w-full animate-toast-in overflow-hidden rounded-2xl border border-border bg-white shadow-elevated transition-transform duration-150 motion-reduce:animate-none',
+        'pointer-events-auto relative w-full animate-toast-in overflow-hidden rounded-2xl border border-border bg-surface-raised shadow-elevated transition-transform duration-150 motion-reduce:animate-none',
         paused && 'translate-y-[2px]',
         className,
       )}

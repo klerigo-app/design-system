@@ -30,7 +30,7 @@ type ModalPanelStyleProps = {
 }
 
 const modalPanelStyles: (props?: ModalPanelStyleProps) => string = cva(
-  'relative flex w-full flex-col gap-4 rounded-2xl bg-white p-6 shadow-elevated outline-none',
+  'relative flex w-full flex-col gap-4 rounded-2xl bg-surface-raised p-6 shadow-elevated outline-none',
   {
     variants: {
       size: {
@@ -166,7 +166,7 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         aria-hidden
-        className="absolute inset-0 bg-ink opacity-60"
+        className="absolute inset-0 bg-scrim opacity-60"
         onClick={closeOnOverlayClick ? onClose : undefined}
       />
       <div

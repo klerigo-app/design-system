@@ -34,7 +34,7 @@ export function LessonCard({
   actionSlot,
 }: LessonCardProps) {
   return (
-    <div className="flex gap-5 rounded-[var(--radius-card)] border border-border bg-white p-6 shadow-elevated">
+    <div className="flex gap-5 rounded-[var(--radius-card)] border border-border bg-surface-raised p-6 shadow-elevated">
       <div
         className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-[18px] font-display text-[28px] font-semibold text-white"
         style={{ background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})` }}

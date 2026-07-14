@@ -94,7 +94,7 @@ export function MultiSelect({
           <div
             role="listbox"
             aria-multiselectable="true"
-            className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 flex max-h-[280px] flex-col gap-0.5 overflow-y-auto rounded-md border-[1.5px] border-border-input bg-white p-1.5 shadow-elevated"
+            className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 flex max-h-[280px] flex-col gap-0.5 overflow-y-auto rounded-md border-[1.5px] border-border-input bg-surface-raised p-1.5 shadow-elevated"
           >
             {options.map((option) => (
               <div key={option.value} className="rounded-sm px-2.5 py-2 hover:bg-paper">
