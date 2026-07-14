@@ -12,5 +12,8 @@
   "overrides": {
     "Modal": { "cardMode": "single", "primaryStory": "TypeToConfirmDelete" }
   },
+  "storyImports": {
+    "shim": ["useToast"]
+  },
   "readmeHeader": ".design-sync/conventions.md"
 }
