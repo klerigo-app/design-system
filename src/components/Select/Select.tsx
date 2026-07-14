@@ -40,7 +40,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
+          {/* Centered with inset + auto margins, not a translate: a transform
+              composes through the consumer's Tailwind `--tw-*` vars, which
+              differ across majors and can leave the caret pinned to the top. */}
+          <CaretDownIcon className="pointer-events-none absolute inset-y-0 right-3 my-auto h-5 w-5 text-muted" />
         </div>
         {error && (
           <FieldMessage id={`${id}-error`} tone="error">

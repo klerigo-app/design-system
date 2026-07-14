@@ -16,7 +16,11 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   ({ id, className, placeholder, ...props }, ref) => {
     return (
       <div className="relative">
-        <MagnifyingGlassIcon className="pointer-events-none absolute left-[14px] top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
+        {/* Centered vertically with inset + auto margins rather than a
+            translate transform: consumers on a different Tailwind major
+            (e.g. v4) compose the `--tw-*` transform vars differently, which
+            would leave a translate-based centering unresolved. */}
+        <MagnifyingGlassIcon className="pointer-events-none absolute inset-y-0 left-[14px] my-auto h-5 w-5 text-muted" />
         <input
           ref={ref}
           id={id}
