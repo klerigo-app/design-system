@@ -46,7 +46,7 @@ type FieldControlStyleProps = {
 
 /** Base look + border/focus/error states shared by every field control. */
 export const fieldControlStyles: (props?: FieldControlStyleProps) => string = cva(
-  'rounded-md border-[1.5px] bg-white font-body text-[15px] outline-none transition-shadow',
+  'rounded-md border-[1.5px] bg-surface-raised font-body text-[15px] outline-none transition-shadow',
   {
     variants: {
       error: {

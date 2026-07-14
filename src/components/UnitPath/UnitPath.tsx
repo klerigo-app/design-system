@@ -50,7 +50,7 @@ export function UnitPath({ nodes }: UnitPathProps): ReactElement {
               node.state === 'completed' && 'h-14 w-14 bg-teal-500',
               node.state === 'current' && 'h-16 w-16 bg-coral-500 shadow-[0_0_0_5px_#FBD3CB]',
               node.state === 'locked' &&
-                'h-14 w-14 border-2 border-dashed border-node-locked-border bg-white opacity-[0.55]',
+                'h-14 w-14 border-2 border-dashed border-node-locked-border bg-surface-raised opacity-[0.55]',
             )}
           >
             {node.state === 'completed' && (

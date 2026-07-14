@@ -18,7 +18,7 @@ export function StreakCard({
   dayLetters,
 }: StreakCardProps): ReactElement {
   return (
-    <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-ink p-6 text-white">
+    <div className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-surface-inverse p-6 text-white">
       <div className="flex items-center gap-4">
         <div
           className="flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-2xl font-display text-2xl font-semibold text-white"
@@ -39,7 +39,9 @@ export function StreakCard({
             key={`${letter}-${index}`}
             className={cn(
               'flex h-[34px] flex-1 items-center justify-center rounded-[9px] text-sm font-semibold',
-              activeDays[index] ? 'bg-sun-500 text-ink' : 'bg-white/[0.14] text-white/50',
+              activeDays[index]
+                ? 'bg-sun-500 text-surface-inverse'
+                : 'bg-white/[0.14] text-white/50',
             )}
           >
             {letter}

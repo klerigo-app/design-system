@@ -22,7 +22,10 @@ export function FaqAccordion({ items, className }: FaqAccordionProps) {
         const panelId = `faq-panel-${index}`
         const headerId = `faq-header-${index}`
         return (
-          <div key={index} className="overflow-hidden rounded-[18px] border border-border bg-white">
+          <div
+            key={index}
+            className="overflow-hidden rounded-[18px] border border-border bg-surface-raised"
+          >
             <button
               type="button"
               id={headerId}

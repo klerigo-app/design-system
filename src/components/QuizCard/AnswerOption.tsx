@@ -11,7 +11,7 @@ export interface AnswerOptionProps {
 }
 
 const STATUS_CLASSES: Record<AnswerOptionStatus, string> = {
-  default: 'border-border-input bg-white hover:border-teal-500 hover:bg-surface-selected',
+  default: 'border-border-input bg-surface-raised hover:border-teal-500 hover:bg-surface-selected',
   selected: 'border-teal-500 bg-surface-selected',
   correct: 'border-success bg-success-tint',
   wrong: 'border-error-border bg-error-tint',

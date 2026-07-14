@@ -57,6 +57,12 @@
   --color-connector-locked: #e7efef;
   --color-node-locked-border: #d8cdb6;
 
+  /* Raised card/input surface (white in light), inverse hero-panel surface,
+     and modal scrim. Tokenised so they flip in dark; light values preserved. */
+  --color-surface-raised: #ffffff;
+  --color-surface-inverse: #1f2933;
+  --color-scrim: #1f2933;
+
   /* Text on form/field labels — between slate and ink */
   --color-label: #3a454f;
 
@@ -140,6 +146,9 @@
     --color-segmented-track: #2c241d;
     --color-connector-locked: #2b3230;
     --color-node-locked-border: #4a4234;
+    --color-surface-raised: #241d18;
+    --color-surface-inverse: #2c241d;
+    --color-scrim: #000000;
 
     /* Interaction states */
     --color-coral-hover: #ff6a55;
@@ -201,6 +210,9 @@
   --color-segmented-track: #2c241d;
   --color-connector-locked: #2b3230;
   --color-node-locked-border: #4a4234;
+  --color-surface-raised: #241d18;
+  --color-surface-inverse: #2c241d;
+  --color-scrim: #000000;
 
   /* Interaction states */
   --color-coral-hover: #ff6a55;

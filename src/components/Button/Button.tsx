@@ -27,7 +27,7 @@ const buttonStyles: (props?: ButtonStyleProps) => string = cva(
           'bg-coral-500 text-white shadow-lift-coral hover:bg-coral-hover active:translate-y-[3px] active:shadow-pressed-coral',
         reward:
           'bg-sun-500 text-ink shadow-lift-sun hover:bg-sun-hover active:translate-y-[3px] active:shadow-pressed-sun',
-        secondary: 'border-2 border-teal-500 bg-white text-teal-500 hover:bg-teal-50',
+        secondary: 'border-2 border-teal-500 bg-surface-raised text-teal-500 hover:bg-teal-50',
         ghost: 'bg-transparent text-slate hover:bg-border hover:text-ink',
         outline: 'border border-border-input bg-transparent text-ink hover:bg-paper',
         danger: 'bg-error text-white hover:bg-error-hover active:translate-y-[1px]',
