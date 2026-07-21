@@ -163,8 +163,8 @@ The per-palette style cache (`theme.tsx:76`) keys on the theme object identity i
 
 ### 5. Ship the brand fonts as Latin-subset static TTFs — 551 KB
 
-*Re-decided after measurement; supersedes the draft's "ten full statics from Google
-Fonts", whose premise was false — see "Measured against klerigo-app".*
+_Re-decided after measurement; supersedes the draft's "ten full statics from Google
+Fonts", whose premise was false — see "Measured against klerigo-app"._
 
 Ten files: Baloo 2 400/500/600/700, DM Sans 400/500/600/700, DM Mono 400/500 — the same
 set `fonts.css:1-10` loads for web (OFL 1.1; `OFL.txt` ships alongside).
@@ -181,13 +181,13 @@ originally disclaimed — and once that step exists, subsetting is one further f
 
 Only Baloo 2 is subset; DM Sans and DM Mono carry no Devanagari and are already small.
 
-| | Per weight | Total |
-| --- | --- | --- |
-| Baloo 2, full charset | 412.4 KB | 1650 KB |
-| Baloo 2, subset | **57.7 KB** | 231 KB |
-| DM Sans, instanced | 55.5 KB | 222 KB |
-| DM Mono, upstream statics | ~49 KB | 98 KB |
-| | | **551 KB** |
+|                           | Per weight  | Total      |
+| ------------------------- | ----------- | ---------- |
+| Baloo 2, full charset     | 412.4 KB    | 1650 KB    |
+| Baloo 2, subset           | **57.7 KB** | 231 KB     |
+| DM Sans, instanced        | 55.5 KB     | 222 KB     |
+| DM Mono, upstream statics | ~49 KB      | 98 KB      |
+|                           |             | **551 KB** |
 
 Devanagari is 86% of Baloo 2's weight and no Klerigo surface renders it.
 
@@ -206,7 +206,7 @@ testing rather than reasoning:
   `čďěĺľňŕřšťůž` — 12 of the 20 Czech/Slovak accented letters — to save 16 KB per weight.
 - `U+0218-021B` (comma-below S/T). Romanian `șț` live here, outside Latin Extended-A,
   while their cedilla lookalikes `şţ` are inside it. Omitting the range makes Romanian
-  render *half* correctly, which is worse than failing. Costs 0.1 KB.
+  render _half_ correctly, which is worse than failing. Costs 0.1 KB.
 
 Verified present in **all three faces** — subset Baloo 2, instanced DM Sans, and upstream
 DM Mono — across Spanish `áéíóúüñ¿¡`, French `àâçèêëîôûÿœæ«»`, German `ß`, Portuguese
@@ -280,12 +280,12 @@ Which native component takes which family, derived from its web counterpart's cl
 Every native component that renders text is on this list — adopting fonts in the buttons
 alone would ship the binaries and leave headings in the system font:
 
-| Native role                                   | Family            | Weight | From                                    |
-| --------------------------------------------- | ----------------- | ------ | --------------------------------------- |
-| `Heading` (both sizes), all six button labels | `Baloo2-Medium`   | 500    | web `font-display font-medium`          |
-| `Text` body and muted, `Field` control text   | `DMSans-Regular`  | 400    | web `font-body`, `fieldControlStyles`   |
-| `FieldMessage` (error/helper)                 | `DMSans-Medium`   | 500    | web `font-medium` (`field.tsx:31`)      |
-| `FieldLabel`, `Toast` link labels             | `DMSans-SemiBold` | 600    | web `font-semibold`; `Toast.tsx:270`    |
+| Native role                                   | Family            | Weight | From                                  |
+| --------------------------------------------- | ----------------- | ------ | ------------------------------------- |
+| `Heading` (both sizes), all six button labels | `Baloo2-Medium`   | 500    | web `font-display font-medium`        |
+| `Text` body and muted, `Field` control text   | `DMSans-Regular`  | 400    | web `font-body`, `fieldControlStyles` |
+| `FieldMessage` (error/helper)                 | `DMSans-Medium`   | 500    | web `font-medium` (`field.tsx:31`)    |
+| `FieldLabel`, `Toast` link labels             | `DMSans-SemiBold` | 600    | web `font-semibold`; `Toast.tsx:270`  |
 
 Two existing weights change as a result: `Heading` and `PrimaryButton`'s label drop from
 `fontWeight: '700'` to 500, because web's display type is `font-medium` throughout.
@@ -319,17 +319,17 @@ colours.
 - A new `SecondaryButton` is built to web's real secondary: `border-2 border-teal-500`,
   `bg-surface-raised`, `text-teal-500`.
 
-*Resolved during the re-grill; the draft accepted a silent restyle here and no longer
-does.* Reusing the name with an identical prop shape (`label` + `PressableProps`) means
+_Resolved during the re-grill; the draft accepted a silent restyle here and no longer
+does._ Reusing the name with an identical prop shape (`label` + `PressableProps`) means
 existing call sites compile fine and quietly turn teal. Measurement showed that is not
 merely risky but wrong:
 
-| Site | Label |
-| --- | --- |
-| `mobile-tutor/src/screens/MoreScreen.tsx:29` | Log out |
-| `mobile-tutor/src/screens/SettingsScreen.tsx:26` | Log out |
-| `mobile-student/src/screens/SettingsScreen.tsx:27` | Log out |
-| `mobile-shared/src/screens/ErrorState.tsx:32` | Try again |
+| Site                                               | Label     |
+| -------------------------------------------------- | --------- |
+| `mobile-tutor/src/screens/MoreScreen.tsx:29`       | Log out   |
+| `mobile-tutor/src/screens/SettingsScreen.tsx:26`   | Log out   |
+| `mobile-student/src/screens/SettingsScreen.tsx:27` | Log out   |
+| `mobile-shared/src/screens/ErrorState.tsx:32`      | Try again |
 
 All four are neutral, low-emphasis actions. A teal brand-accented "Log out" is the
 opposite of the weight three of them want.
@@ -353,10 +353,10 @@ mechanical `useTheme()` renames and the four buttons above.
 The rationale is instead that **`OutlineButton` cannot land safely without the consumer
 change**, so the two repos are coordinated by necessity:
 
-| Repo | Change |
-| --- | --- |
-| `design-system` | this spec |
-| `klerigo-app` | 11 `useTheme()` → `theme.colors`, 4 `SecondaryButton` → `OutlineButton`, delete the dead `shadows` re-export (`packages/mobile-shared/src/theme/tokens.ts:4`) |
+| Repo            | Change                                                                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `design-system` | this spec                                                                                                                                                     |
+| `klerigo-app`   | 11 `useTheme()` → `theme.colors`, 4 `SecondaryButton` → `OutlineButton`, delete the dead `shadows` re-export (`packages/mobile-shared/src/theme/tokens.ts:4`) |
 
 klerigo-app pins the design system by commit SHA, so its PR is opened against this branch's
 merge commit and the emulator pass (§13) runs on that pair.
@@ -440,8 +440,10 @@ props, because two of the three are conditionally rendered:
 ```ts
 type ModalProps = Base &
   ({ onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }) &
-  ({ confirmationValue: string; confirmationLabel: string } |
-   { confirmationValue?: never; confirmationLabel?: never })
+  (
+    | { confirmationValue: string; confirmationLabel: string }
+    | { confirmationValue?: never; confirmationLabel?: never }
+  )
 ```
 
 A caller who forgets a string it needs fails to typecheck; a caller with no cancel button
@@ -472,14 +474,14 @@ So an emulator pass is a merge gate, not a follow-up:
 
 Test surface changes:
 
-| File                    | Change                                                              |
-| ----------------------- | ------------------------------------------------------------------- |
-| `tokens.parity.test.ts` | extend to shadows, parsing CSS into the structured form, both prefixes |
-| `tokens.test.ts`        | `:25-27` rewritten for `getShadows`                                 |
+| File                    | Change                                                                  |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `tokens.parity.test.ts` | extend to shadows, parsing CSS into the structured form, both prefixes  |
+| `tokens.test.ts`        | `:25-27` rewritten for `getShadows`                                     |
 | `themed-source.test.ts` | also ban importing `getShadows` from the token module; file floor rises |
-| `components.test.tsx`   | six buttons, `TextInput`, `Field` states — each in both schemes      |
-| `Modal.test.tsx` (web)  | rewritten off the Spanish accessible names                          |
-| `fonts.test.ts` (new)   | cmap coverage across 14 languages, non-empty glyph bounds (§5a)     |
+| `components.test.tsx`   | six buttons, `TextInput`, `Field` states — each in both schemes         |
+| `Modal.test.tsx` (web)  | rewritten off the Spanish accessible names                              |
+| `fonts.test.ts` (new)   | cmap coverage across 14 languages, non-empty glyph bounds (§5a)         |
 
 Step 1 is now answered ahead of implementation: `newArchEnabled=true` in both apps
 (`android/gradle.properties:38`), RN 0.86 / Expo SDK 57. It stays on the checklist because
@@ -492,7 +494,7 @@ against is not currently testable here.
 
 ### 14. One branch, sequenced commits, one PR — spec approved first
 
-*Rationale restated by §8a; the original justification did not survive measurement.*
+_Rationale restated by §8a; the original justification did not survive measurement._
 
 Everything lands on one design-system branch, paired with the companion klerigo-app PR
 described in §8a.
@@ -544,12 +546,12 @@ reasoning still applies.
 
 ### Blast radius: much smaller than §14 assumed
 
-| Breaking change | klerigo-app sites |
-| --- | --- |
-| `shadows` removal | 1 — `packages/mobile-shared/src/theme/tokens.ts:4`, a re-export with **no downstream consumers**. Dead code. |
-| `useTheme()` shape | 11, all of the form `const palette = useTheme()` across both apps + `mobile-shared`. Mechanical. |
-| `SecondaryButton` restyle | 4 — `mobile-tutor/MoreScreen.tsx:29`, both `SettingsScreen.tsx:26/27`, `mobile-shared/ErrorState.tsx:32`. |
-| Modal required strings | **0 on native** — the native Modal is not used anywhere in klerigo-app. **0 on web** — all 17 `<Modal>` sites already pass `confirmText`; the two without `cancelText` (`LessonBuilderPage.tsx:447,467`) also have no `onCancel`, which §12's union permits; all four `confirmationValue` sites already pass `confirmationLabel`. |
+| Breaking change           | klerigo-app sites                                                                                                                                                                                                                                                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shadows` removal         | 1 — `packages/mobile-shared/src/theme/tokens.ts:4`, a re-export with **no downstream consumers**. Dead code.                                                                                                                                                                                                                      |
+| `useTheme()` shape        | 11, all of the form `const palette = useTheme()` across both apps + `mobile-shared`. Mechanical.                                                                                                                                                                                                                                  |
+| `SecondaryButton` restyle | 4 — `mobile-tutor/MoreScreen.tsx:29`, both `SettingsScreen.tsx:26/27`, `mobile-shared/ErrorState.tsx:32`.                                                                                                                                                                                                                         |
+| Modal required strings    | **0 on native** — the native Modal is not used anywhere in klerigo-app. **0 on web** — all 17 `<Modal>` sites already pass `confirmText`; the two without `cancelText` (`LessonBuilderPage.tsx:447,467`) also have no `onCancel`, which §12's union permits; all four `confirmationValue` sites already pass `confirmationLabel`. |
 
 This undercuts §14's stated rationale. "Land together so klerigo-app migrates once across
 all four breaking changes" describes a migration that is really one mechanical rename
@@ -574,11 +576,11 @@ applies to the statics themselves.
 
 Measured, at Baloo 2 `wght`, DM Sans `wght` at `opsz=14`:
 
-| Bundle | Size |
-| --- | --- |
+| Bundle                          | Size                                               |
+| ------------------------------- | -------------------------------------------------- |
 | §5 as written — 10 full statics | **1.92 MB** (Baloo 2 alone is 1.65 MB, 412 KB × 4) |
-| 2 variable + 2 DM Mono statics | **999 KB** |
-| 10 Latin-subset statics | **551 KB** |
+| 2 variable + 2 DM Mono statics  | **999 KB**                                         |
+| 10 Latin-subset statics         | **551 KB**                                         |
 
 Baloo 2's Devanagari coverage is 86% of its weight: 412 KB → 58 KB per weight subset to
 Latin. Since instancing already requires the build step, subsetting is one further flag on
