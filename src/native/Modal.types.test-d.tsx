@@ -1,3 +1,4 @@
+import { type ReactElement } from 'react'
 import { Modal } from './Modal'
 
 /**
@@ -14,7 +15,7 @@ import { Modal } from './Modal'
 
 const noop = () => {}
 
-export const valid = (
+export const valid: ReactElement = (
   <>
     <Modal isOpen onClose={noop} title="t" onConfirm={noop} confirmText="Confirm" />
     <Modal
@@ -38,7 +39,7 @@ export const valid = (
   </>
 )
 
-export const invalid = (
+export const invalid: ReactElement = (
   <>
     {/* @ts-expect-error confirmText is required — it used to default to 'Confirmar'. */}
     <Modal isOpen onClose={noop} title="t" onConfirm={noop} />

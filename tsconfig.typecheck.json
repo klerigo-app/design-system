@@ -1,0 +1,19 @@
+// Typechecks the *.test-d.tsx type-level tests, which tsconfig.json excludes.
+//
+// They cannot live in the build config: `prepare` runs `npm run build` on every
+// consumer install (klerigo-app installs this package from git), so anything in
+// that config is typechecked and declaration-emitted in someone else's node
+// modules. A type-level test failing there breaks their install, and its
+// declarations would ship in dist/ for no reason.
+//
+// They also cannot live in *.test.tsx, which the build config excludes from
+// typechecking entirely — assertions written there would never run at all.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "emitDeclarationOnly": false
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.stories.tsx", "src/**/*.test.tsx"]
+}

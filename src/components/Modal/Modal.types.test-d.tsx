@@ -1,3 +1,4 @@
+import { type ReactElement } from 'react'
 import { Modal, type ModalCancelProps } from './Modal'
 
 /**
@@ -16,7 +17,7 @@ import { Modal, type ModalCancelProps } from './Modal'
 
 const noop = () => {}
 
-export const valid = (
+export const valid: ReactElement = (
   <>
     {/* Minimal: confirm only. */}
     <Modal isOpen onClose={noop} title="t" onConfirm={noop} confirmText="Confirm" />
@@ -50,12 +51,12 @@ export const valid = (
  * `onCancel={cond ? fn : undefined}` inline, or spreading a conditional object
  * literal, both widen to optional and satisfy no branch of the union.
  */
-export const conditional = (cond: boolean) => {
+export const conditional = (cond: boolean): ReactElement => {
   const cancelProps: ModalCancelProps = cond ? { onCancel: () => {}, cancelText: 'Close' } : {}
   return <Modal isOpen onClose={noop} title="t" onConfirm={noop} confirmText="C" {...cancelProps} />
 }
 
-export const invalid = (
+export const invalid: ReactElement = (
   <>
     {/* @ts-expect-error confirmText is required — it used to default to 'Confirmar'. */}
     <Modal isOpen onClose={noop} title="t" onConfirm={noop} />
