@@ -1,11 +1,19 @@
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, type ReactNode } from 'react'
 import { TextInput, View, type TextInput as RNTextInput, type TextInputProps } from 'react-native'
-import { fieldStyles } from './fieldParts'
-import { useTheme, useThemedStyles } from './theme'
+import { fieldStyles } from '../internal/fieldParts'
+import { useTheme, useThemedStyles } from '../theme'
 
 export interface FieldProps extends TextInputProps {
   /** Draw the control in its invalid state. Set by `TextInput` from its `error` prop. */
   error?: boolean
+  /**
+   * Adornment before the text, inside the box — `SearchField`'s magnifier.
+   *
+   * A slot rather than each caller rebuilding the box: the focus and error
+   * wiring below is the part worth not duplicating, and an absolutely
+   * positioned overlay would have to guess this control's height.
+   */
+  leading?: ReactNode
 }
 
 /**
@@ -14,10 +22,12 @@ export interface FieldProps extends TextInputProps {
  *
  * This stays bare on purpose. `TextInput` is the component that assembles a
  * label and a message around it; `Field` is what Modal's type-to-confirm input
- * uses, and what #10's Select, SearchField and MultiSelect compose.
+ * uses, and what SearchField wraps. Select and MultiSelect do not wrap it —
+ * they have no text to type — but their trigger borrows its styles so all four
+ * controls draw the same box.
  */
 export const Field = forwardRef<RNTextInput, FieldProps>(
-  ({ style, error = false, onFocus, onBlur, ...props }, ref) => {
+  ({ style, error = false, leading, onFocus, onBlur, ...props }, ref) => {
     const styles = useThemedStyles(fieldStyles)
     // placeholderTextColor is a prop, not a style, so it cannot live in the sheet.
     const { colors } = useTheme()
@@ -34,9 +44,11 @@ export const Field = forwardRef<RNTextInput, FieldProps>(
           // focus variant, so an invalid field keeps its red ring while focused.
           focused && !error && styles.controlFocused,
           error && styles.controlError,
+          leading ? styles.controlWithLeading : null,
           style,
         ]}
       >
+        {leading ? <View style={styles.leading}>{leading}</View> : null}
         <TextInput
           ref={ref}
           placeholderTextColor={colors.muted}
@@ -48,7 +60,7 @@ export const Field = forwardRef<RNTextInput, FieldProps>(
             setFocused(false)
             onBlur?.(e)
           }}
-          style={styles.input}
+          style={[styles.input, leading ? styles.inputWithLeading : null]}
           {...props}
         />
       </View>

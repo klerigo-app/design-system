@@ -7,9 +7,9 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import { radiusValue, type ShadowValue } from '../tokens/tokens'
-import { fontFamily } from './fonts'
-import { createThemedStyles, useTheme, useThemedStyles, type Theme } from './theme'
+import { radiusValue, type ShadowValue } from '../../tokens/tokens'
+import { fontFamily } from '../fonts'
+import { createThemedStyles, useTheme, useThemedStyles, type Theme } from '../theme'
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
@@ -80,10 +80,8 @@ interface Props extends ButtonBaseProps {
 /**
  * Shared geometry, press wiring and icon slot for the six button variants.
  *
- * Not exported from index.ts — it is an implementation detail of the variants.
- * It is a flat file rather than a directory on purpose: themed-source.test.ts
- * scans src/native non-recursively, so anything in a subdirectory would escape
- * the frozen-palette and hardcoded-hex guards.
+ * Not exported from the Button barrel — it is an implementation detail of the
+ * variants.
  */
 export function ButtonBase({
   label,

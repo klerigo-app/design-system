@@ -61,6 +61,31 @@ a DOM-only side effect that breaks Metro). Use the dedicated subpaths instead:
     // Shared RN components (StyleSheet-based, driven by the tokens above)
     import { Screen, Heading, Text, Field, PrimaryButton } from '@klerigo/design-system/native'
 
+#### Native peer dependencies
+
+Two packages are resolved from your app rather than bundled:
+
+- **`@expo/vector-icons`** — the glyphs inside `Checkbox`, `Chip`, `Select`,
+  `SearchField` and `AnswerOption`. Assumed ambient, like `react-native`
+  itself; every Expo app already ships it.
+- **`react-native-svg`** — needed by `LogoMark` alone, which draws a real
+  extracted glyph outline. It is a **native module**, so adding it means
+  `expo prebuild` and a fresh dev-client build. Declared optional, because
+  web consumers of this package have no use for it — if you import `LogoMark`
+  without installing it, you get a runtime crash rather than a type error.
+
+#### `Select` and `MultiSelect` open a sheet, and it is a React Native `Modal`
+
+So is this package's `Modal`. Nesting the two — a `Select` inside a `Modal` —
+is modal-in-modal, which is fragile on both platforms and worst on Android.
+It is **unverified**: the test suite renders `Modal` to a plain `<div>`, so a
+nesting test would pass without proving anything. Check it on a device before
+relying on it.
+
+The sheet also uses a fixed 34pt bottom inset rather than a real safe-area
+one, since this package deliberately has no `react-native-safe-area-context`
+dependency.
+
 `@klerigo/design-system/tokens` is the single source of truth for the
 palette and radius scale — apps must import it rather than hand-copying hex
 values into `theme/tokens.ts` or `tailwind.config.js`.

@@ -1,6 +1,6 @@
 import { type ReactElement, type ReactNode } from 'react'
 import { View, type ViewStyle } from 'react-native'
-import { createThemedStyles, useThemedStyles } from './theme'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 // Matches the apps' `px-6` screen gutter (Tailwind 6 * 4px = 24).
 const SCREEN_GUTTER = 24

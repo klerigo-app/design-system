@@ -9,20 +9,34 @@ export interface LogoMarkProps {
   className?: string
 }
 
+/**
+ * The mark's colours come from the `--color-brand-mark-*` tokens rather than
+ * literals, so this file and its React Native twin cannot drift.
+ *
+ * They are read as CSS custom properties, not through `getPalette` — tokens.ts
+ * says outright that web components style through the CSS layer and that the JS
+ * palette exists for React Native. All four are in THEME_INVARIANT, so there is
+ * no dark value to miss.
+ *
+ * Note the navy does two jobs: it is the knockout tile *and* the outline
+ * variant's letter, where the other two variants use white.
+ */
+const MARK_TILE = 'var(--color-brand-mark-tile)'
+const MARK_INK = 'var(--color-brand-mark-ink)'
+const MARK_LETTER = 'var(--color-brand-mark-letter)'
+const MARK_DOT = 'var(--color-brand-mark-dot)'
+
 const TILE_FILL: Record<LogoMarkVariant, string> = {
-  coral: '#F14E3A',
-  knockout: '#1F2933',
+  coral: MARK_TILE,
+  knockout: MARK_INK,
   outline: 'none',
 }
 
 const LETTER_FILL: Record<LogoMarkVariant, string> = {
-  coral: '#FFFFFF',
-  knockout: '#FFFFFF',
-  outline: '#1F2933',
+  coral: MARK_LETTER,
+  knockout: MARK_LETTER,
+  outline: MARK_INK,
 }
-
-const OUTLINE_STROKE_COLOR = '#1F2933'
-const SUN_DOT_FILL = '#FFC23C'
 
 export function LogoMark({
   size = 160,
@@ -46,7 +60,7 @@ export function LogoMark({
           height={504}
           rx={130}
           fill="none"
-          stroke={OUTLINE_STROKE_COLOR}
+          stroke={MARK_INK}
           strokeWidth={8}
         />
       ) : (
@@ -55,7 +69,7 @@ export function LogoMark({
       {/* Real Baloo 2 bold 'K' glyph outline (see scripts/extract-glyph-paths.mjs),
           matching the wordmark's typeface/weight rather than a hand-drawn shape. */}
       <path d={LETTER_K_PATH} fill={LETTER_FILL[variant]} />
-      <circle cx={382} cy={140} r={30} fill={SUN_DOT_FILL} />
+      <circle cx={382} cy={140} r={30} fill={MARK_DOT} />
     </svg>
   )
 }

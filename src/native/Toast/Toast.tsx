@@ -10,10 +10,10 @@ import {
   type ReactNode,
 } from 'react'
 import { AccessibilityInfo, Animated, Pressable, View } from 'react-native'
-import { radiusValue, type Palette } from '../tokens/tokens'
-import { createThemedStyles, useTheme, useThemedStyles } from './theme'
-import { fontFamily } from './fonts'
-import { Heading, Text } from './Text'
+import { radiusValue, type Palette } from '../../tokens/tokens'
+import { createThemedStyles, useTheme, useThemedStyles } from '../theme'
+import { fontFamily } from '../fonts'
+import { Heading, Text } from '../Text'
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error'
 

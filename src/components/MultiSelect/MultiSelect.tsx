@@ -11,7 +11,13 @@ export interface MultiSelectProps {
   options: SelectOption[]
   value: string[]
   onChange: (next: string[]) => void
-  placeholder?: string
+  /**
+   * Shown when nothing is selected. Required, and deliberately not defaulted:
+   * it used to fall back to 'Selecciona opciones', which shipped Spanish to any
+   * caller who forgot. #9 made the same call for both Modals' button labels and
+   * this was the last one left in the package.
+   */
+  placeholder: string
   helperText?: string
   className?: string
 }
@@ -22,7 +28,7 @@ export function MultiSelect({
   options,
   value,
   onChange,
-  placeholder = 'Selecciona opciones',
+  placeholder,
   helperText,
   className,
 }: MultiSelectProps) {

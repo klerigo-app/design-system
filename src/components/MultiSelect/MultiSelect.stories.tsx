@@ -21,7 +21,7 @@ function MultiSelectDemo({
 const meta: Meta<typeof MultiSelectDemo> = {
   title: 'Core/MultiSelect',
   component: MultiSelectDemo,
-  args: { id: 'skills', label: 'Habilidades', options },
+  args: { id: 'skills', label: 'Habilidades', placeholder: 'Selecciona opciones', options },
 }
 export default meta
 

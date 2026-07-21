@@ -48,7 +48,8 @@
   },
   "peerDependencies": {
     "react": "^18.3.0 || ^19.0.0",
-    "react-dom": "^18.3.0 || ^19.0.0"
+    "react-dom": "^18.3.0 || ^19.0.0",
+    "react-native-svg": ">=15.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -56,6 +57,9 @@
     },
     "react-dom": {
       "optional": false
+    },
+    "react-native-svg": {
+      "optional": true
     }
   },
   "dependencies": {
@@ -71,6 +75,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@expo/vector-icons": "^15.1.1",
     "@storybook/addon-a11y": "^10.4.6",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",
@@ -92,6 +97,7 @@
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "react-native": "0.86.0",
+    "react-native-svg": "^15.15.5",
     "storybook": "^10.4.6",
     "tailwindcss": "^3.4.19",
     "typescript": "6.0.3",

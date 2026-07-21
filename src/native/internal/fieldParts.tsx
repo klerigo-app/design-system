@@ -1,19 +1,17 @@
 import { type ReactElement, type ReactNode } from 'react'
 import { Text as RNText } from 'react-native'
-import { radiusValue } from '../tokens/tokens'
-import { fontFamily } from './fonts'
-import { createThemedStyles, useThemedStyles } from './theme'
+import { radiusValue } from '../../tokens/tokens'
+import { fontFamily } from '../fonts'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 /**
  * Shared building blocks for form fields — the native counterpart of
  * src/internal/field.tsx, which four web components already compose.
  *
- * Internal: not exported from index.ts. `TextInput` assembles these today, and
- * #10's `Select`, `SearchField` and `MultiSelect` are expected to compose them
- * rather than re-deriving label and message rendering.
- *
- * Named fieldParts rather than field.tsx: `Field.tsx` already exists here, and
- * the two would collide on a case-insensitive filesystem.
+ * Internal: not exported from index.ts. `TextInput`, `Select` and `MultiSelect`
+ * assemble the label and message from here, and `fieldStyles.control` is what
+ * gives the option sheet's trigger the same box as a real field rather than a
+ * lookalike that drifts from it.
  */
 
 /** Field label. Mirrors web's `mb-[7px] font-body text-[13px] font-semibold text-label`. */
@@ -74,6 +72,18 @@ export const fieldStyles = createThemedStyles((theme) => ({
     fontFamily: fontFamily.body,
     fontSize: 15,
   },
+  /**
+   * Layout for a control carrying a leading adornment.
+   *
+   * Note what is NOT here: horizontal padding. The adornment's inset is a
+   * margin on the adornment and the text's is padding on the input, so this
+   * view still has no padding for an Android background change to reset — the
+   * same reason the box and the input are separate views in the first place.
+   */
+  controlWithLeading: { flexDirection: 'row', alignItems: 'center' },
+  /** left-[14px] plus a 20pt glyph, so text starts at 44 — web's `pl-11`. */
+  leading: { marginLeft: 14 },
+  inputWithLeading: { flex: 1, paddingLeft: 10 },
   controlFocused: {
     borderColor: theme.colors.teal[500],
     boxShadow: [theme.shadows.focusRingTeal],

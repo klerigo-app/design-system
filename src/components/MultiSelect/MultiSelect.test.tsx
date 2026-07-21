@@ -15,6 +15,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={[]}
         onChange={vi.fn()}
@@ -28,6 +29,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={[]}
         onChange={vi.fn()}
@@ -48,6 +50,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={['design']}
         onChange={onChange}
@@ -65,6 +68,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={['design', 'product']}
         onChange={onChange}
@@ -81,6 +85,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={['design', 'product']}
         onChange={vi.fn()}
@@ -94,6 +99,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={[]}
         onChange={vi.fn()}
@@ -128,6 +134,7 @@ describe('MultiSelect', () => {
       <MultiSelect
         id="skills"
         label="Habilidades"
+        placeholder="Selecciona opciones"
         options={options}
         value={[]}
         onChange={vi.fn()}

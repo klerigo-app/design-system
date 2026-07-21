@@ -66,6 +66,16 @@
   /* Text on form/field labels — between slate and ink */
   --color-label: #3a454f;
 
+  /* Brand mark. Fixed artwork, not surfaces: the logo is these colours in both
+     themes by definition, so all four are theme-invariant and the dark blocks
+     below deliberately do not restate them. `mark-ink` is the same navy as the
+     light `--color-ink`, but it is not that token — ink flips to #f4efe7 in
+     dark and the mark must not follow it. See src/tokens/themeInvariant.ts. */
+  --color-brand-mark-tile: #f14e3a;
+  --color-brand-mark-ink: #1f2933;
+  --color-brand-mark-letter: #ffffff;
+  --color-brand-mark-dot: #ffc23c;
+
   /* Interaction states */
   --color-coral-hover: #e0402d;
   --color-sun-hover: #f5b52e;

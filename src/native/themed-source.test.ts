@@ -8,9 +8,33 @@ import { resolve } from 'node:path'
 // guards, because a component can only be caught by a render test once someone
 // remembers to write one — and #9/#10 add roughly ten more components here.
 
-const files = readdirSync(resolve(process.cwd(), 'src/native'))
-  .filter((name) => name.endsWith('.tsx') && !name.endsWith('.test.tsx'))
-  .map((name) => `src/native/${name}`)
+/**
+ * Directories holding no component source. `__test__` is the react-native stub,
+ * which is allowed everything this file forbids.
+ */
+const SKIP_DIRS = new Set(['__test__'])
+
+/**
+ * Walk `src/native` recursively.
+ *
+ * It used to be a flat `readdirSync`. #10 moved every component into its own
+ * directory, which would have left this reading nothing but the barrels — the
+ * guard would have passed while covering zero components.
+ */
+function collect(dir: string): string[] {
+  return readdirSync(resolve(process.cwd(), dir), { withFileTypes: true }).flatMap((entry) => {
+    if (entry.isDirectory()) {
+      return SKIP_DIRS.has(entry.name) ? [] : collect(`${dir}/${entry.name}`)
+    }
+    const isSource =
+      entry.name.endsWith('.tsx') &&
+      !entry.name.endsWith('.test.tsx') &&
+      !entry.name.endsWith('.test-d.tsx')
+    return isSource ? [`${dir}/${entry.name}`] : []
+  })
+}
+
+const files = collect('src/native')
 
 const read = (file: string) => readFileSync(resolve(process.cwd(), file), 'utf8')
 
@@ -27,11 +51,21 @@ const KNOWN_UNTHEMED: Record<string, Set<string>> = {}
 
 describe('native components cannot freeze the palette', () => {
   it('finds the component files it is meant to guard', () => {
-    // Guards the guard: a glob that matches nothing passes every test below.
-    // 13 after #9 added ButtonBase and the five new button variants. This is a
-    // floor, not an equality, so #10 does not have to touch it — but it must
-    // rise whenever a batch lands, or a broken glob goes unnoticed.
-    expect(files.length).toBeGreaterThanOrEqual(13)
+    // Guards the guard: a walk that matches nothing passes every test below.
+    // 13 after #9 added ButtonBase and the five new button variants; 27 after
+    // #10's ten plus the option sheet and the control row. A floor, not an
+    // equality — but it must rise whenever a batch lands, or a broken walk goes
+    // unnoticed.
+    expect(files.length).toBeGreaterThanOrEqual(27)
+  })
+
+  it('reaches into the per-component directories, not just the flat files', () => {
+    // The specific failure the recursive walk exists to prevent: matching only
+    // `src/native/*.tsx` still finds theme.tsx and would satisfy the floor above,
+    // while covering no component at all. Every path below is nested.
+    expect(files).toContain('src/native/Card/Card.tsx')
+    expect(files).toContain('src/native/Button/ButtonBase.tsx')
+    expect(files).toContain('src/native/internal/optionSheet.tsx')
   })
 
   for (const file of files) {
@@ -44,7 +78,10 @@ describe('native components cannot freeze the palette', () => {
     it(`${file} reads colours through the theme, not the token module`, () => {
       const src = read(file)
       // radiusValue and the types are fine — geometry does not flip.
-      expect(src).not.toMatch(/import\s*\{[^}]*\bgetPalette\b[^}]*\}\s*from\s*'\.\.\/tokens/)
+      // `(\.\.\/)+` rather than a single `../`: from a component directory the
+      // specifier is '../../tokens', which the one-level pattern silently
+      // stopped matching, so this check passed vacuously for every new file.
+      expect(src).not.toMatch(/import\s*\{[^}]*\bgetPalette\b[^}]*\}\s*from\s*'(\.\.\/)+tokens/)
     })
 
     it(`${file} has no hardcoded hex outside a saturated fill`, () => {

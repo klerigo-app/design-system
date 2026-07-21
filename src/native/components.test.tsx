@@ -1,7 +1,16 @@
-import { describe, it, expect } from 'vitest'
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+import {
+  act,
+  cleanup as cleanupRender,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react'
 import { type ReactElement } from 'react'
 import { styleOf } from './__test__/rn-stub'
+import { iconOf } from './__test__/vector-icons-stub'
+import { LETTER_K_PATH } from '../components/Logo/glyphPaths'
 import { getPalette, getShadows, type ColorScheme, type Palette } from '../tokens/tokens'
 import { fontFamily } from './fonts'
 import { ThemeProvider } from './theme'
@@ -9,14 +18,26 @@ import { Screen } from './Screen'
 import { Heading, Text } from './Text'
 import { Field } from './Field'
 import { TextInput } from './TextInput'
-import { PrimaryButton } from './PrimaryButton'
-import { RewardButton } from './RewardButton'
-import { SecondaryButton } from './SecondaryButton'
-import { OutlineButton } from './OutlineButton'
-import { GhostButton } from './GhostButton'
-import { DangerButton } from './DangerButton'
+import {
+  DangerButton,
+  GhostButton,
+  OutlineButton,
+  PrimaryButton,
+  RewardButton,
+  SecondaryButton,
+} from './Button'
 import { Modal } from './Modal'
 import { ToastProvider, useToast } from './Toast'
+import { Card } from './Card'
+import { Chip } from './Chip'
+import { Checkbox } from './Checkbox'
+import { Toggle } from './Toggle'
+import { SearchField } from './SearchField'
+import { SegmentedControl } from './SegmentedControl'
+import { Select } from './Select'
+import { MultiSelect } from './MultiSelect'
+import { AnswerOption } from './AnswerOption'
+import { LogoMark } from './LogoMark'
 
 const inScheme = (scheme: ColorScheme, ui: ReactElement) =>
   render(<ThemeProvider scheme={scheme}>{ui}</ThemeProvider>)
@@ -44,6 +65,25 @@ const style = (testId: string) => styleOf(screen.getByTestId(testId))
  * so the box is its parent.
  */
 const box = (testId: string) => styleOf(screen.getByTestId(testId).parentElement!)
+
+/**
+ * The glyph a component asked @expo/vector-icons for, or null if it drew none.
+ * `color` is a prop rather than a style on the real component, so it lands on a
+ * data attribute — the same treatment Field's placeholderTextColor gets.
+ */
+const iconIn = (testId: string) => {
+  const icon = screen.getByTestId(testId).querySelector('[data-icon]')
+  return icon ? iconOf(icon) : null
+}
+
+/**
+ * Checkbox's box and Toggle's track carry no testID of their own — the testID
+ * belongs on the pressable row, which is what a caller taps. Both are the row's
+ * first child, the label being the second.
+ */
+const firstChildStyle = (testId: string) => styleOf(screen.getByTestId(testId).children[0])
+const boxIn = firstChildStyle
+const trackIn = firstChildStyle
 
 describe('Screen', () => {
   it('paints the paper background of the active scheme', () => {
@@ -499,5 +539,486 @@ describe('Toast', () => {
         expect(style('toast-card').elevation).toBeUndefined()
       },
     )
+  })
+})
+
+// ---------------------------------------------------------------------------
+// #10's primitives.
+//
+// Every one gets a bothSchemes assertion, for the reason at the top of this
+// file: a colour that is right in light and unchanged in dark is the exact bug
+// this harness exists to catch, and ten new components is ten new chances at it.
+// ---------------------------------------------------------------------------
+
+describe('Card', () => {
+  it('themes surface and border across the two bordered variants', () => {
+    bothSchemes(
+      <>
+        <Card testID="flat" />
+        <Card testID="elevated" variant="elevated" />
+      </>,
+      (palette) => {
+        for (const id of ['flat', 'elevated']) {
+          expect(style(id).backgroundColor).toBe(palette.surfaceRaised)
+          expect(style(id).borderColor).toBe(palette.border)
+        }
+      },
+    )
+  })
+
+  it('takes its elevation from the themed shadow scale', () => {
+    bothSchemes(<Card testID="card" variant="elevated" />, (_palette, scheme) => {
+      expect(style('card').boxShadow).toEqual([getShadows(scheme).cardElevated])
+    })
+    // The flat variant must not quietly acquire one.
+    inScheme('light', <Card testID="flat" />)
+    expect(style('flat').boxShadow).toBeUndefined()
+  })
+
+  it('matches web geometry: rounded-xl and p-6', () => {
+    inScheme('light', <Card testID="card" />)
+    expect(style('card').borderRadius).toBe(20)
+    expect(style('card').padding).toBe(24)
+  })
+
+  it('puts the feature variant on the inverse surface and clips its circle', () => {
+    bothSchemes(<Card testID="card" variant="feature" decorativeCircle />, (palette) => {
+      expect(style('card').backgroundColor).toBe(palette.surfaceInverse)
+      // Without this the disc bleeds past the rounded corner.
+      expect(style('card').overflow).toBe('hidden')
+    })
+  })
+
+  it('draws the decorative circle only for the feature variant', () => {
+    // The circle has no testID; it is the card's first child when present.
+    inScheme('light', <Card testID="a" variant="feature" decorativeCircle />)
+    expect(screen.getByTestId('a').children).toHaveLength(1)
+    cleanupRender()
+    inScheme('light', <Card testID="b" variant="flat" decorativeCircle />)
+    expect(screen.getByTestId('b').children).toHaveLength(0)
+  })
+})
+
+describe('Chip', () => {
+  it('themes every variant from the palette, including the tinted 50/700 pairs', () => {
+    // The 50s and 700s invert in dark — teal-50 is a deep background there and
+    // teal-700 is light text — so a frozen table would be visibly wrong.
+    bothSchemes(
+      <>
+        <Chip testID="level" variant="level" label="A2" />
+        <Chip testID="category" variant="category" label="Vocab" />
+        <Chip testID="new" variant="new" label="New" />
+        <Chip testID="completed" variant="completed" label="Done" />
+        <Chip testID="outline" variant="outline" label="Draft" />
+      </>,
+      (palette) => {
+        expect(style('level').backgroundColor).toBe(palette.teal[50])
+        expect(style('category').backgroundColor).toBe(palette.coral[50])
+        expect(style('new').backgroundColor).toBe(palette.sun[50])
+        expect(style('completed').backgroundColor).toBe(palette.successTint)
+        expect(style('outline').borderColor).toBe(palette.borderInput)
+      },
+    )
+  })
+
+  it('keeps white labels on the two saturated fills', () => {
+    // coral-500 and surface-inverse do not flip under the label, so the label
+    // must not flip either — the one sanctioned literal.
+    bothSchemes(
+      <>
+        <Chip testID="live" variant="live" label="Live" />
+        <Chip testID="dark" variant="dark" label="Admin" />
+      </>,
+      (palette) => {
+        expect(style('live').backgroundColor).toBe(palette.coral[500])
+        expect(style('dark').backgroundColor).toBe(palette.surfaceInverse)
+      },
+    )
+  })
+
+  it('prefixes completed with a check glyph and live with a dot', () => {
+    inScheme(
+      'light',
+      <>
+        <Chip testID="completed" variant="completed" label="Done" />
+        <Chip testID="level" variant="level" label="A2" />
+      </>,
+    )
+    expect(iconIn('completed')?.name).toBe('check')
+    // Nothing else grows a glyph by accident.
+    expect(iconIn('level')).toBeNull()
+  })
+})
+
+describe('Checkbox', () => {
+  it('fills with coral when checked and shows the check only then', () => {
+    bothSchemes(
+      <>
+        <Checkbox testID="on" label="On" checked onChange={() => {}} />
+        <Checkbox testID="off" label="Off" checked={false} onChange={() => {}} />
+      </>,
+      (palette) => {
+        expect(boxIn('on').backgroundColor).toBe(palette.coral[500])
+        expect(boxIn('off').borderColor).toBe(palette.borderInput)
+        expect(boxIn('off').backgroundColor).toBeUndefined()
+        expect(iconIn('on')?.name).toBe('check')
+        // Not rendered at opacity 0 — an invisible glyph is still announced.
+        expect(iconIn('off')).toBeNull()
+      },
+    )
+  })
+
+  it('greys disabled with the tokens rather than opacity', () => {
+    // #5 moved web's Checkbox off opacity onto these two, and the reason binds
+    // harder here: a dimmed control reads differently over light and dark paper.
+    bothSchemes(
+      <Checkbox testID="cb" label="Off" checked={false} disabled onChange={() => {}} />,
+      (palette) => {
+        expect(boxIn('cb').backgroundColor).toBe(palette.disabledBg)
+        expect(boxIn('cb').borderColor).toBe(palette.disabledText)
+        expect(style('cb').opacity).toBeUndefined()
+      },
+    )
+  })
+
+  it('reports the value it is moving to, and stays silent when disabled', () => {
+    const onChange = vi.fn()
+    inScheme('light', <Checkbox testID="cb" label="X" checked={false} onChange={onChange} />)
+    fireEvent.click(screen.getByTestId('cb'))
+    expect(onChange).toHaveBeenCalledWith(true)
+
+    cleanupRender()
+    const blocked = vi.fn()
+    inScheme('light', <Checkbox testID="d" label="X" checked disabled onChange={blocked} />)
+    fireEvent.click(screen.getByTestId('d'))
+    expect(blocked).not.toHaveBeenCalled()
+  })
+
+  it('carries the checkbox role and state for screen readers', () => {
+    inScheme('light', <Checkbox testID="cb" label="X" checked onChange={() => {}} />)
+    expect(screen.getByTestId('cb')).toHaveAttribute('role', 'checkbox')
+  })
+})
+
+describe('Toggle', () => {
+  it('runs the track from border-input to teal, both themed', () => {
+    bothSchemes(
+      <>
+        <Toggle testID="on" label="On" checked onChange={() => {}} />
+        <Toggle testID="off" label="Off" checked={false} onChange={() => {}} />
+      </>,
+      (palette) => {
+        expect(trackIn('on').backgroundColor).toBe(palette.teal[500])
+        expect(trackIn('off').backgroundColor).toBe(palette.borderInput)
+      },
+    )
+  })
+
+  it('matches web geometry rather than the platform switch', () => {
+    // The reason this is hand-built: RN's Switch is 51x31 on iOS and a Material
+    // thumb on Android, so neither matches web's 48x28 nor each other.
+    inScheme('light', <Toggle testID="t" label="X" checked onChange={() => {}} />)
+    expect(trackIn('t').width).toBe(48)
+    expect(trackIn('t').height).toBe(28)
+  })
+
+  it('exposes the switch role', () => {
+    inScheme('light', <Toggle testID="t" label="X" checked onChange={() => {}} />)
+    expect(screen.getByTestId('t')).toHaveAttribute('role', 'switch')
+  })
+
+  it('reports the value it is moving to', () => {
+    const onChange = vi.fn()
+    inScheme('light', <Toggle testID="t" label="X" checked onChange={onChange} />)
+    fireEvent.click(screen.getByTestId('t'))
+    expect(onChange).toHaveBeenCalledWith(false)
+  })
+})
+
+describe('SearchField', () => {
+  it('is the themed field box with a magnifier in it', () => {
+    bothSchemes(
+      <SearchField testID="s" accessibilityLabel="Search" placeholder="Find" />,
+      (palette) => {
+        expect(box('s').backgroundColor).toBe(palette.surfaceRaised)
+        expect(box('s').borderColor).toBe(palette.borderInput)
+        const icon = screen.getByTestId('s').parentElement!.querySelector('[data-icon]')!
+        expect(icon.getAttribute('data-icon')).toBe('search')
+        // Muted, and it must follow the scheme like everything else.
+        expect(icon.getAttribute('data-icon-color')).toBe(palette.muted)
+      },
+    )
+  })
+
+  it('turns off the corrections web got free from type="search"', () => {
+    inScheme('light', <SearchField testID="s" accessibilityLabel="Search" placeholder="Find" />)
+    const input = screen.getByTestId('s')
+    expect(input).toHaveAttribute('autoCapitalize', 'none')
+    expect(input).toHaveAttribute('aria-label', 'Search')
+  })
+})
+
+describe('SegmentedControl', () => {
+  const OPTIONS = [
+    { value: 'day', label: 'Day' },
+    { value: 'week', label: 'Week' },
+  ]
+
+  it('paints the track and marks the active segment coral', () => {
+    bothSchemes(
+      <SegmentedControl testID="sc" options={OPTIONS} value="day" onChange={() => {}} />,
+      (palette) => {
+        expect(style('sc').backgroundColor).toBe(palette.segmentedTrack)
+        const [active, idle] = [...screen.getByTestId('sc').children]
+        expect(styleOf(active).backgroundColor).toBe(palette.coral[500])
+        expect(styleOf(idle).backgroundColor).toBe('transparent')
+      },
+    )
+  })
+
+  it('reports the tapped value', () => {
+    const onChange = vi.fn()
+    inScheme(
+      'light',
+      <SegmentedControl testID="sc" options={OPTIONS} value="day" onChange={onChange} />,
+    )
+    fireEvent.click([...screen.getByTestId('sc').children][1])
+    expect(onChange).toHaveBeenCalledWith('week')
+  })
+
+  it('marks the active segment selected for screen readers', () => {
+    inScheme(
+      'light',
+      <SegmentedControl testID="sc" options={OPTIONS} value="week" onChange={() => {}} />,
+    )
+    const segments = [...screen.getByTestId('sc').children]
+    expect(segments[0]).toHaveAttribute('role', 'tab')
+    expect(segments[1]).toHaveAttribute('role', 'tab')
+  })
+})
+
+describe('AnswerOption', () => {
+  it('themes all four states', () => {
+    bothSchemes(
+      <>
+        <AnswerOption testID="default" label="A" />
+        <AnswerOption testID="selected" status="selected" label="B" />
+        <AnswerOption testID="correct" status="correct" label="C" />
+        <AnswerOption testID="wrong" status="wrong" label="D" />
+      </>,
+      (palette) => {
+        expect(style('default').borderColor).toBe(palette.borderInput)
+        expect(style('default').backgroundColor).toBe(palette.surfaceRaised)
+        expect(style('selected').borderColor).toBe(palette.teal[500])
+        expect(style('selected').backgroundColor).toBe(palette.surfaceSelected)
+        expect(style('correct').borderColor).toBe(palette.success)
+        expect(style('correct').backgroundColor).toBe(palette.successTint)
+        expect(style('wrong').borderColor).toBe(palette.errorBorder)
+        expect(style('wrong').backgroundColor).toBe(palette.errorTint)
+      },
+    )
+  })
+
+  it('badges correct and wrong with the right glyph', () => {
+    inScheme(
+      'light',
+      <>
+        <AnswerOption testID="correct" status="correct" label="C" />
+        <AnswerOption testID="wrong" status="wrong" label="D" />
+        <AnswerOption testID="selected" status="selected" label="B" />
+      </>,
+    )
+    expect(iconIn('correct')?.name).toBe('check')
+    expect(iconIn('wrong')?.name).toBe('x')
+    // Selected is a plain teal dot, not a glyph.
+    expect(iconIn('selected')).toBeNull()
+  })
+
+  it('reports selection', () => {
+    const onSelect = vi.fn()
+    inScheme('light', <AnswerOption testID="a" label="A" onSelect={onSelect} />)
+    fireEvent.click(screen.getByTestId('a'))
+    expect(onSelect).toHaveBeenCalled()
+  })
+})
+
+describe('LogoMark', () => {
+  const fills = (testID: string) => {
+    const svg = screen.getByTestId(testID)
+    return {
+      tile: svg.querySelector('rect')!,
+      letter: svg.querySelector('path')!,
+      dot: svg.querySelector('circle')!,
+    }
+  }
+
+  it('reads the brand tokens, and they are the same in both schemes', () => {
+    // The point of the tokens being invariant: a logo that recoloured itself in
+    // dark would be a different logo.
+    bothSchemes(<LogoMark testID="m" variant="coral" />, (palette) => {
+      expect(fills('m').tile).toHaveAttribute('fill', palette.brandMarkTile)
+      expect(fills('m').letter).toHaveAttribute('fill', palette.brandMarkLetter)
+      expect(fills('m').dot).toHaveAttribute('fill', palette.brandMarkDot)
+    })
+    expect(getPalette('light').brandMarkTile).toBe(getPalette('dark').brandMarkTile)
+  })
+
+  it('inks the outline variant letter rather than knocking it out white', () => {
+    // The navy does two jobs and they are easy to conflate: knockout tile, and
+    // the outline variant's letter, where the other two variants use white.
+    inScheme(
+      'light',
+      <>
+        <LogoMark testID="knockout" variant="knockout" />
+        <LogoMark testID="outline" variant="outline" />
+      </>,
+    )
+    const palette = getPalette('light')
+    expect(fills('knockout').tile).toHaveAttribute('fill', palette.brandMarkInk)
+    expect(fills('knockout').letter).toHaveAttribute('fill', palette.brandMarkLetter)
+    expect(fills('outline').tile).toHaveAttribute('fill', 'none')
+    expect(fills('outline').tile).toHaveAttribute('stroke', palette.brandMarkInk)
+    expect(fills('outline').letter).toHaveAttribute('fill', palette.brandMarkInk)
+  })
+
+  it('draws the real extracted glyph, not an approximation', () => {
+    inScheme('light', <LogoMark testID="m" />)
+    expect(fills('m').letter.getAttribute('d')).toBe(LETTER_K_PATH)
+  })
+})
+
+describe('Select', () => {
+  const OPTIONS = [
+    { value: 'es', label: 'Español' },
+    { value: 'en', label: 'English' },
+  ]
+  const select = (props: Partial<React.ComponentProps<typeof Select>> = {}) => (
+    <Select
+      testID="sel"
+      label="Idioma"
+      options={OPTIONS}
+      value=""
+      onChange={() => {}}
+      placeholder="Elige uno"
+      {...props}
+    />
+  )
+  // The trigger is the Pressable inside Select's wrapper, after the label.
+  const trigger = () => screen.getByRole('button', { name: 'Idioma' })
+
+  it('shows the placeholder in muted until something is selected', () => {
+    bothSchemes(select(), (palette) => {
+      expect(screen.getByText('Elige uno')).toBeTruthy()
+      expect(styleOf(screen.getByText('Elige uno')).color).toBe(palette.muted)
+    })
+    cleanupRender()
+    inScheme('light', select({ value: 'es' }))
+    expect(screen.getByText('Español')).toBeTruthy()
+    expect(screen.queryByText('Elige uno')).toBeNull()
+  })
+
+  it('draws the trigger as the same box a Field draws', () => {
+    // Shared with fieldParts rather than a lookalike, so the two cannot drift.
+    bothSchemes(select(), (palette) => {
+      expect(styleOf(trigger()).borderColor).toBe(palette.borderInput)
+      expect(styleOf(trigger()).backgroundColor).toBe(palette.surfaceRaised)
+      expect(styleOf(trigger()).borderRadius).toBe(12)
+    })
+  })
+
+  it('opens the sheet, commits the tapped option, and closes', () => {
+    const onChange = vi.fn()
+    inScheme('light', select({ onChange }))
+    // The sheet is an RN Modal; the stub renders nothing while it is closed.
+    expect(screen.queryByTestId('modal')).toBeNull()
+
+    fireEvent.click(trigger())
+    expect(screen.getByTestId('modal')).toBeTruthy()
+
+    fireEvent.click(screen.getByText('English'))
+    expect(onChange).toHaveBeenCalledWith('en')
+    // A single choice needs no confirm step, so choosing dismisses.
+    expect(screen.queryByTestId('modal')).toBeNull()
+  })
+
+  it('rings the trigger red on error and says why in text', () => {
+    // RN has no aria-invalid and no `invalid` in accessibilityState, so an
+    // error can only be announced as text — not flagged as a state.
+    bothSchemes(select({ error: 'Requerido' }), (palette, scheme) => {
+      expect(styleOf(trigger()).borderColor).toBe(palette.error)
+      expect(styleOf(trigger()).boxShadow).toEqual([getShadows(scheme).focusRingError])
+      expect(screen.getByText('Requerido')).toBeTruthy()
+    })
+  })
+
+  it('keeps the error ring while open, because error outranks focus', () => {
+    inScheme('light', select({ error: 'Requerido' }))
+    fireEvent.click(trigger())
+    expect(styleOf(trigger()).borderColor).toBe(getPalette('light').error)
+  })
+})
+
+describe('MultiSelect', () => {
+  const OPTIONS = [
+    { value: 'tutor', label: 'Tutor' },
+    { value: 'admin', label: 'Admin' },
+  ]
+  const multi = (props: Partial<React.ComponentProps<typeof MultiSelect>> = {}) => (
+    <MultiSelect
+      testID="ms"
+      label="Roles"
+      options={OPTIONS}
+      value={[]}
+      onChange={() => {}}
+      placeholder="Elige roles"
+      doneText="Listo"
+      {...props}
+    />
+  )
+  const trigger = () => screen.getByRole('button', { name: 'Roles' })
+  /**
+   * Queries scoped to the open sheet. The label and the option names also
+   * appear on the trigger behind it, so an unscoped getByText picks the wrong
+   * one — which looks like the component not reacting rather than the test
+   * clicking the wrong element.
+   */
+  const sheet = () => within(screen.getByTestId('modal'))
+
+  it('summarises the selection in the options order, not the tick order', () => {
+    // Ticking admin before tutor must not reshuffle the trigger text.
+    inScheme('light', multi({ value: ['admin', 'tutor'] }))
+    expect(screen.getByText('Tutor, Admin')).toBeTruthy()
+  })
+
+  it('toggles a value on and back off without closing', () => {
+    const onChange = vi.fn()
+    inScheme('light', multi({ value: ['tutor'], onChange }))
+    fireEvent.click(trigger())
+
+    fireEvent.click(sheet().getByText('Admin'))
+    expect(onChange).toHaveBeenCalledWith(['tutor', 'admin'])
+
+    fireEvent.click(sheet().getByText('Tutor'))
+    expect(onChange).toHaveBeenLastCalledWith([])
+    // Picking more than one thing means no single tap can mean "done".
+    expect(screen.queryByTestId('modal')).toBeTruthy()
+  })
+
+  it('closes on the required done label', () => {
+    inScheme('light', multi())
+    fireEvent.click(trigger())
+    fireEvent.click(sheet().getByText('Listo'))
+    expect(screen.queryByTestId('modal')).toBeNull()
+  })
+
+  it('themes the sheet surface and scrim', () => {
+    bothSchemes(multi(), (palette) => {
+      fireEvent.click(trigger())
+      const panel = sheet().getByText('Roles').parentElement!
+      expect(styleOf(panel).backgroundColor).toBe(palette.surfaceRaised)
+      // Same scrim treatment Modal uses — its own token, because dark wants
+      // pure black behind the sheet rather than a lifted ink.
+      expect(styleOf(panel.parentElement!).backgroundColor).toBe(`${palette.scrim}99`)
+    })
   })
 })
