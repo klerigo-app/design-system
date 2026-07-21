@@ -3,7 +3,8 @@
 **Date:** 2026-07-21
 **Repo:** `@klerigo/design-system` (branch off `master`)
 **Ticket:** [#9](https://github.com/klerigo-app/design-system/issues/9)
-**Status:** Draft — not yet grilled, not ready for implementation
+**Status:** Re-grilled 2026-07-21 against measured klerigo-app data. All open questions
+closed. Ready for implementation.
 
 ## Problem
 
@@ -290,24 +291,54 @@ colours.
 `themed-source.test.ts`'s non-recursive scan still guards it. It is not exported from
 `index.ts`.
 
-### 8. `SecondaryButton` is renamed and its name reused — an accepted silent restyle
+### 8. `SecondaryButton` is renamed and its name reused — migrated, not accepted
 
 - Today's `SecondaryButton` becomes `OutlineButton`, with its border corrected
   `slate` → `border-input` to match web's `outline`.
 - A new `SecondaryButton` is built to web's real secondary: `border-2 border-teal-500`,
   `bg-surface-raised`, `text-teal-500`.
 
-These two decisions conflict, and the conflict was raised and accepted rather than
-resolved. Dropping the name was chosen so existing call sites would fail to typecheck
-and a human would pick ghost or outline deliberately. Reintroducing the name in the same
-release with an identical prop shape (`label` + `PressableProps`) means those call sites
-compile fine and silently turn teal instead.
+*Resolved during the re-grill; the draft accepted a silent restyle here and no longer
+does.* Reusing the name with an identical prop shape (`label` + `PressableProps`) means
+existing call sites compile fine and quietly turn teal. Measurement showed that is not
+merely risky but wrong:
 
-The mitigation is a changelog entry and the fact that the release breaks
-`useTheme()` and `shadows` anyway, so klerigo-app cannot upgrade without a deliberate
-pass. That mitigation is weak — nothing points a migrating developer at the restyle.
-Deferring the teal secondary to #10 was the alternative and remains available if the
-grilling reverses this.
+| Site | Label |
+| --- | --- |
+| `mobile-tutor/src/screens/MoreScreen.tsx:29` | Log out |
+| `mobile-tutor/src/screens/SettingsScreen.tsx:26` | Log out |
+| `mobile-student/src/screens/SettingsScreen.tsx:27` | Log out |
+| `mobile-shared/src/screens/ErrorState.tsx:32` | Try again |
+
+All four are neutral, low-emphasis actions. A teal brand-accented "Log out" is the
+opposite of the weight three of them want.
+
+So the restyle is **migrated rather than accepted**: a companion klerigo-app PR flips
+these four to `OutlineButton` and lands with this one. That PR has to exist regardless —
+the 11 `useTheme()` call sites need it — so the marginal cost is four lines.
+
+Deferring the teal secondary to #10 was the alternative. Rejected because it trades a
+release's worth of web/native vocabulary drift for a migration that is already happening.
+
+### 8a. Delivery spans two repos, merged together
+
+This restates §14's rationale, which the measured blast radius invalidated.
+
+The draft justified a single PR as "klerigo-app migrates once across all four breaking
+changes." That is not what the numbers show: `shadows` has no live consumer, the native
+Modal has no call sites, and §12 costs web nothing. The real consumer migration is 11
+mechanical `useTheme()` renames and the four buttons above.
+
+The rationale is instead that **`OutlineButton` cannot land safely without the consumer
+change**, so the two repos are coordinated by necessity:
+
+| Repo | Change |
+| --- | --- |
+| `design-system` | this spec |
+| `klerigo-app` | 11 `useTheme()` → `theme.colors`, 4 `SecondaryButton` → `OutlineButton`, delete the dead `shadows` re-export (`packages/mobile-shared/src/theme/tokens.ts:4`) |
+
+klerigo-app pins the design system by commit SHA, so its PR is opened against this branch's
+merge commit and the emulator pass (§13) runs on that pair.
 
 ### 9. Button props and states mirror web
 
@@ -427,17 +458,30 @@ Test surface changes:
 | `themed-source.test.ts` | also ban importing `getShadows` from the token module; file floor rises |
 | `components.test.tsx`   | six buttons, `TextInput`, `Field` states — each in both schemes      |
 | `Modal.test.tsx` (web)  | rewritten off the Spanish accessible names                          |
+| `fonts.test.ts` (new)   | cmap coverage across 14 languages, non-empty glyph bounds (§5a)     |
+
+Step 1 is now answered ahead of implementation: `newArchEnabled=true` in both apps
+(`android/gradle.properties:38`), RN 0.86 / Expo SDK 57. It stays on the checklist because
+the property is per-app and a third app would need checking.
+
+Neither app has a committed `ios/`, so the emulator pass is Android-only. iOS remains a
+declared target (`app.json` sets `ios.bundleIdentifier`, no `platforms` restriction), which
+is why §5 still ships static instances rather than variable fonts — the risk it guards
+against is not currently testable here.
 
 ### 14. One branch, sequenced commits, one PR — spec approved first
 
-Everything lands together so klerigo-app migrates once across all four breaking changes
-(`useTheme` shape, `shadows` removal, `SecondaryButton` restyle, Modal required props).
+*Rationale restated by §8a; the original justification did not survive measurement.*
+
+Everything lands on one design-system branch, paired with the companion klerigo-app PR
+described in §8a.
 
 The alternative was filing the token/font work as separate blocking issues in the
-#8 → #9 pattern, matching this repo's history of small single-purpose PRs. Rejected in
-favour of a single consumer migration. The cost is a large PR spanning tokens, fonts,
-binaries, ten-plus components and both Modals — hard to review and hard to bisect when
-the emulator pass finds something.
+#8 → #9 pattern, matching this repo's history of small single-purpose PRs. Rejected
+because `OutlineButton` and the `useTheme()` reshape have to reach klerigo-app together
+anyway, and splitting the producer side would multiply the coordination without reducing
+it. The cost is a large PR spanning tokens, fonts, binaries, ten-plus components and both
+Modals — hard to review and hard to bisect when the emulator pass finds something.
 
 The spec is grilled and approved before implementation starts, following #8.
 
@@ -525,8 +569,6 @@ untouched by this and still stands, iOS being a live target.
 
 ## Open questions
 
-- **§14's rationale needs restating** given the measured blast radius above.
-- **Is the silent `SecondaryButton` restyle (§8) acceptable on reflection?** It was
-  accepted knowingly, but it is the one decision here that trades a guarantee for
-  convenience, and deferring the teal secondary to #10 costs almost nothing. Now scoped:
-  four call sites, all of them plausibly wanting the outline they have today.
+All of the draft's open questions are now closed: §3's New Architecture dependency is
+confirmed, blast radius is measured, §5 is re-decided against real numbers, §8's silent
+restyle is migrated away, and §14's rationale is restated by §8a.
