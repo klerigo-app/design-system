@@ -29,11 +29,11 @@ export function PrimaryButton({ label, disabled, ...props }: PrimaryButtonProps)
   )
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   button: {
     alignItems: 'center',
     borderRadius: radiusValue.lg,
-    backgroundColor: palette.coral[500],
+    backgroundColor: theme.colors.coral[500],
     paddingHorizontal: 16,
     paddingVertical: 12,
   },

@@ -57,7 +57,7 @@ export function Modal({
   closeOnOverlayClick = true,
 }: ModalProps): ReactElement {
   const styles = useThemedStyles(themedStyles)
-  const palette = useTheme()
+  const { colors } = useTheme()
   const [confirmationInput, setConfirmationInput] = useState('')
   const requiresConfirmationMatch = confirmationValue !== undefined
   const isConfirmDisabled = requiresConfirmationMatch && confirmationInput !== confirmationValue
@@ -74,7 +74,7 @@ export function Modal({
         {/* Empty onPress claims the touch responder so taps on the card don't
             fall through to the overlay's onPress above. */}
         <Pressable style={styles.card} onPress={() => {}}>
-          <View style={[styles.badge, { backgroundColor: variantBadgeColor(palette)[variant] }]} />
+          <View style={[styles.badge, { backgroundColor: variantBadgeColor(colors)[variant] }]} />
 
           <Heading size="md">{title}</Heading>
           {description && (
@@ -121,7 +121,7 @@ export function Modal({
   )
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   overlay: {
     flex: 1,
     alignItems: 'center',
@@ -129,14 +129,14 @@ const themedStyles = createThemedStyles((palette) => ({
     padding: 24,
     // scrim @ ~60% opacity (RN supports 8-digit hex). Its own token because
     // dark wants pure black behind the card, not a lifted ink.
-    backgroundColor: `${palette.scrim}99`,
+    backgroundColor: `${theme.colors.scrim}99`,
   },
   card: {
     width: '100%',
     maxWidth: 400,
     gap: 12,
     borderRadius: radiusValue['2xl'],
-    backgroundColor: palette.surfaceRaised,
+    backgroundColor: theme.colors.surfaceRaised,
     padding: 24,
   },
   badge: {
@@ -160,7 +160,7 @@ const themedStyles = createThemedStyles((palette) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radiusValue.lg,
-    backgroundColor: palette.error,
+    backgroundColor: theme.colors.error,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },

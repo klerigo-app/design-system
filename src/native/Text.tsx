@@ -27,10 +27,10 @@ export function Text({ variant = 'body', style, ...props }: BodyTextProps): Reac
   return <RNText style={[variant === 'muted' ? styles.muted : styles.body, style]} {...props} />
 }
 
-const themedStyles = createThemedStyles((palette) => ({
-  heading: { fontWeight: '700', color: palette.ink },
+const themedStyles = createThemedStyles((theme) => ({
+  heading: { fontWeight: '700', color: theme.colors.ink },
   lg: { fontSize: 24 },
   md: { fontSize: 20 },
-  body: { fontSize: 16, color: palette.ink },
-  muted: { fontSize: 16, color: palette.slate },
+  body: { fontSize: 16, color: theme.colors.ink },
+  muted: { fontSize: 16, color: theme.colors.slate },
 }))

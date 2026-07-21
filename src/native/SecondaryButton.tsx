@@ -29,12 +29,12 @@ export function SecondaryButton({ label, disabled, ...props }: SecondaryButtonPr
   )
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   button: {
     alignItems: 'center',
     borderRadius: radiusValue.lg,
     borderWidth: 1,
-    borderColor: palette.slate,
+    borderColor: theme.colors.slate,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -42,7 +42,7 @@ const themedStyles = createThemedStyles((palette) => ({
     opacity: 0.6,
   },
   label: {
-    color: palette.ink,
+    color: theme.colors.ink,
     fontSize: 16,
   },
 }))

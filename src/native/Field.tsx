@@ -10,11 +10,11 @@ import { createThemedStyles, useTheme, useThemedStyles } from './theme'
 export const Field = forwardRef<RNTextInput, TextInputProps>(({ style, ...props }, ref) => {
   const styles = useThemedStyles(themedStyles)
   // placeholderTextColor is a prop, not a style, so it cannot live in the sheet.
-  const palette = useTheme()
+  const { colors } = useTheme()
   return (
     <TextInput
       ref={ref}
-      placeholderTextColor={palette.muted}
+      placeholderTextColor={colors.muted}
       style={[styles.field, style]}
       {...props}
     />
@@ -22,14 +22,14 @@ export const Field = forwardRef<RNTextInput, TextInputProps>(({ style, ...props 
 })
 Field.displayName = 'Field'
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   field: {
     borderRadius: radiusValue.lg,
     borderWidth: 1,
-    borderColor: palette.slate,
+    borderColor: theme.colors.slate,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    color: palette.ink,
+    color: theme.colors.ink,
     fontSize: 16,
   },
 }))
