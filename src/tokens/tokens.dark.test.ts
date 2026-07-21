@@ -42,20 +42,9 @@ function attrDarkBlock(): Record<string, string> | null {
 
 // Tokens intentionally NOT re-declared in dark: geometry, the vivid brand 500s,
 // and the inner ramp steps no component uses (only shown in the token showcase).
-const THEME_INVARIANT = new Set([
-  '--color-coral-500',
-  '--color-sun-500',
-  '--color-teal-500',
-  '--color-coral-100',
-  '--color-coral-300',
-  '--color-coral-900',
-  '--color-sun-100',
-  '--color-sun-300',
-  '--color-sun-900',
-  '--color-teal-100',
-  '--color-teal-300',
-  '--color-teal-900',
-])
+// Shared with the CSS↔JS parity test so the two cannot disagree about which
+// tokens are allowed to stay put.
+import { THEME_INVARIANT } from './themeInvariant'
 
 const isThemeable = (name: string) =>
   name.startsWith('--color-') || name.startsWith('--shadow-') || name.startsWith('--focus-ring-')

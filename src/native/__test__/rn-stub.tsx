@@ -1,0 +1,153 @@
+/**
+ * Stand-in for `react-native` under Vitest.
+ *
+ * The real package cannot be imported here: it ships Flow-typed source that
+ * rolldown fails to parse, and the usual escape hatch — react-test-renderer via
+ * @testing-library/react-native — is deprecated on React 19, which this package
+ * builds against. So the native components are rendered to the DOM through
+ * @testing-library/react with these primitives aliased in (see vite.config.ts).
+ *
+ * What that does and does not prove: style objects reach elements with the
+ * values the active theme dictates, and they change when the theme changes.
+ * It says nothing about how React Native itself lays them out — that is what
+ * the emulator pass on the consuming apps is for.
+ */
+import { forwardRef, type ReactNode } from 'react'
+
+export type ViewStyle = Record<string, unknown>
+export type TextStyle = Record<string, unknown>
+export type ImageStyle = Record<string, unknown>
+
+type Style = ViewStyle | TextStyle | ImageStyle | false | null | undefined | Style[]
+
+/** Mirrors RN's flattening of `style={[a, cond && b]}` arrays. */
+function flatten(style: Style): Record<string, unknown> {
+  if (Array.isArray(style)) return Object.assign({}, ...style.map(flatten))
+  if (!style) return {}
+  return style as Record<string, unknown>
+}
+
+/**
+ * Styles are serialised onto a data attribute rather than mapped to CSS: the
+ * assertions are about token values (`backgroundColor: '#181310'`), and going
+ * through the DOM's style parser would normalise hex to rgb() and silently drop
+ * RN-only properties.
+ */
+function styleProps(style: Style) {
+  return { 'data-style': JSON.stringify(flatten(style)) }
+}
+
+/** Read back what a component computed for an element. */
+export function styleOf(element: Element): Record<string, unknown> {
+  return JSON.parse(element.getAttribute('data-style') ?? '{}')
+}
+
+interface HostProps {
+  children?: ReactNode
+  style?: Style
+  testID?: string
+  onPress?: () => void
+  [key: string]: unknown
+}
+
+const host =
+  (tag: 'div' | 'span' | 'button', role?: string) =>
+  // eslint-disable-next-line react/display-name
+  ({ children, style, testID, onPress, ...rest }: HostProps) => {
+    const Tag = tag
+    // RN props that are not DOM attributes are dropped rather than spread, so
+    // React does not warn about unknown attributes on every render.
+    const {
+      onPressIn,
+      onPressOut,
+      pointerEvents,
+      accessibilityRole,
+      accessibilityLabel,
+      accessibilityLiveRegion,
+      hitSlop,
+      ...domProps
+    } = rest
+    void [onPressIn, onPressOut, pointerEvents, hitSlop]
+    return (
+      <Tag
+        data-testid={testID}
+        role={(accessibilityRole as string) ?? role}
+        aria-label={accessibilityLabel as string}
+        aria-live={accessibilityLiveRegion as 'polite' | 'assertive'}
+        onClick={onPress}
+        {...styleProps(style)}
+        {...(domProps as object)}
+      >
+        {children}
+      </Tag>
+    )
+  }
+
+export const View = host('div')
+export const Text = host('span')
+export const Pressable = host('button')
+export const ScrollView = host('div')
+export const Modal = ({ children, visible = true }: HostProps & { visible?: boolean }) =>
+  visible ? <div data-testid="modal">{children}</div> : null
+
+export const TextInput = forwardRef<
+  HTMLInputElement,
+  HostProps & { placeholderTextColor?: string }
+>(({ style, testID, placeholderTextColor, ...rest }, ref) => (
+  <input
+    ref={ref}
+    data-testid={testID}
+    data-placeholder-color={placeholderTextColor as string}
+    {...styleProps(style as Style)}
+    {...(rest as object)}
+  />
+))
+TextInput.displayName = 'TextInput'
+
+export const StyleSheet = {
+  create: <T,>(styles: T): T => styles,
+  flatten,
+  absoluteFillObject: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
+  hairlineWidth: 1,
+}
+
+/**
+ * Overridable OS scheme. RN reads this from the platform; tests set it directly
+ * to exercise the uncontrolled ThemeProvider path.
+ */
+let osColorScheme: 'light' | 'dark' | null = 'light'
+export const useColorScheme = () => osColorScheme
+export const __setColorScheme = (scheme: 'light' | 'dark' | null) => {
+  osColorScheme = scheme
+}
+
+export const Animated = {
+  View: host('div'),
+  Text: host('span'),
+  Value: class {
+    value: number
+    constructor(value: number) {
+      this.value = value
+    }
+    setValue(v: number) {
+      this.value = v
+    }
+    interpolate() {
+      return this
+    }
+  },
+  timing: () => ({ start: (cb?: () => void) => cb?.() }),
+  parallel: () => ({ start: (cb?: () => void) => cb?.() }),
+  sequence: () => ({ start: (cb?: () => void) => cb?.() }),
+}
+
+export const AccessibilityInfo = {
+  announceForAccessibility: () => {},
+  isReduceMotionEnabled: () => Promise.resolve(false),
+}
+
+export const Platform = {
+  OS: 'ios' as const,
+  select: (o: Record<string, unknown>) => o.ios ?? o.default,
+}
+export const Dimensions = { get: () => ({ width: 390, height: 844 }) }

@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react'
-import { Pressable, StyleSheet, Text, type PressableProps } from 'react-native'
-import { colors, radiusValue } from '../tokens/tokens'
+import { Pressable, Text, type PressableProps } from 'react-native'
+import { radiusValue } from '../tokens/tokens'
+import { createThemedStyles, useThemedStyles } from './theme'
 
 export interface SecondaryButtonProps extends Omit<PressableProps, 'children' | 'style'> {
   label: string
@@ -15,6 +16,7 @@ export interface SecondaryButtonProps extends Omit<PressableProps, 'children' | 
  * emitted declaration when this package is built as a git dependency (TS2883).
  */
 export function SecondaryButton({ label, disabled, ...props }: SecondaryButtonProps): ReactElement {
+  const styles = useThemedStyles(themedStyles)
   return (
     <Pressable
       accessibilityRole="button"
@@ -27,12 +29,12 @@ export function SecondaryButton({ label, disabled, ...props }: SecondaryButtonPr
   )
 }
 
-const styles = StyleSheet.create({
+const themedStyles = createThemedStyles((palette) => ({
   button: {
     alignItems: 'center',
     borderRadius: radiusValue.lg,
     borderWidth: 1,
-    borderColor: colors.slate,
+    borderColor: palette.slate,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   label: {
-    color: colors.ink,
+    color: palette.ink,
     fontSize: 16,
   },
-})
+}))

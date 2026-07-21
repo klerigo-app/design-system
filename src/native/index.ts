@@ -12,6 +12,7 @@
  *
  *   import { Screen, Field, PrimaryButton } from '@klerigo/design-system/native'
  */
+export * from './theme'
 export * from './Screen'
 export * from './Text'
 export * from './Field'
@@ -20,5 +21,8 @@ export * from './SecondaryButton'
 export * from './Modal'
 export * from './Toast'
 
-// Re-export tokens so RN consumers have one import site.
-export { colors, radii, radiusValue, shadows } from '../tokens/tokens'
+// Re-export tokens so RN consumers have one import site. There is deliberately
+// no standing palette export: read colours through `useTheme` / `useThemedStyles`
+// so they follow the active scheme instead of freezing at import time.
+export { getPalette, radii, radiusValue, shadows } from '../tokens/tokens'
+export type { ColorScheme, Palette } from '../tokens/tokens'

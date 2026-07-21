@@ -9,8 +9,9 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react'
-import { AccessibilityInfo, Animated, Pressable, StyleSheet, View } from 'react-native'
-import { colors, radiusValue } from '../tokens/tokens'
+import { AccessibilityInfo, Animated, Pressable, View } from 'react-native'
+import { radiusValue, type Palette } from '../tokens/tokens'
+import { createThemedStyles, useTheme, useThemedStyles } from './theme'
 import { Heading, Text } from './Text'
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error'
@@ -35,12 +36,12 @@ interface ToastRecord extends ToastOptions {
   duration: number | null
 }
 
-const VARIANT_COLOR: Record<ToastVariant, string> = {
-  info: colors.info,
-  success: colors.success,
-  warning: colors.warning,
-  error: colors.error,
-}
+const variantColor = (palette: Palette): Record<ToastVariant, string> => ({
+  info: palette.info,
+  success: palette.success,
+  warning: palette.warning,
+  error: palette.error,
+})
 
 interface ToastContextValue {
   toast: (options: ToastOptions) => string
@@ -78,6 +79,7 @@ export function ToastProvider({
   duration = DEFAULT_DURATION,
   max = 4,
 }: ToastProviderProps): ReactElement {
+  const styles = useThemedStyles(themedStyles)
   const [toasts, setToasts] = useState<ToastRecord[]>([])
   const idRef = useRef(0)
 
@@ -131,6 +133,8 @@ function ToastItem({
   record: ToastRecord
   onDismiss: () => void
 }): ReactElement {
+  const styles = useThemedStyles(themedStyles)
+  const palette = useTheme()
   // Lazy state (not a ref) so it can be read during render without tripping
   // react-hooks/refs; the initializer runs once, so the value is stable.
   const [anim] = useState(() => new Animated.Value(0))
@@ -176,11 +180,12 @@ function ToastItem({
 
   return (
     <Animated.View
+      testID="toast-card"
       style={[styles.card, { opacity: anim, transform: [{ translateY }] }]}
       accessibilityLiveRegion={assertive ? 'assertive' : 'polite'}
     >
       <Pressable style={styles.pressArea} onPressIn={pause} onPressOut={resume}>
-        <View style={[styles.badge, { backgroundColor: VARIANT_COLOR[record.variant] }]} />
+        <View style={[styles.badge, { backgroundColor: variantColor(palette)[record.variant] }]} />
         <View style={styles.content}>
           <Heading size="md" style={styles.title}>
             {record.title}
@@ -207,13 +212,13 @@ function ToastItem({
         </Pressable>
       </Pressable>
       {record.duration !== null ? (
-        <View style={[styles.shelf, { backgroundColor: VARIANT_COLOR[record.variant] }]} />
+        <View style={[styles.shelf, { backgroundColor: variantColor(palette)[record.variant] }]} />
       ) : null}
     </Animated.View>
   )
 }
 
-const styles = StyleSheet.create({
+const themedStyles = createThemedStyles((palette) => ({
   viewport: {
     position: 'absolute',
     left: 16,
@@ -226,9 +231,9 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 380,
     borderRadius: radiusValue['2xl'],
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.surfaceRaised,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: palette.border,
     overflow: 'hidden',
     shadowColor: '#5A3C1E',
     shadowOpacity: 0.25,
@@ -261,7 +266,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   linkText: {
-    color: colors.teal[700],
+    color: palette.teal[700],
     fontWeight: '600',
   },
   close: {
@@ -272,10 +277,10 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 20,
-    color: colors.muted,
+    color: palette.muted,
   },
   shelf: {
     height: 4,
     width: '100%',
   },
-})
+}))

@@ -1,6 +1,7 @@
 import { useState, type ReactElement, type ReactNode } from 'react'
-import { Modal as RNModal, Pressable, StyleSheet, View } from 'react-native'
-import { colors, radiusValue } from '../tokens/tokens'
+import { Modal as RNModal, Pressable, View } from 'react-native'
+import { radiusValue, type Palette } from '../tokens/tokens'
+import { createThemedStyles, useTheme, useThemedStyles } from './theme'
 import { Heading, Text } from './Text'
 import { Field } from './Field'
 import { PrimaryButton } from './PrimaryButton'
@@ -8,12 +9,12 @@ import { SecondaryButton } from './SecondaryButton'
 
 export type ModalVariant = 'info' | 'warning' | 'error' | 'success'
 
-const VARIANT_BADGE_COLOR: Record<ModalVariant, string> = {
-  info: colors.info,
-  warning: colors.warning,
-  error: colors.error,
-  success: colors.success,
-}
+const variantBadgeColor = (palette: Palette): Record<ModalVariant, string> => ({
+  info: palette.info,
+  warning: palette.warning,
+  error: palette.error,
+  success: palette.success,
+})
 
 export interface ModalProps {
   isOpen: boolean
@@ -55,6 +56,8 @@ export function Modal({
   confirmationPlaceholder,
   closeOnOverlayClick = true,
 }: ModalProps): ReactElement {
+  const styles = useThemedStyles(themedStyles)
+  const palette = useTheme()
   const [confirmationInput, setConfirmationInput] = useState('')
   const requiresConfirmationMatch = confirmationValue !== undefined
   const isConfirmDisabled = requiresConfirmationMatch && confirmationInput !== confirmationValue
@@ -71,7 +74,7 @@ export function Modal({
         {/* Empty onPress claims the touch responder so taps on the card don't
             fall through to the overlay's onPress above. */}
         <Pressable style={styles.card} onPress={() => {}}>
-          <View style={[styles.badge, { backgroundColor: VARIANT_BADGE_COLOR[variant] }]} />
+          <View style={[styles.badge, { backgroundColor: variantBadgeColor(palette)[variant] }]} />
 
           <Heading size="md">{title}</Heading>
           {description && (
@@ -118,20 +121,22 @@ export function Modal({
   )
 }
 
-const styles = StyleSheet.create({
+const themedStyles = createThemedStyles((palette) => ({
   overlay: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
-    backgroundColor: `${colors.ink}99`, // ink @ ~60% opacity (RN supports 8-digit hex)
+    // scrim @ ~60% opacity (RN supports 8-digit hex). Its own token because
+    // dark wants pure black behind the card, not a lifted ink.
+    backgroundColor: `${palette.scrim}99`,
   },
   card: {
     width: '100%',
     maxWidth: 400,
     gap: 12,
     borderRadius: radiusValue['2xl'],
-    backgroundColor: '#FFFFFF',
+    backgroundColor: palette.surfaceRaised,
     padding: 24,
   },
   badge: {
@@ -155,16 +160,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radiusValue.lg,
-    backgroundColor: colors.error,
+    backgroundColor: palette.error,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   dangerLabel: {
     fontWeight: '700',
+    // White on a saturated semantic fill, per the dark-mode conventions.
     color: '#FFFFFF',
     fontSize: 16,
   },
   disabled: {
     opacity: 0.6,
   },
-})
+}))
