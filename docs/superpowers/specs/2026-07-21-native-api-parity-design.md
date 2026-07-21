@@ -3,8 +3,9 @@
 **Date:** 2026-07-21
 **Repo:** `@klerigo/design-system` (branch off `master`)
 **Ticket:** [#9](https://github.com/klerigo-app/design-system/issues/9)
-**Status:** Re-grilled 2026-07-21 against measured klerigo-app data. Every open question
-the draft carried is now closed. **Awaiting confirmation before implementation.**
+**Status:** Implemented 2026-07-21 on `native-api-parity`. Re-grilled against measured
+klerigo-app data first; every open question the draft carried was closed before code
+started. The companion klerigo-app PR (§8a) and the emulator pass (§13) are outstanding.
 
 ## Problem
 
