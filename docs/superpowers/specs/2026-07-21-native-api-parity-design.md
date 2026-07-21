@@ -401,24 +401,77 @@ re-deriving them.
 - **Latin-subset fonts.** Needs a reproducible font build step this repo does not have.
 - **The nine components in #10.** This unblocks them; it does not do them.
 
+## Measured against klerigo-app (2026-07-21)
+
+The three klerigo-app questions this draft left open have been answered against
+`klerigo/main` @ `apps/{mobile-student,mobile-tutor}`. Both apps pin the design system at
+`fa7b17b` (the #8 merge). Two answers change what is written above.
+
+### New Architecture: confirmed, §3 holds
+
+`newArchEnabled=true` in both apps' `android/gradle.properties:38`, on RN 0.86 / Expo
+SDK 57. `boxShadow` is available, so §3 stands and §4/§7/§9 keep their foundation.
+
+Neither app has a committed `ios/` directory — they are Android-prebuilt today. iOS is
+still a declared target: `app.json` sets `ios.bundleIdentifier` and `ios.supportsTablet`
+with no `platforms` restriction. So iOS is unbuilt, not dropped, and §5's iOS-specific
+reasoning still applies.
+
+### Blast radius: much smaller than §14 assumed
+
+| Breaking change | klerigo-app sites |
+| --- | --- |
+| `shadows` removal | 1 — `packages/mobile-shared/src/theme/tokens.ts:4`, a re-export with **no downstream consumers**. Dead code. |
+| `useTheme()` shape | 11, all of the form `const palette = useTheme()` across both apps + `mobile-shared`. Mechanical. |
+| `SecondaryButton` restyle | 4 — `mobile-tutor/MoreScreen.tsx:29`, both `SettingsScreen.tsx:26/27`, `mobile-shared/ErrorState.tsx:32`. |
+| Modal required strings | **0 on native** — the native Modal is not used anywhere in klerigo-app. **0 on web** — all 17 `<Modal>` sites already pass `confirmText`; the two without `cancelText` (`LessonBuilderPage.tsx:447,467`) also have no `onCancel`, which §12's union permits; all four `confirmationValue` sites already pass `confirmationLabel`. |
+
+This undercuts §14's stated rationale. "Land together so klerigo-app migrates once across
+all four breaking changes" describes a migration that is really one mechanical rename
+(`useTheme`), one dead-code deletion, and four buttons to eyeball. §12 costs the consumer
+nothing at all. Single-PR may still be right, but it needs a different reason.
+
+It also sharpens §8: the silent teal restyle lands on exactly four call sites, and all
+four are log-out / settings / error-state actions — the places a neutral outline button is
+most likely to be what was wanted.
+
+### Fonts: §5's source does not exist as described
+
+`google/fonts` ships **only variable** TTFs for both families — `ofl/baloo2` contains
+`Baloo2[wght].ttf` and nothing else; `ofl/dmsans` contains `DMSans[opsz,wght].ttf` and its
+italic. There are no static instances upstream to source. DM Mono is the exception and
+does ship statics.
+
+Statics are obtainable by instancing (`fonttools varLib.instancer`, present in this
+environment), but that is exactly "a reproducible font build step the repo does not have"
+— the reason §5 and "Out of scope" gave for rejecting Latin subsetting. The objection now
+applies to the statics themselves.
+
+Measured, at Baloo 2 `wght`, DM Sans `wght` at `opsz=14`:
+
+| Bundle | Size |
+| --- | --- |
+| §5 as written — 10 full statics | **1.92 MB** (Baloo 2 alone is 1.65 MB, 412 KB × 4) |
+| 2 variable + 2 DM Mono statics | **999 KB** |
+| 10 Latin-subset statics | **551 KB** |
+
+Baloo 2's Devanagari coverage is 86% of its weight: 412 KB → 58 KB per weight subset to
+Latin. Since instancing already requires the build step, subsetting is one further flag on
+a pipeline that has to exist either way.
+
+§5 is therefore not implementable as written and is **reopened** — see below. Its
+variable-font objection (inconsistent RN handling across iOS and Android versions) is
+untouched by this and still stands, iOS being a live target.
+
 ## Open questions
 
-Three of these live in klerigo-app and cannot be answered from this repo. The re-grill
-should **open** by pulling those numbers rather than reaching them at the end: the New
-Architecture answer in particular can invalidate §3, and §3 is load-bearing for §4, §7
-and §9. None of them block this draft; all of them gate implementation.
-
-- **klerigo-app call sites are unmeasured.** Every breaking decision above — removing
-  `shadows`, changing `useTheme()`'s return type, restyling `SecondaryButton`, requiring
-  the Modal strings — was taken without knowing how many sites each touches. The #8 spec
-  measured its blast radius before committing (19 files / 40 sites here, 4 in
-  klerigo-app). This one should do the same before it is approved.
-- **New Architecture status of both Expo apps is unconfirmed.** If either is on the old
-  architecture, §3 does not work: `boxShadow` no-ops, and the representation falls back
-  to the legacy `shadowColor`/`elevation` option this spec rejected — which cannot draw
-  the hard coloured lift on Android at all. Answer this first.
-- **Font bundle size is unmeasured.** Ten static TTFs including Baloo 2's Devanagari
-  coverage; the number should be in this spec before it is approved.
+- **§5 needs re-deciding.** Full statics (1.92 MB, needs a build step), Latin-subset
+  statics (551 KB, same build step plus one flag, drops Devanagari), or variable fonts
+  (999 KB, no build step, but the cross-platform risk §5 rejected). Whichever wins, the
+  "no reproducible font build step" premise behind both §5 and the subsetting entry under
+  "Out of scope" has to be restated.
+- **§14's rationale needs restating** given the measured blast radius above.
 - **Is the silent `SecondaryButton` restyle (§8) acceptable on reflection?** It was
   accepted knowingly, but it is the one decision here that trades a guarantee for
-  convenience, and deferring the teal secondary to #10 costs almost nothing.
+  convenience, and deferring the teal secondary to #10 costs almost nothing. Now scoped:
+  four call sites, all of them plausibly wanting the outline they have today.
