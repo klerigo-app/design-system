@@ -3,8 +3,8 @@
 **Date:** 2026-07-21
 **Repo:** `@klerigo/design-system` (branch off `master`)
 **Ticket:** [#9](https://github.com/klerigo-app/design-system/issues/9)
-**Status:** Re-grilled 2026-07-21 against measured klerigo-app data. All open questions
-closed. Ready for implementation.
+**Status:** Re-grilled 2026-07-21 against measured klerigo-app data. Every open question
+the draft carried is now closed. **Awaiting confirmation before implementation.**
 
 ## Problem
 
@@ -207,9 +207,15 @@ testing rather than reasoning:
   while their cedilla lookalikes `şţ` are inside it. Omitting the range makes Romanian
   render *half* correctly, which is worse than failing. Costs 0.1 KB.
 
-Verified present across the subset: Spanish `áéíóúüñ¿¡`, French `àâçèêëîôûÿœæ«»`, German
-`ß`, Portuguese `ãõç`, Italian, Czech, Slovak, Polish `ąćęłńśźż`, Hungarian `őű`,
-Croatian `čćđšž`, Turkish `çğıİş`, Romanian `ăâîșț`, Catalan `·`, and `€£¢`.
+Verified present in **all three faces** — subset Baloo 2, instanced DM Sans, and upstream
+DM Mono — across Spanish `áéíóúüñ¿¡`, French `àâçèêëîôûÿœæ«»`, German `ß`, Portuguese
+`ãõç`, Italian, Czech, Slovak, Polish `ąćęłńśźż`, Hungarian `őű`, Croatian `čćđšž`,
+Turkish `çğıİş`, Romanian `ăâîșț`, Catalan `·`, and `€£¢`.
+
+Checking all three matters: DM Sans is the body, label, field and message face, so it is
+where most of this text actually renders. DM Mono was expected to be narrower — monospace
+faces usually are — and turned out to cover the same set, so §5a's test can hold every
+face to one language list rather than a per-face one.
 
 Full weight parity rather than only the four weights native components reference means
 nobody has to check which weights exist before using one. DM Mono ships with no native
@@ -228,10 +234,23 @@ regeneration that drops a range. Two guards:
 
 - `scripts/build-fonts.py` holds the weight list and the subset range as the single
   source of truth. The range above is a copy of it, not the original.
-- `src/native/fonts.test.ts` parses each committed TTF's `cmap` directly — no `fonttools`,
-  so it runs in ordinary CI — and asserts that every language's letters resolve to a glyph
-  with **non-empty bounds**. Presence in `cmap` alone is not enough: subsetting can leave
-  a mapped-but-hollow glyph, which renders as blank rather than as tofu.
+- `src/native/fonts.test.ts` parses each committed TTF directly — no `fonttools` and no
+  font-parsing dependency, so it runs in ordinary CI — and asserts that every language's
+  letters resolve to a glyph with **non-empty bounds**. Presence in `cmap` alone is not
+  enough: subsetting can leave a mapped-but-hollow glyph, which renders blank rather than
+  as tofu, and blank is the harder failure to notice.
+
+What the test has to read, and the one thing that nearly makes it expensive: every
+accented letter in these fonts is a **composite** glyph (`ccaron` = `c` + `uni030C`,
+`uni0219` = `s` + `uni0326`, and so on — only `ß` is simple). Resolving components to
+compute bounds would mean a real font parser. It is avoidable: the `glyf` table stores an
+explicit bounding box in each glyph's header, composites included, so the test reads it
+rather than deriving it.
+
+So the parse is `cmap` (formats 4 and 12) → glyph id, then `loca` → `glyf` header →
+`numberOfContours` and the four bbox values. Assert the glyph id is not 0 (`.notdef`) and
+the bbox is non-degenerate. Realistically 150–200 lines, most of it `cmap` subtable
+handling — not the ~80 first estimated.
 
 The failure this exists to catch is a font that reads fine in English and mojibakes on
 `příliš` or `mañana`.
