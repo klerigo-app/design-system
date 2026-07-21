@@ -56,7 +56,7 @@ React Native can't import the main entry (it starts with `import './tokens.css'`
 a DOM-only side effect that breaks Metro). Use the dedicated subpaths instead:
 
     // Tokens only — side-effect-free, safe in Metro and in a CJS tailwind.config.js
-    import { colors, radiusValue } from '@klerigo/design-system/tokens'
+    import { getPalette, radiusValue } from '@klerigo/design-system/tokens'
 
     // Shared RN components (StyleSheet-based, driven by the tokens above)
     import { Screen, Heading, Text, Field, PrimaryButton } from '@klerigo/design-system/native'
@@ -64,6 +64,60 @@ a DOM-only side effect that breaks Metro). Use the dedicated subpaths instead:
 `@klerigo/design-system/tokens` is the single source of truth for the
 palette and radius scale — apps must import it rather than hand-copying hex
 values into `theme/tokens.ts` or `tailwind.config.js`.
+
+#### Dark mode
+
+There is no standing `colors` export. A palette is always requested for a
+scheme, because a module-scope one is how every component in this package ended
+up frozen in light mode. Wrap the app once:
+
+    import { ThemeProvider } from '@klerigo/design-system/native'
+
+    <ThemeProvider>          {/* follows the OS */}
+      <App />
+    </ThemeProvider>
+
+`<ThemeProvider scheme="dark">` forces a scheme and wins over the OS in both
+directions, mirroring `data-theme` on the web. Components throw without a
+provider rather than falling back to light.
+
+Two things the app owns:
+
+- **`userInterfaceStyle: "automatic"` in `app.json`.** While it is `"light"`,
+  React Native's `useColorScheme()` returns `'light'` no matter what the OS
+  says, and dark mode will look broken-on-arrival. On a prebuilt `android/`
+  project this is a native-config regeneration, not a JS change.
+- **Persistence, if a theme toggle is wanted.** Reading a stored preference is
+  async, so it belongs behind the app's splash gate next to the locale read —
+  restore the value there and pass it in as `scheme`. This package deliberately
+  has no storage dependency.
+
+Styling your own screens:
+
+    const styles = createThemedStyles((palette) => ({
+      card: { backgroundColor: palette.surfaceRaised, borderColor: palette.border },
+    }))
+
+    function Card() {
+      const s = useThemedStyles(styles)
+      return <View style={s.card} />
+    }
+
+Never call `StyleSheet.create` with a colour at module scope — that is exactly
+the bug. Geometry (`radiusValue`, spacing, font sizes) does not flip and can
+stay wherever it is convenient.
+
+#### NativeWind
+
+App screens styled with `className` are a **second, independent** theming
+mechanism: they resolve through the app's `tailwind.config.js` at build time
+and know nothing about `ThemeProvider`. Left alone, they stay light while the
+design-system components go dark, on the same screen.
+
+Drive both from one value. Build the Tailwind theme from
+`getPalette('light')` / `getPalette('dark')` under NativeWind's `dark:`
+variant, and pass the same scheme to `ThemeProvider` that you hand NativeWind's
+`colorScheme` — never let the two decide independently.
 
 ### Styling conventions
 
