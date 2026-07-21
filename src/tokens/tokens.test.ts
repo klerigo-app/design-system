@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getPalette, radii, shadows } from './tokens'
+import { getPalette, getShadows, radii } from './tokens'
 
 describe('tokens', () => {
   const light = getPalette('light')
@@ -22,10 +22,31 @@ describe('tokens', () => {
     expect(light.error).toBe('#E23B3B')
   })
 
-  it('exposes the button lift shadows and pill radius', () => {
-    expect(shadows.buttonLiftCoral).toBe('0 4px 0 #C63823')
-    expect(shadows.buttonLiftSun).toBe('0 4px 0 #D99A18')
+  it('exposes the button lift shadows structurally, and the pill radius', () => {
+    // Hard, zero-blur, coloured offsets — the brand's signature lift. Asserted
+    // field by field because that is the whole reason these are objects rather
+    // than the CSS strings this export used to hold.
+    expect(getShadows('light').buttonLiftCoral).toEqual({
+      offsetX: 0,
+      offsetY: 4,
+      blurRadius: 0,
+      spreadDistance: 0,
+      color: '#C63823',
+    })
+    expect(getShadows('light').buttonLiftSun.color).toBe('#D99A18')
     expect(radii.pill).toBe('9999px')
+  })
+
+  it('darkens the lift shadows rather than reusing the light ones', () => {
+    expect(getShadows('dark').buttonLiftCoral.color).toBe('#7A2E21')
+    expect(getShadows('dark').buttonLiftCoral.offsetY).toBe(4)
+  })
+
+  it('carries the pressed variants the CSS layer always had', () => {
+    // These existed in tokens.css and were missing from tokens.ts entirely;
+    // nothing caught it until the parity test grew to cover shadows.
+    expect(getShadows('light').buttonPressedCoral.offsetY).toBe(1)
+    expect(getShadows('dark').buttonPressedSun.offsetY).toBe(1)
   })
 
   it('flips surfaces and text between the two schemes', () => {
