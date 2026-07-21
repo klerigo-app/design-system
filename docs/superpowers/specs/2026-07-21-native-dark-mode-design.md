@@ -8,7 +8,7 @@
 ## Problem
 
 `/native` components resolve `colors` at module scope inside `StyleSheet.create`, so
-the palette is frozen at import time. And there is no dark palette to freeze *to*:
+the palette is frozen at import time. And there is no dark palette to freeze _to_:
 the dark values exist only as CSS custom properties in `src/tokens/tokens.css`, which
 React Native cannot read. Dark mode on RN is not unimplemented — it is unrepresentable.
 
@@ -63,7 +63,7 @@ against the light `:root` block, plus hex equality (case-insensitive).
 The dark side needs care: the dark CSS block **deliberately does not re-declare** the
 theme-invariants — brand 500s and the unused `-100`/`-300`/`-900` ramp steps — which is
 exactly what `THEME_INVARIANT` in the existing `tokens.dark.test.ts` encodes. Since
-`getPalette('dark')` is fully resolved (§3), it *will* carry `coral[500]` while the dark
+`getPalette('dark')` is fully resolved (§3), it _will_ carry `coral[500]` while the dark
 CSS block does not. So the test reuses that same `THEME_INVARIANT` set rather than
 inventing a second one:
 
@@ -71,7 +71,7 @@ inventing a second one:
 - every other token → assert it equals the **dark** CSS value
 
 Extracting `THEME_INVARIANT` into a shared module both test files import keeps one
-allowlist, not two. There is no *separate* "known absent" list to maintain.
+allowlist, not two. There is no _separate_ "known absent" list to maintain.
 
 The nine native mirrors queued in #10 and the `Field` rework in #9 need
 `surface-raised`, `scrim`, and `disabled-*` anyway.
@@ -119,7 +119,7 @@ After this, no web component depends on the JS palette.
 
 Mirrors web's truth table exactly (`:root` / `[data-theme="dark"]` / `[data-theme="light"]`).
 The override is not only web-parity — with `userInterfaceStyle: "light"` in both apps it
-is the *only* way to see or test dark before the app-side change lands.
+is the _only_ way to see or test dark before the app-side change lands.
 
 The DS gains **no new dependency**. `packages/mobile-shared` already owns
 `expo-secure-store` and the splash-screen hydration gate that the i18n ticket built so a
@@ -137,7 +137,7 @@ is in scope anyway (§9), so wrapping both roots is marginal cost.
 
 ```tsx
 const styles = createThemedStyles((p) => ({
-  button: { backgroundColor: p.coral[500], borderRadius: radiusValue.lg, /* … */ },
+  button: { backgroundColor: p.coral[500], borderRadius: radiusValue.lg /* … */ },
 }))
 
 export function PrimaryButton(): ReactElement {
@@ -157,9 +157,10 @@ File shape stays close to today's: one `styles` block at the bottom, one hook ca
 
 `import 'react-native'` does not work under Vitest 4 (verified). Wiring the real thing
 needs a Babel transform over `node_modules/react-native` using `@react-native/babel-preset`
-+ `babel-plugin-syntax-hermes-parser`, transforms all of RN on every run, and lands on
-`@testing-library/react-native` → `react-test-renderer`, which **React 19 deprecated**
-(this repo is on React 19.2).
+
+- `babel-plugin-syntax-hermes-parser`, transforms all of RN on every run, and lands on
+  `@testing-library/react-native` → `react-test-renderer`, which **React 19 deprecated**
+  (this repo is on React 19.2).
 
 Instead: a small in-repo stub aliased for `react-native` — `StyleSheet.create` as
 identity, `View`/`Text`/`Pressable` as host elements, `useColorScheme` settable per test —
@@ -172,11 +173,11 @@ proven on an emulator (§9) — per #196, "treat 'it compiles' as no evidence."
 
 Test surface:
 
-| File | Asserts |
-| --- | --- |
-| `tokens.parity.test.ts` | `tokens.css` ↔ `tokens.ts`, both themes, keys + hex |
-| `theme.test.tsx` | `getPalette`, `createThemedStyles`, provider precedence, throw-without-provider |
-| `native/*.test.tsx` | each component renders and flips between themes |
+| File                    | Asserts                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `tokens.parity.test.ts` | `tokens.css` ↔ `tokens.ts`, both themes, keys + hex                             |
+| `theme.test.tsx`        | `getPalette`, `createThemedStyles`, provider precedence, throw-without-provider |
+| `native/*.test.tsx`     | each component renders and flips between themes                                 |
 
 ### 9. NativeWind is named, not solved here
 
