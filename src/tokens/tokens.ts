@@ -75,6 +75,15 @@ const light = {
   errorHover: '#C92F2F',
   disabledBg: '#E9EDEE',
   disabledText: '#A6ADB3',
+
+  // Brand mark. Flat keys rather than a nested `brandMark: {…}` on purpose:
+  // the parity test flattens the palette back to CSS names by kebab-casing the
+  // outer key and appending nested keys raw, so a nested shape would produce
+  // `--color-brand-mark-tile` as `--color-brandMark-tile` and fail to match.
+  brandMarkTile: '#F14E3A',
+  brandMarkInk: '#1F2933',
+  brandMarkLetter: '#FFFFFF',
+  brandMarkDot: '#FFC23C',
 } as const
 
 export type Palette = {
@@ -159,6 +168,13 @@ const dark = {
   errorHover: '#E05548',
   disabledBg: '#2C241D',
   disabledText: '#6E655A',
+
+  // Brand mark — invariant, so these repeat the light values verbatim, per the
+  // note above about this palette being written out in full.
+  brandMarkTile: '#F14E3A',
+  brandMarkInk: '#1F2933',
+  brandMarkLetter: '#FFFFFF',
+  brandMarkDot: '#FFC23C',
 } as const satisfies Palette
 
 /**
