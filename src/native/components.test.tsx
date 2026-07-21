@@ -9,12 +9,14 @@ import { Screen } from './Screen'
 import { Heading, Text } from './Text'
 import { Field } from './Field'
 import { TextInput } from './TextInput'
-import { PrimaryButton } from './PrimaryButton'
-import { RewardButton } from './RewardButton'
-import { SecondaryButton } from './SecondaryButton'
-import { OutlineButton } from './OutlineButton'
-import { GhostButton } from './GhostButton'
-import { DangerButton } from './DangerButton'
+import {
+  DangerButton,
+  GhostButton,
+  OutlineButton,
+  PrimaryButton,
+  RewardButton,
+  SecondaryButton,
+} from './Button'
 import { Modal } from './Modal'
 import { ToastProvider, useToast } from './Toast'
 

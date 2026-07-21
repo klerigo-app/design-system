@@ -1,6 +1,6 @@
 import { type ReactElement } from 'react'
 import { ButtonBase, type ButtonBaseProps, type ButtonVisual } from './ButtonBase'
-import { type Theme } from './theme'
+import { type Theme } from '../theme'
 
 const visual = (theme: Theme): ButtonVisual => ({
   // surface-raised, not transparent — web's secondary sits on its own surface

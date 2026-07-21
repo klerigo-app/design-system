@@ -1,8 +1,8 @@
 import { type ReactElement, type ReactNode } from 'react'
 import { Text as RNText } from 'react-native'
-import { radiusValue } from '../tokens/tokens'
-import { fontFamily } from './fonts'
-import { createThemedStyles, useThemedStyles } from './theme'
+import { radiusValue } from '../../tokens/tokens'
+import { fontFamily } from '../fonts'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 /**
  * Shared building blocks for form fields — the native counterpart of

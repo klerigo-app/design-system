@@ -23,14 +23,8 @@ export * from './TextInput'
 export * from './Modal'
 export * from './Toast'
 
-// Six variants, one component each, mirroring web's Button variants. ButtonBase
-// is deliberately not exported: it is how they share geometry, not API.
-export * from './PrimaryButton'
-export * from './RewardButton'
-export * from './SecondaryButton'
-export * from './OutlineButton'
-export * from './GhostButton'
-export * from './DangerButton'
+// Six variants, one component each, mirroring web's Button variants.
+export * from './Button'
 
 // Re-export tokens so RN consumers have one import site. There is deliberately
 // no standing palette or shadow export: read both through `useTheme` /

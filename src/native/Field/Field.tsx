@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react'
 import { TextInput, View, type TextInput as RNTextInput, type TextInputProps } from 'react-native'
-import { fieldStyles } from './fieldParts'
-import { useTheme, useThemedStyles } from './theme'
+import { fieldStyles } from '../internal/fieldParts'
+import { useTheme, useThemedStyles } from '../theme'
 
 export interface FieldProps extends TextInputProps {
   /** Draw the control in its invalid state. Set by `TextInput` from its `error` prop. */

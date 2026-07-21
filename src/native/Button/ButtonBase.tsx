@@ -7,9 +7,9 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import { radiusValue, type ShadowValue } from '../tokens/tokens'
-import { fontFamily } from './fonts'
-import { createThemedStyles, useTheme, useThemedStyles, type Theme } from './theme'
+import { radiusValue, type ShadowValue } from '../../tokens/tokens'
+import { fontFamily } from '../fonts'
+import { createThemedStyles, useTheme, useThemedStyles, type Theme } from '../theme'
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
 

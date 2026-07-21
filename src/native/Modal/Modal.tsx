@@ -1,12 +1,10 @@
 import { useState, type ReactElement, type ReactNode } from 'react'
 import { Modal as RNModal, Pressable, View } from 'react-native'
-import { radiusValue, type Palette } from '../tokens/tokens'
-import { createThemedStyles, useTheme, useThemedStyles } from './theme'
-import { Heading, Text } from './Text'
-import { Field } from './Field'
-import { PrimaryButton } from './PrimaryButton'
-import { GhostButton } from './GhostButton'
-import { DangerButton } from './DangerButton'
+import { radiusValue, type Palette } from '../../tokens/tokens'
+import { createThemedStyles, useTheme, useThemedStyles } from '../theme'
+import { Heading, Text } from '../Text'
+import { Field } from '../Field'
+import { DangerButton, GhostButton, PrimaryButton } from '../Button'
 
 export type ModalVariant = 'info' | 'warning' | 'error' | 'success'
 

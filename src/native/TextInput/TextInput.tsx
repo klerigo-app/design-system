@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { View, type TextInput as RNTextInput } from 'react-native'
-import { Field, type FieldProps } from './Field'
-import { FieldLabel, FieldMessage } from './fieldParts'
+import { Field, type FieldProps } from '../Field'
+import { FieldLabel, FieldMessage } from '../internal/fieldParts'
 
 export interface TextInputProps extends Omit<FieldProps, 'error'> {
   label: string

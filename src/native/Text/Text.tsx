@@ -1,7 +1,7 @@
 import { type ReactElement } from 'react'
 import { Text as RNText, type TextProps as RNTextProps } from 'react-native'
-import { fontFamily } from './fonts'
-import { createThemedStyles, useThemedStyles } from './theme'
+import { fontFamily } from '../fonts'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 export interface HeadingProps extends RNTextProps {
   size?: 'md' | 'lg'
