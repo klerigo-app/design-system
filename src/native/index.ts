@@ -16,7 +16,10 @@ export * from './theme'
 export * from './fonts'
 export * from './Screen'
 export * from './Text'
+// Field is the bare control; TextInput assembles label + control + message
+// around it. fieldParts (FieldLabel/FieldMessage/fieldStyles) stays internal.
 export * from './Field'
+export * from './TextInput'
 export * from './Modal'
 export * from './Toast'
 

@@ -107,15 +107,24 @@ export const Modal = ({ children, visible = true }: HostProps & { visible?: bool
 export const TextInput = forwardRef<
   HTMLInputElement,
   HostProps & { placeholderTextColor?: string }
->(({ style, testID, placeholderTextColor, ...rest }, ref) => (
-  <input
-    ref={ref}
-    data-testid={testID}
-    data-placeholder-color={placeholderTextColor as string}
-    {...styleProps(style as Style)}
-    {...(rest as object)}
-  />
-))
+>(({ style, testID, placeholderTextColor, ...rest }, ref) => {
+  // Accessibility props are mapped rather than spread, matching host() above.
+  // Spreading them raw puts `accessibilityLabel` on the DOM node as an unknown
+  // attribute, which React warns about and no assertion can sensibly read.
+  // accessibilityHint has no DOM equivalent, so it gets a data attribute.
+  const { accessibilityLabel, accessibilityHint, ...domProps } = rest
+  return (
+    <input
+      ref={ref}
+      data-testid={testID}
+      data-placeholder-color={placeholderTextColor as string}
+      aria-label={accessibilityLabel as string}
+      data-hint={accessibilityHint as string}
+      {...styleProps(style as Style)}
+      {...(domProps as object)}
+    />
+  )
+})
 TextInput.displayName = 'TextInput'
 
 export const StyleSheet = {

@@ -8,6 +8,7 @@ import { ThemeProvider } from './theme'
 import { Screen } from './Screen'
 import { Heading, Text } from './Text'
 import { Field } from './Field'
+import { TextInput } from './TextInput'
 import { PrimaryButton } from './PrimaryButton'
 import { RewardButton } from './RewardButton'
 import { SecondaryButton } from './SecondaryButton'
@@ -95,13 +96,108 @@ describe('Text', () => {
 })
 
 describe('Field', () => {
-  it('themes text, border, and the placeholder prop', () => {
+  it('themes text, surface, border, and the placeholder prop', () => {
     bothSchemes(<Field testID="field" />, (palette) => {
       expect(style('field').color).toBe(palette.ink)
-      expect(style('field').borderColor).toBe(palette.slate)
+      // border-input, not slate — matching web's fieldControlStyles.
+      expect(style('field').borderColor).toBe(palette.borderInput)
+      expect(style('field').backgroundColor).toBe(palette.surfaceRaised)
       // placeholderTextColor is a prop, not a style — easy to leave frozen.
       expect(screen.getByTestId('field').getAttribute('data-placeholder-color')).toBe(palette.muted)
     })
+  })
+
+  it('matches the web field geometry rather than the old native one', () => {
+    inScheme('light', <Field testID="field" />)
+    // rounded-md (12) and 1.5px, not the lg (16) and 1px native had.
+    expect(style('field').borderRadius).toBe(12)
+    expect(style('field').borderWidth).toBe(1.5)
+    expect(style('field').fontSize).toBe(15)
+    expect(style('field').fontFamily).toBe(fontFamily.body)
+  })
+
+  it('rings teal on focus and drops it on blur', () => {
+    bothSchemes(<Field testID="field" />, (palette, scheme) => {
+      const input = screen.getByTestId('field')
+      expect(style('field').boxShadow).toBeUndefined()
+
+      fireEvent.focus(input)
+      expect(style('field').borderColor).toBe(palette.teal[500])
+      expect(style('field').boxShadow).toEqual([getShadows(scheme).focusRingTeal])
+
+      fireEvent.blur(input)
+      expect(style('field').borderColor).toBe(palette.borderInput)
+      expect(style('field').boxShadow).toBeUndefined()
+    })
+  })
+
+  it('keeps the error ring while focused, because error outranks focus', () => {
+    // Web's cva has no focus variant on the error branch, so an invalid field
+    // must not turn teal when the user clicks back into it to fix it.
+    bothSchemes(<Field testID="field" error />, (palette, scheme) => {
+      expect(style('field').borderColor).toBe(palette.error)
+      fireEvent.focus(screen.getByTestId('field'))
+      expect(style('field').borderColor).toBe(palette.error)
+      expect(style('field').boxShadow).toEqual([getShadows(scheme).focusRingError])
+    })
+  })
+
+  it('still calls a caller-supplied onFocus/onBlur', () => {
+    const events: string[] = []
+    inScheme(
+      'light',
+      <Field
+        testID="field"
+        onFocus={() => events.push('focus')}
+        onBlur={() => events.push('blur')}
+      />,
+    )
+    fireEvent.focus(screen.getByTestId('field'))
+    fireEvent.blur(screen.getByTestId('field'))
+    expect(events).toEqual(['focus', 'blur'])
+  })
+})
+
+describe('TextInput', () => {
+  it('renders label, control, and one of error/helper', () => {
+    inScheme('light', <TextInput testID="field" label="Email" helper="We never share it." />)
+    expect(screen.getByText('Email')).toBeTruthy()
+    expect(screen.getByText('We never share it.')).toBeTruthy()
+  })
+
+  it('replaces the helper with the error, and puts the control in its error state', () => {
+    bothSchemes(
+      <TextInput testID="field" label="Email" helper="We never share it." error="Required" />,
+      (palette) => {
+        expect(screen.queryByText('We never share it.')).toBeNull()
+        expect(styleOf(screen.getByText('Required')).color).toBe(palette.error)
+        expect(style('field').borderColor).toBe(palette.error)
+      },
+    )
+  })
+
+  it('tones the helper in slate and the error in error', () => {
+    bothSchemes(<TextInput testID="field" label="Email" helper="Optional" />, (palette) => {
+      expect(styleOf(screen.getByText('Optional')).color).toBe(palette.slate)
+    })
+  })
+
+  it('associates the label without an id, and announces the error as text', () => {
+    // RN has no aria-invalid and accessibilityLabelledBy is Android-only, so
+    // the label rides on the control and the error goes into the hint.
+    inScheme('light', <TextInput testID="field" label="Email" error="Required" />)
+    const input = screen.getByTestId('field')
+    expect(input.getAttribute('aria-label')).toBe('Email')
+    expect(input.getAttribute('data-hint')).toContain('Required')
+  })
+
+  it('keeps a caller-supplied hint alongside the error', () => {
+    inScheme(
+      'light',
+      <TextInput testID="field" label="Email" accessibilityHint="Work address" error="Required" />,
+    )
+    const hint = screen.getByTestId('field').getAttribute('data-hint')
+    expect(hint).toBe('Work address. Required')
   })
 })
 
