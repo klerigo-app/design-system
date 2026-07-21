@@ -1,6 +1,6 @@
 import { type ReactElement, type ReactNode } from 'react'
-import { StyleSheet, View, type ViewStyle } from 'react-native'
-import { colors } from '../tokens/tokens'
+import { View, type ViewStyle } from 'react-native'
+import { createThemedStyles, useThemedStyles } from './theme'
 
 // Matches the apps' `px-6` screen gutter (Tailwind 6 * 4px = 24).
 const SCREEN_GUTTER = 24
@@ -17,17 +17,18 @@ export interface ScreenProps {
  * padding. Replaces the repeated `flex-1 bg-paper px-6` shells.
  */
 export function Screen({ children, center, style }: ScreenProps): ReactElement {
+  const styles = useThemedStyles(themedStyles)
   return <View style={[styles.screen, center && styles.center, style]}>{children}</View>
 }
 
-const styles = StyleSheet.create({
+const themedStyles = createThemedStyles((palette) => ({
   screen: {
     flex: 1,
-    backgroundColor: colors.paper,
+    backgroundColor: palette.paper,
     paddingHorizontal: SCREEN_GUTTER,
   },
   center: {
     justifyContent: 'center',
     alignItems: 'stretch',
   },
-})
+}))

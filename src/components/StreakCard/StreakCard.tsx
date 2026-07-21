@@ -1,6 +1,5 @@
 import type { ReactElement } from 'react'
 import { cn } from '../../lib/cn'
-import { colors } from '../../tokens/tokens'
 
 export interface StreakCardProps {
   days: number
@@ -23,7 +22,7 @@ export function StreakCard({
         <div
           className="flex h-[66px] w-[66px] shrink-0 items-center justify-center rounded-2xl font-display text-2xl font-semibold text-white"
           style={{
-            background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})`,
+            background: `linear-gradient(135deg, var(--color-sun-500), var(--color-coral-500))`,
           }}
         >
           {days}

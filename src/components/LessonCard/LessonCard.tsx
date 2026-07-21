@@ -2,7 +2,6 @@ import { type ReactNode } from 'react'
 import { Chip, type ChipVariant } from '../Chip/Chip'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { Button } from '../Button/Button'
-import { colors } from '../../tokens/tokens'
 
 export interface LessonCardProps {
   number: number
@@ -37,7 +36,9 @@ export function LessonCard({
     <div className="flex gap-5 rounded-[var(--radius-card)] border border-border bg-surface-raised p-6 shadow-elevated">
       <div
         className="flex h-[70px] w-[70px] shrink-0 items-center justify-center rounded-[18px] font-display text-[28px] font-semibold text-white"
-        style={{ background: `linear-gradient(135deg, ${colors.sun[500]}, ${colors.coral[500]})` }}
+        style={{
+          background: `linear-gradient(135deg, var(--color-sun-500), var(--color-coral-500))`,
+        }}
       >
         {number}
       </div>

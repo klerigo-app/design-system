@@ -1,7 +1,6 @@
 import type { ReactElement } from 'react'
 import { CheckIcon, LockIcon } from '@phosphor-icons/react'
 import { cn } from '../../lib/cn'
-import { colors } from '../../tokens/tokens'
 
 export type UnitNodeState = 'completed' | 'current' | 'locked'
 
@@ -27,7 +26,9 @@ function Connector({
         data-connector
         className="h-1 flex-1 rounded-md"
         style={{
-          background: `linear-gradient(90deg, ${colors.teal[500]} 50%, ${colors.connectorLocked} 50%)`,
+          // Custom properties, not JS token values — the JS palette is light-only,
+          // so a baked gradient string left this half-connector frozen in dark.
+          background: `linear-gradient(90deg, var(--color-teal-500) 50%, var(--color-connector-locked) 50%)`,
         }}
       />
     )

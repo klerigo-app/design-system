@@ -1,5 +1,4 @@
 import type { ReactElement } from 'react'
-import { colors } from '../../tokens/tokens'
 
 export interface ProgressRingProps {
   percent: number
@@ -23,7 +22,10 @@ export function ProgressRing({
       style={{
         width: size,
         height: size,
-        background: `conic-gradient(${colors.teal[500]} 0% ${pct}%, #E7EFEF ${pct}% 100%)`,
+        // Custom properties, not JS token values: a gradient string is baked at
+        // render time and would freeze the light palette. #E7EFEF here was the
+        // locked-connector colour, which does flip in dark.
+        background: `conic-gradient(var(--color-teal-500) 0% ${pct}%, var(--color-connector-locked) ${pct}% 100%)`,
       }}
     >
       <div

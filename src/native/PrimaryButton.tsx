@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react'
-import { Pressable, StyleSheet, Text, type PressableProps } from 'react-native'
-import { colors, radiusValue } from '../tokens/tokens'
+import { Pressable, Text, type PressableProps } from 'react-native'
+import { radiusValue } from '../tokens/tokens'
+import { createThemedStyles, useThemedStyles } from './theme'
 
 export interface PrimaryButtonProps extends Omit<PressableProps, 'children' | 'style'> {
   label: string
@@ -15,6 +16,7 @@ export interface PrimaryButtonProps extends Omit<PressableProps, 'children' | 's
  * emitted declaration when this package is built as a git dependency (TS2883).
  */
 export function PrimaryButton({ label, disabled, ...props }: PrimaryButtonProps): ReactElement {
+  const styles = useThemedStyles(themedStyles)
   return (
     <Pressable
       accessibilityRole="button"
@@ -27,11 +29,11 @@ export function PrimaryButton({ label, disabled, ...props }: PrimaryButtonProps)
   )
 }
 
-const styles = StyleSheet.create({
+const themedStyles = createThemedStyles((palette) => ({
   button: {
     alignItems: 'center',
     borderRadius: radiusValue.lg,
-    backgroundColor: colors.coral[500],
+    backgroundColor: palette.coral[500],
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -40,7 +42,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: '700',
+    // White on a saturated brand fill reads in both themes; coral-500 does not flip.
     color: '#FFFFFF',
     fontSize: 16,
   },
-})
+}))

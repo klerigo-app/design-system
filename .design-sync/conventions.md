@@ -58,3 +58,13 @@ What flips vs. what holds:
 - **Brand primaries stay vivid**: `bg-coral-500` / `bg-sun-500` / `bg-teal-500` keep their colour in dark (with `text-white` on them). The `-50` steps become dark tint backgrounds and `-700` steps become light text (e.g. a `bg-teal-50 text-teal-700` chip stays legible in both themes).
 
 To keep new work dark-ready, **never hardcode `bg-white`, `bg-ink`, `text-black`, or arbitrary hex** for surfaces — those do not flip. Use the tokens: `bg-surface-raised` for cards/inputs/dropdowns/toasts/modals, `bg-surface-inverse` for intentionally-dark hero panels, `bg-scrim` for overlays. `text-white` is fine **only** on a saturated brand/semantic fill (e.g. `bg-coral-500`), never on a token surface.
+
+The same applies to **inline `style` gradients**, which Tailwind cannot express: interpolate the custom property (`linear-gradient(90deg, var(--color-teal-500) 50%, var(--color-connector-locked) 50%)`), never a hex or a JS token value. A gradient string is baked at render time, so a literal there freezes that element in light mode — which is how `UnitPath`'s connector and `ProgressRing`'s track were quietly wrong in dark.
+
+### Dark mode on React Native
+
+The `/native` components do not read the CSS layer — React Native cannot — so they resolve colours through a theme context instead. This does not affect web design work; it matters only when a component is mirrored to native.
+
+There is no standing palette export: `getPalette(scheme)` is the only way to get colours, and components declare styles as a function of the palette via `createThemedStyles` + `useThemedStyles`. A colour captured in a module-scope `StyleSheet.create` is frozen at import time and can never flip, which is the bug the whole native theme layer exists to prevent.
+
+The JS palette in `src/tokens/tokens.ts` mirrors every `--color-*` token in `tokens.css`, in both themes. **Add tokens to both files** — a cross-file parity test fails the build otherwise.

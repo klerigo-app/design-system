@@ -40,5 +40,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
+    alias: {
+      // The real react-native cannot be imported under Vitest — rolldown fails
+      // to parse its Flow-typed source. See the stub's header for what this
+      // does and does not prove.
+      'react-native': resolve(__dirname, 'src/native/__test__/rn-stub.tsx'),
+    },
   },
 })

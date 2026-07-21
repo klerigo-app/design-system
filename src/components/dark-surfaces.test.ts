@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 // Guards the dark-mode component fix: surfaces that were hardcoded (bg-white /
@@ -55,4 +55,40 @@ describe('dark-mode surfaces are tokenized', () => {
       expect(src).not.toMatch(/\bbg-ink\b/)
     })
   }
+})
+
+// Components that build inline gradient strings (which Tailwind cannot express)
+// must interpolate CSS custom properties, not JS token values. The JS palette is
+// light-only, so a baked-in hex freezes that element in light mode — this is how
+// UnitPath's locked connector and ProgressRing's track were silently broken.
+const inlineGradientComponents = [
+  'src/components/ProgressRing/ProgressRing.tsx',
+  'src/components/StreakCard/StreakCard.tsx',
+  'src/components/LessonCard/LessonCard.tsx',
+  'src/components/UnitPath/UnitPath.tsx',
+]
+
+describe('web components do not bake colors into inline styles', () => {
+  for (const file of inlineGradientComponents) {
+    it(`${file} builds gradients from CSS custom properties`, () => {
+      const src = read(file)
+      expect(src).toContain('var(--color-')
+      expect(src).not.toMatch(/from '.*tokens\/tokens'/)
+    })
+  }
+
+  // Applies to every web component, including ones with no gradient today.
+  it('no web component imports the JS palette', () => {
+    const components = readdirSync(resolve(process.cwd(), 'src/components'), {
+      recursive: true,
+      encoding: 'utf8',
+    })
+      .filter((name) => name.endsWith('.tsx') && !name.endsWith('.stories.tsx'))
+      .map((name) => `src/components/${name}`)
+    // Guards the guard: a listing that matches nothing passes vacuously.
+    expect(components.length).toBeGreaterThan(20)
+
+    const offenders = components.filter((file) => /from\s+'[^']*tokens\/tokens'/.test(read(file)))
+    expect(offenders).toEqual([])
+  })
 })
