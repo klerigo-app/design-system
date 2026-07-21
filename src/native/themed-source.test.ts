@@ -16,20 +16,22 @@ const read = (file: string) => readFileSync(resolve(process.cwd(), file), 'utf8'
 
 /**
  * Colours knowingly left unthemed, listed per file so the exception cannot
- * quietly grow. Native shadows need shadowColor/shadowOffset/elevation rather
- * than the CSS box-shadow strings the token layer carries, so a themed native
- * shadow scale is separate work — see the "out of scope" section of
- * docs/superpowers/specs/2026-07-21-native-dark-mode-design.md. Until then this
- * warm brown is correct on paper and too warm on a dark surface.
+ * quietly grow.
+ *
+ * Empty as of #9. It previously held Toast's hardcoded `#5A3C1E` shadow, which
+ * existed only because the token layer carried CSS box-shadow strings React
+ * Native could not consume. #9 added `getShadows` and Toast now reads
+ * `theme.shadows.cardElevated` like everything else.
  */
-const KNOWN_UNTHEMED: Record<string, Set<string>> = {
-  'src/native/Toast.tsx': new Set(['#5A3C1E']),
-}
+const KNOWN_UNTHEMED: Record<string, Set<string>> = {}
 
 describe('native components cannot freeze the palette', () => {
   it('finds the component files it is meant to guard', () => {
     // Guards the guard: a glob that matches nothing passes every test below.
-    expect(files.length).toBeGreaterThanOrEqual(8)
+    // 13 after #9 added ButtonBase and the five new button variants. This is a
+    // floor, not an equality, so #10 does not have to touch it — but it must
+    // rise whenever a batch lands, or a broken glob goes unnoticed.
+    expect(files.length).toBeGreaterThanOrEqual(13)
   })
 
   for (const file of files) {

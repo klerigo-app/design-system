@@ -28,6 +28,18 @@ export default tseslint.config(
     },
   },
   {
+    // native-fonts/index.js is CommonJS on purpose, like tailwind-preset.js:
+    // it is consumed by Metro, and its require() calls of .ttf files ARE the
+    // API — Metro resolves them to bundled asset handles. Rewriting them as
+    // imports would break font loading.
+    files: ['native-fonts/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: { require: 'readonly', module: 'writable' },
+    },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     plugins: { react, 'react-hooks': reactHooks },
     languageOptions: {

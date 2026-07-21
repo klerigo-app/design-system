@@ -21,10 +21,10 @@ export function Screen({ children, center, style }: ScreenProps): ReactElement {
   return <View style={[styles.screen, center && styles.center, style]}>{children}</View>
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   screen: {
     flex: 1,
-    backgroundColor: palette.paper,
+    backgroundColor: theme.colors.paper,
     paddingHorizontal: SCREEN_GUTTER,
   },
   center: {

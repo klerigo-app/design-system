@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { getPalette, type Palette } from './tokens'
+import { getPalette, getShadows, type Palette, type ShadowValue } from './tokens'
 import { THEME_INVARIANT } from './themeInvariant'
 
 // tokens.css and tokens.ts are both hand-authored (see the 2026-07-14 spec for
@@ -22,10 +22,48 @@ function parseDecls(body: string): Record<string, string> {
 const colorDecls = (block: Record<string, string>) =>
   Object.fromEntries(Object.entries(block).filter(([name]) => name.startsWith('--color-')))
 
-const lightCss = colorDecls(parseDecls(css.match(/:root\s*\{([^{}]*)\}/)![1]))
-const darkCss = colorDecls(
-  parseDecls(css.match(/:root\[data-theme=['"]dark['"]\]\s*\{([^{}]*)\}/)![1]),
-)
+const lightBlock = parseDecls(css.match(/:root\s*\{([^{}]*)\}/)![1])
+const darkBlock = parseDecls(css.match(/:root\[data-theme=['"]dark['"]\]\s*\{([^{}]*)\}/)![1])
+
+const lightCss = colorDecls(lightBlock)
+const darkCss = colorDecls(darkBlock)
+
+/**
+ * Shadow tokens live under two prefixes, not one: lift/pressed/card/device are
+ * `--shadow-*`, while the focus rings are `--focus-ring-*`. Both map onto the
+ * same JS `Shadows` object, so both are collected here.
+ */
+const shadowDecls = (block: Record<string, string>) =>
+  Object.fromEntries(
+    Object.entries(block).filter(
+      ([name]) => name.startsWith('--shadow-') || name.startsWith('--focus-ring-'),
+    ),
+  )
+
+const camel = (s: string) => s.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
+
+/** `--shadow-button-lift-coral` -> `buttonLiftCoral`; `--focus-ring-teal` -> `focusRingTeal`. */
+const shadowKey = (cssName: string) =>
+  camel(cssName.startsWith('--shadow-') ? cssName.slice('--shadow-'.length) : cssName.slice(2))
+
+/**
+ * Parse a CSS box-shadow into the structured form tokens.ts stores. Handles the
+ * three shapes in use: three lengths + hex, four lengths + hex, four lengths +
+ * rgba(). Spread is absent in the three-length form and defaults to 0, matching
+ * CSS. Colour is matched from the end because rgba() contains its own spaces.
+ */
+function parseShadow(value: string): ShadowValue {
+  const m = value.match(/^(.*?)\s*(#[0-9a-f]{3,8}|rgba?\([^)]*\))\s*$/i)
+  if (!m) throw new Error(`unparseable box-shadow: ${value}`)
+  const lengths = m[1].trim().split(/\s+/).map(parseFloat)
+  if (lengths.length < 3 || lengths.length > 4 || lengths.some(Number.isNaN)) {
+    throw new Error(`unexpected box-shadow lengths in: ${value}`)
+  }
+  const [offsetX, offsetY, blurRadius, spreadDistance = 0] = lengths
+  return { offsetX, offsetY, blurRadius, spreadDistance, color: m[2] }
+}
+
+const normalise = (s: ShadowValue): ShadowValue => ({ ...s, color: s.color.toLowerCase() })
 
 /**
  * Map a CSS custom-property name to the value it should equal in the JS
@@ -110,6 +148,55 @@ describe('tokens.ts mirrors tokens.css', () => {
     const unflipped = paletteCssNames(lightPalette)
       .filter((name) => eq(paletteValue(lightPalette, name), paletteValue(darkPalette, name)))
       .filter((name) => !THEME_INVARIANT.has(name))
+    expect(unflipped).toEqual([])
+  })
+})
+
+// The shadow scale had the same hole the palette did before #8: tokens.ts was
+// light-only AND an incomplete subset — tokens.css declared the two `pressed`
+// variants that tokens.ts simply did not have, and nothing failed. These cover
+// both directions so that cannot recur.
+describe('getShadows mirrors tokens.css', () => {
+  const lightShadowCss = shadowDecls(lightBlock)
+  const darkShadowCss = shadowDecls(darkBlock)
+
+  it('finds the shadow declarations it is meant to compare', () => {
+    // Guards the guard: an empty parse passes every assertion below.
+    expect(Object.keys(lightShadowCss).length).toBeGreaterThanOrEqual(8)
+    expect(Object.keys(darkShadowCss)).toHaveLength(Object.keys(lightShadowCss).length)
+  })
+
+  it('covers every shadow token the stylesheet declares, and no others', () => {
+    const cssKeys = Object.keys(lightShadowCss).map(shadowKey).sort()
+    expect(Object.keys(getShadows('light')).sort()).toEqual(cssKeys)
+  })
+
+  for (const scheme of ['light', 'dark'] as const) {
+    it(`matches every ${scheme} value`, () => {
+      const shadows = getShadows(scheme) as unknown as Record<string, ShadowValue>
+      const block = scheme === 'dark' ? darkShadowCss : lightShadowCss
+      const mismatched = Object.entries(block)
+        .filter(([name, value]) => {
+          const js = shadows[shadowKey(name)]
+          return !js || JSON.stringify(normalise(js)) !== JSON.stringify(parseShadow(value))
+        })
+        .map(
+          ([name, value]) =>
+            `${name}: css ${value} vs js ${JSON.stringify(shadows[shadowKey(name)])}`,
+        )
+      expect(mismatched).toEqual([])
+    })
+  }
+
+  it('flips every shadow between the two schemes', () => {
+    // Unlike colours there are no invariants here: every shadow in this scale is
+    // a coloured lift or ring, and all of them are tuned per scheme.
+    const [lightS, darkS] = [getShadows('light'), getShadows('dark')]
+    const unflipped = Object.keys(lightS).filter(
+      (key) =>
+        (lightS as unknown as Record<string, ShadowValue>)[key].color ===
+        (darkS as unknown as Record<string, ShadowValue>)[key].color,
+    )
     expect(unflipped).toEqual([])
   })
 })

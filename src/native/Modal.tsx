@@ -5,7 +5,8 @@ import { createThemedStyles, useTheme, useThemedStyles } from './theme'
 import { Heading, Text } from './Text'
 import { Field } from './Field'
 import { PrimaryButton } from './PrimaryButton'
-import { SecondaryButton } from './SecondaryButton'
+import { GhostButton } from './GhostButton'
+import { DangerButton } from './DangerButton'
 
 export type ModalVariant = 'info' | 'warning' | 'error' | 'success'
 
@@ -16,7 +17,7 @@ const variantBadgeColor = (palette: Palette): Record<ModalVariant, string> => ({
   success: palette.success,
 })
 
-export interface ModalProps {
+interface ModalBaseProps {
   isOpen: boolean
   /** Called on hardware back press (Android) and overlay tap (when enabled). */
   onClose: () => void
@@ -25,16 +26,57 @@ export interface ModalProps {
   description?: string
   children?: ReactNode
   onConfirm: () => void
-  /** Cancel button is only rendered when this is provided. */
-  onCancel?: () => void
-  confirmText?: string
-  cancelText?: string
-  /** When set, Confirm stays disabled until the typed text exactly matches this value. */
-  confirmationValue?: string
-  confirmationLabel?: string
+  /** Required: this component previously defaulted it to Spanish. */
+  confirmText: string
   confirmationPlaceholder?: string
   closeOnOverlayClick?: boolean
 }
+
+/**
+ * Button and prompt strings are required rather than defaulted.
+ *
+ * They used to default to 'Confirmar' / 'Cancelar', with a hardcoded
+ * confirmation prompt behind them, which shipped Spanish to any caller who
+ * forgot. The issue that prompted this framed it as a /native leftover; both
+ * Modals had it, and fixing only native would have left the two prop contracts
+ * diverging — web/native drift pointing the other way.
+ *
+ * Required-ness is a discriminated union rather than three flat required props,
+ * because two of the three are only rendered conditionally: a modal with no
+ * cancel button should not be asked to invent a label for one.
+ *
+ * The union has two sharp edges, both found integrating it:
+ *
+ *  - Spreading `ModalProps` works, but `Omit<ModalProps, K>` does not — `Omit`
+ *    does not distribute over unions, so it collapses the branches into
+ *    something no value satisfies. Use a distributive omit:
+ *    `type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never`
+ *  - A conditional call site cannot inline the correlation; see
+ *    `ModalCancelProps` below.
+ */
+
+/**
+ * The cancel button and its label, together or not at all.
+ *
+ * Exported because a call site that decides conditionally cannot express this
+ * inline: neither `onCancel={x ? fn : undefined}` nor a conditional spread
+ * preserves the correlation — TypeScript widens both branches to optional and
+ * no union member matches. Annotating the value does work:
+ *
+ *   const cancelProps: ModalCancelProps = canDismiss
+ *     ? { onCancel: close, cancelText: 'Close' }
+ *     : {}
+ *   <Modal {...cancelProps} ... />
+ */
+export type ModalCancelProps =
+  { onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }
+
+/** The type-to-confirm value and the prompt that explains it, together or not at all. */
+export type ModalConfirmationProps =
+  | { confirmationValue: string; confirmationLabel: string }
+  | { confirmationValue?: never; confirmationLabel?: never }
+
+export type ModalProps = ModalBaseProps & ModalCancelProps & ModalConfirmationProps
 
 /**
  * Confirmation dialog built on React Native's built-in `Modal`. Mirrors the
@@ -49,15 +91,15 @@ export function Modal({
   children,
   onConfirm,
   onCancel,
-  confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
+  confirmText,
+  cancelText,
   confirmationValue,
   confirmationLabel,
   confirmationPlaceholder,
   closeOnOverlayClick = true,
 }: ModalProps): ReactElement {
   const styles = useThemedStyles(themedStyles)
-  const palette = useTheme()
+  const { colors } = useTheme()
   const [confirmationInput, setConfirmationInput] = useState('')
   const requiresConfirmationMatch = confirmationValue !== undefined
   const isConfirmDisabled = requiresConfirmationMatch && confirmationInput !== confirmationValue
@@ -74,7 +116,7 @@ export function Modal({
         {/* Empty onPress claims the touch responder so taps on the card don't
             fall through to the overlay's onPress above. */}
         <Pressable style={styles.card} onPress={() => {}}>
-          <View style={[styles.badge, { backgroundColor: variantBadgeColor(palette)[variant] }]} />
+          <View style={[styles.badge, { backgroundColor: variantBadgeColor(colors)[variant] }]} />
 
           <Heading size="md">{title}</Heading>
           {description && (
@@ -87,9 +129,10 @@ export function Modal({
 
           {requiresConfirmationMatch && (
             <View style={styles.confirmationGroup}>
-              <Text variant="muted">
-                {confirmationLabel ?? `To confirm, write "${confirmationValue}"`}
-              </Text>
+              {/* No fallback string: confirmationLabel is required whenever
+                  confirmationValue is set. The old English default here was
+                  the mirror of web's Spanish one. */}
+              <Text variant="muted">{confirmationLabel}</Text>
               <Field
                 value={confirmationInput}
                 onChangeText={setConfirmationInput}
@@ -101,16 +144,13 @@ export function Modal({
           )}
 
           <View style={styles.actions}>
-            {onCancel && <SecondaryButton label={cancelText} onPress={onCancel} />}
+            {/* Ghost, matching web (Modal.tsx:216). This used to be the
+                slate-outlined SecondaryButton, so the two Modals disagreed on
+                the cancel button's whole visual identity. */}
+            {onCancel && <GhostButton label={cancelText} onPress={onCancel} />}
             {variant === 'error' ? (
-              <Pressable
-                accessibilityRole="button"
-                disabled={isConfirmDisabled}
-                onPress={onConfirm}
-                style={[styles.dangerButton, isConfirmDisabled && styles.disabled]}
-              >
-                <Text style={styles.dangerLabel}>{confirmText}</Text>
-              </Pressable>
+              // Was hand-rolled inline here; DangerButton absorbs it.
+              <DangerButton label={confirmText} disabled={isConfirmDisabled} onPress={onConfirm} />
             ) : (
               <PrimaryButton label={confirmText} disabled={isConfirmDisabled} onPress={onConfirm} />
             )}
@@ -121,7 +161,7 @@ export function Modal({
   )
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   overlay: {
     flex: 1,
     alignItems: 'center',
@@ -129,14 +169,14 @@ const themedStyles = createThemedStyles((palette) => ({
     padding: 24,
     // scrim @ ~60% opacity (RN supports 8-digit hex). Its own token because
     // dark wants pure black behind the card, not a lifted ink.
-    backgroundColor: `${palette.scrim}99`,
+    backgroundColor: `${theme.colors.scrim}99`,
   },
   card: {
     width: '100%',
     maxWidth: 400,
     gap: 12,
     borderRadius: radiusValue['2xl'],
-    backgroundColor: palette.surfaceRaised,
+    backgroundColor: theme.colors.surfaceRaised,
     padding: 24,
   },
   badge: {
@@ -155,22 +195,5 @@ const themedStyles = createThemedStyles((palette) => ({
     justifyContent: 'flex-end',
     gap: 12,
     marginTop: 8,
-  },
-  dangerButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radiusValue.lg,
-    backgroundColor: palette.error,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  dangerLabel: {
-    fontWeight: '700',
-    // White on a saturated semantic fill, per the dark-mode conventions.
-    color: '#FFFFFF',
-    fontSize: 16,
-  },
-  disabled: {
-    opacity: 0.6,
   },
 }))

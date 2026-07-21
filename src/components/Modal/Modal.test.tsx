@@ -6,7 +6,13 @@ import { Modal } from './Modal'
 describe('Modal', () => {
   it('renders nothing when closed', () => {
     render(
-      <Modal isOpen={false} onClose={vi.fn()} title="Título" onConfirm={vi.fn()}>
+      <Modal
+        isOpen={false}
+        onClose={vi.fn()}
+        title="Título"
+        onConfirm={vi.fn()}
+        confirmText="Confirm"
+      >
         Contenido
       </Modal>,
     )
@@ -33,31 +39,50 @@ describe('Modal', () => {
     'renders an icon for the %s variant',
     (variant) => {
       render(
-        <Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} variant={variant} />,
+        <Modal
+          isOpen
+          onClose={vi.fn()}
+          title="Título"
+          onConfirm={vi.fn()}
+          confirmText="Confirm"
+          variant={variant}
+        />,
       )
       expect(screen.getByRole('dialog').querySelector('svg')).toBeInTheDocument()
     },
   )
 
   it('does not render a Cancel button when onCancel is omitted', () => {
-    render(<Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} />)
-    expect(screen.queryByRole('button', { name: 'Cancelar' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Confirmar' })).toBeInTheDocument()
+    render(
+      <Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} confirmText="Confirm" />,
+    )
+    expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument()
   })
 
   it('renders a Cancel button and fires onCancel when provided', async () => {
     const onCancel = vi.fn()
     render(
-      <Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} onCancel={onCancel} />,
+      <Modal
+        isOpen
+        onClose={vi.fn()}
+        title="Título"
+        onConfirm={vi.fn()}
+        confirmText="Confirm"
+        onCancel={onCancel}
+        cancelText="Cancel"
+      />,
     )
-    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(onCancel).toHaveBeenCalledTimes(1)
   })
 
   it('fires onConfirm when the confirm button is clicked', async () => {
     const onConfirm = vi.fn()
-    render(<Modal isOpen onClose={vi.fn()} title="Título" onConfirm={onConfirm} />)
-    await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }))
+    render(
+      <Modal isOpen onClose={vi.fn()} title="Título" onConfirm={onConfirm} confirmText="Confirm" />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }))
     expect(onConfirm).toHaveBeenCalledTimes(1)
   })
 
@@ -79,7 +104,9 @@ describe('Modal', () => {
 
   it('calls onClose when Escape is pressed', async () => {
     const onClose = vi.fn()
-    render(<Modal isOpen onClose={onClose} title="Título" onConfirm={vi.fn()} />)
+    render(
+      <Modal isOpen onClose={onClose} title="Título" onConfirm={vi.fn()} confirmText="Confirm" />,
+    )
     await userEvent.keyboard('{Escape}')
     expect(onClose).toHaveBeenCalledTimes(1)
   })
@@ -87,7 +114,14 @@ describe('Modal', () => {
   it('does not call onClose on Escape when closeOnEscape is false', async () => {
     const onClose = vi.fn()
     render(
-      <Modal isOpen onClose={onClose} title="Título" onConfirm={vi.fn()} closeOnEscape={false} />,
+      <Modal
+        isOpen
+        onClose={onClose}
+        title="Título"
+        onConfirm={vi.fn()}
+        confirmText="Confirm"
+        closeOnEscape={false}
+      />,
     )
     await userEvent.keyboard('{Escape}')
     expect(onClose).not.toHaveBeenCalled()
@@ -95,7 +129,9 @@ describe('Modal', () => {
 
   it('calls onClose when the overlay is clicked', async () => {
     const onClose = vi.fn()
-    render(<Modal isOpen onClose={onClose} title="Título" onConfirm={vi.fn()} />)
+    render(
+      <Modal isOpen onClose={onClose} title="Título" onConfirm={vi.fn()} confirmText="Confirm" />,
+    )
     const overlay = document.body.querySelector('div[aria-hidden="true"]')
     expect(overlay).not.toBeNull()
     await userEvent.click(overlay as Element)
@@ -103,7 +139,9 @@ describe('Modal', () => {
   })
 
   it('defaults to the md size', () => {
-    render(<Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} />)
+    render(
+      <Modal isOpen onClose={vi.fn()} title="Título" onConfirm={vi.fn()} confirmText="Confirm" />,
+    )
     expect(screen.getByRole('dialog')).toHaveClass('max-w-md')
   })
 
@@ -123,10 +161,12 @@ describe('Modal', () => {
         title="Eliminar unidad"
         onConfirm={onConfirm}
         confirmationValue="Verbos irregulares"
+        confirmationLabel='Para confirmar, escribe "Verbos irregulares"'
         confirmText="Eliminar"
       />,
     )
     const confirmButton = screen.getByRole('button', { name: 'Eliminar' })
+    // The label is the caller's now; there is no Spanish fallback behind it.
     const input = screen.getByLabelText('Para confirmar, escribe "Verbos irregulares"')
 
     expect(confirmButton).toBeDisabled()

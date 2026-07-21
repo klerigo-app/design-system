@@ -1,48 +1,30 @@
 import { type ReactElement } from 'react'
-import { Pressable, Text, type PressableProps } from 'react-native'
-import { radiusValue } from '../tokens/tokens'
-import { createThemedStyles, useThemedStyles } from './theme'
+import { ButtonBase, type ButtonBaseProps, type ButtonVisual } from './ButtonBase'
+import { type Theme } from './theme'
 
-export interface SecondaryButtonProps extends Omit<PressableProps, 'children' | 'style'> {
-  label: string
-}
+const visual = (theme: Theme): ButtonVisual => ({
+  // surface-raised, not transparent — web's secondary sits on its own surface
+  // (Button.tsx:30), which is what keeps the teal border legible over paper.
+  backgroundColor: theme.colors.surfaceRaised,
+  color: theme.colors.teal[500],
+  borderColor: theme.colors.teal[500],
+  borderWidth: 2,
+  hoverBackgroundColor: theme.colors.teal[50],
+  // No lift and no sink: only primary, reward and danger move on press.
+  pressTranslate: 0,
+})
 
 /**
- * Secondary (outline) button. Replaces the repeated
- * `rounded-lg border border-slate px-4 py-3` + `text-ink` Pressable/Text pair
- * (e.g. the "Log out" action).
+ * The teal-bordered secondary action, matching web's `secondary` variant.
  *
- * Explicit return type avoids a non-portable @types/react reference in the
- * emitted declaration when this package is built as a git dependency (TS2883).
+ * NOTE: this name previously belonged to a slate-bordered outline button. That
+ * component is now `OutlineButton`, with its border corrected to
+ * `border-input`. The prop shape is unchanged, so an un-migrated call site
+ * compiles and silently turns teal — which is why the klerigo-app migration
+ * lands with this change rather than after it. See §8 of the design spec.
  */
-export function SecondaryButton({ label, disabled, ...props }: SecondaryButtonProps): ReactElement {
-  const styles = useThemedStyles(themedStyles)
-  return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={disabled}
-      style={[styles.button, disabled && styles.disabled]}
-      {...props}
-    >
-      <Text style={styles.label}>{label}</Text>
-    </Pressable>
-  )
+export function SecondaryButton(props: ButtonBaseProps): ReactElement {
+  return <ButtonBase {...props} visual={visual} />
 }
 
-const themedStyles = createThemedStyles((palette) => ({
-  button: {
-    alignItems: 'center',
-    borderRadius: radiusValue.lg,
-    borderWidth: 1,
-    borderColor: palette.slate,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  disabled: {
-    opacity: 0.6,
-  },
-  label: {
-    color: palette.ink,
-    fontSize: 16,
-  },
-}))
+export type SecondaryButtonProps = ButtonBaseProps

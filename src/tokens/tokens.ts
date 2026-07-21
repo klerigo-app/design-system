@@ -200,15 +200,116 @@ export const radii = {
 } as const
 
 /**
- * CSS box-shadow strings, light-only. React Native cannot consume these — it
- * needs shadowColor/shadowOffset/shadowRadius/elevation — so a themed native
- * shadow scale is separate, still-unbuilt work.
+ * One shadow layer, structurally identical to React Native's `BoxShadowValue`.
+ *
+ * Declared here rather than imported from react-native: this module is the
+ * side-effect-free token entry, consumed by CommonJS Tailwind configs that have
+ * no business resolving a react-native type. The shape is asserted against RN's
+ * in `src/native/index.ts`, which does depend on it.
+ *
+ * `color` is a string rather than a hex, because the dark focus rings are
+ * rgba() (tokens.css:169-170).
  */
-export const shadows = {
-  buttonLiftCoral: '0 4px 0 #C63823',
-  buttonLiftSun: '0 4px 0 #D99A18',
-  cardElevated: '0 14px 30px -18px rgba(90, 60, 30, 0.45)',
-  device: '0 30px 60px -30px rgba(90, 60, 30, 0.5)',
-  focusRingTeal: '0 0 0 3px #D6EFEF',
-  focusRingError: '0 0 0 3px #FBDCDC',
+export interface ShadowValue {
+  readonly offsetX: number
+  readonly offsetY: number
+  readonly blurRadius: number
+  readonly spreadDistance: number
+  readonly color: string
+}
+
+export type Shadows = {
+  readonly [K in keyof typeof lightShadows]: ShadowValue
+}
+
+/**
+ * Structured rather than CSS strings, which is what makes them testable: the
+ * parity test parses tokens.css into this shape and compares field by field,
+ * instead of diffing two strings and hoping RN's CSS parser agrees. It also
+ * keeps `cardElevated`'s negative spread off that parser's critical path.
+ *
+ * Note the CSS namespace is not uniform — lift/pressed/card/device are
+ * `--shadow-*` while the focus rings are `--focus-ring-*`. The parity test
+ * knows both prefixes.
+ */
+const lightShadows = {
+  buttonLiftCoral: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#C63823' },
+  buttonLiftSun: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#D99A18' },
+  buttonPressedCoral: {
+    offsetX: 0,
+    offsetY: 1,
+    blurRadius: 0,
+    spreadDistance: 0,
+    color: '#C63823',
+  },
+  buttonPressedSun: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#D99A18' },
+  cardElevated: {
+    offsetX: 0,
+    offsetY: 14,
+    blurRadius: 30,
+    spreadDistance: -18,
+    color: 'rgba(90, 60, 30, 0.45)',
+  },
+  device: {
+    offsetX: 0,
+    offsetY: 30,
+    blurRadius: 60,
+    spreadDistance: -30,
+    color: 'rgba(90, 60, 30, 0.5)',
+  },
+  focusRingTeal: { offsetX: 0, offsetY: 0, blurRadius: 0, spreadDistance: 3, color: '#D6EFEF' },
+  focusRingError: { offsetX: 0, offsetY: 0, blurRadius: 0, spreadDistance: 3, color: '#FBDCDC' },
 } as const
+
+const darkShadows = {
+  buttonLiftCoral: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#7A2E21' },
+  buttonLiftSun: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#8A6613' },
+  buttonPressedCoral: {
+    offsetX: 0,
+    offsetY: 1,
+    blurRadius: 0,
+    spreadDistance: 0,
+    color: '#7A2E21',
+  },
+  buttonPressedSun: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#8A6613' },
+  cardElevated: {
+    offsetX: 0,
+    offsetY: 14,
+    blurRadius: 30,
+    spreadDistance: -18,
+    color: 'rgba(0, 0, 0, 0.55)',
+  },
+  device: {
+    offsetX: 0,
+    offsetY: 30,
+    blurRadius: 60,
+    spreadDistance: -30,
+    color: 'rgba(0, 0, 0, 0.6)',
+  },
+  focusRingTeal: {
+    offsetX: 0,
+    offsetY: 0,
+    blurRadius: 0,
+    spreadDistance: 3,
+    color: 'rgba(79, 196, 196, 0.35)',
+  },
+  focusRingError: {
+    offsetX: 0,
+    offsetY: 0,
+    blurRadius: 0,
+    spreadDistance: 3,
+    color: 'rgba(240, 128, 110, 0.35)',
+  },
+} as const satisfies Shadows
+
+/**
+ * The shadow scale for a colour scheme.
+ *
+ * There is deliberately no scheme-less `shadows` export. The one this replaced
+ * was light-only, which is the same shape of frozen-palette bug `colors` was
+ * before #8 removed it — and leaving it in place would keep it as the shortest
+ * path to a shadow.
+ */
+export function getShadows(scheme: ColorScheme): Shadows {
+  return scheme === 'dark' ? darkShadows : lightShadows
+}

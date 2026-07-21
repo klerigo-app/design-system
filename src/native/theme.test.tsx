@@ -1,11 +1,11 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { View, styleOf, __setColorScheme } from './__test__/rn-stub'
-import { getPalette } from '../tokens/tokens'
-import { ThemeProvider, useTheme, createThemedStyles, useThemedStyles } from './theme'
+import { getPalette, getShadows } from '../tokens/tokens'
+import { ThemeProvider, useTheme, createThemedStyles, useThemedStyles, type Theme } from './theme'
 
-const styles = createThemedStyles((p) => ({
-  box: { backgroundColor: p.paper, color: p.ink },
+const styles = createThemedStyles((t) => ({
+  box: { backgroundColor: t.colors.paper, color: t.colors.ink },
 }))
 
 function Box() {
@@ -82,7 +82,7 @@ describe('useTheme', () => {
 
   it('hands back the palette for the active scheme', () => {
     function Probe() {
-      return <View testID="probe" style={{ backgroundColor: useTheme().surfaceRaised }} />
+      return <View testID="probe" style={{ backgroundColor: useTheme().colors.surfaceRaised }} />
     }
     render(
       <ThemeProvider scheme="dark">
@@ -93,14 +93,38 @@ describe('useTheme', () => {
       getPalette('dark').surfaceRaised,
     )
   })
+
+  it('carries the shadow scale alongside the colours, and flips it too', () => {
+    // The shadows axis is the whole reason useTheme returns an object rather
+    // than a bare palette. A shadow that stays light on a dark surface is the
+    // same class of bug the colours had.
+    const seen: string[] = []
+    function Probe() {
+      seen.push(useTheme().shadows.buttonLiftCoral.color)
+      return null
+    }
+    for (const scheme of ['light', 'dark'] as const) {
+      const { unmount } = render(
+        <ThemeProvider scheme={scheme}>
+          <Probe />
+        </ThemeProvider>,
+      )
+      unmount()
+    }
+    expect(seen).toEqual([
+      getShadows('light').buttonLiftCoral.color,
+      getShadows('dark').buttonLiftCoral.color,
+    ])
+    expect(seen[0]).not.toBe(seen[1])
+  })
 })
 
 describe('createThemedStyles', () => {
   it('builds each scheme once, however many components read it', () => {
     let builds = 0
-    const counted = createThemedStyles((p) => {
+    const counted = createThemedStyles((t) => {
       builds++
-      return { box: { backgroundColor: p.paper } }
+      return { box: { backgroundColor: t.colors.paper } }
     })
     function Counted() {
       useThemedStyles(counted)
@@ -126,8 +150,14 @@ describe('createThemedStyles', () => {
   })
 
   it('returns the identical object for repeat resolutions of a scheme', () => {
-    const light = getPalette('light')
+    // The cache keys on theme identity, so these have to be stable objects —
+    // which is exactly the contract ThemeProvider's useMemo upholds.
+    const theme = (scheme: 'light' | 'dark'): Theme => ({
+      colors: getPalette(scheme),
+      shadows: getShadows(scheme),
+    })
+    const [light, dark] = [theme('light'), theme('dark')]
     expect(styles.resolve(light)).toBe(styles.resolve(light))
-    expect(styles.resolve(light)).not.toBe(styles.resolve(getPalette('dark')))
+    expect(styles.resolve(light)).not.toBe(styles.resolve(dark))
   })
 })

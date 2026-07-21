@@ -44,7 +44,7 @@ const modalPanelStyles: (props?: ModalPanelStyleProps) => string = cva(
   },
 )
 
-export interface ModalProps {
+interface ModalBaseProps {
   isOpen: boolean
   /** Called on Escape and overlay click (when enabled). Does not fire from the Confirm/Cancel buttons. */
   onClose: () => void
@@ -55,17 +55,58 @@ export interface ModalProps {
   description?: ReactNode
   children?: ReactNode
   onConfirm: () => void
-  /** Cancel button is only rendered when this is provided. */
-  onCancel?: () => void
-  confirmText?: string
-  cancelText?: string
-  /** When set, Confirm stays disabled until the typed text exactly matches this value. */
-  confirmationValue?: string
-  confirmationLabel?: string
+  /** Required: this component previously defaulted it to Spanish. */
+  confirmText: string
   confirmationPlaceholder?: string
   closeOnOverlayClick?: boolean
   closeOnEscape?: boolean
 }
+
+/**
+ * Button and prompt strings are required rather than defaulted.
+ *
+ * They used to default to 'Confirmar' / 'Cancelar', with a hardcoded
+ * confirmation prompt behind them, which shipped Spanish to any caller who
+ * forgot. The issue that prompted this framed it as a /native leftover; both
+ * Modals had it, and fixing only native would have left the two prop contracts
+ * diverging — web/native drift pointing the other way.
+ *
+ * Required-ness is a discriminated union rather than three flat required props,
+ * because two of the three are only rendered conditionally: a modal with no
+ * cancel button should not be asked to invent a label for one.
+ *
+ * The union has two sharp edges, both found integrating it:
+ *
+ *  - Spreading `ModalProps` works, but `Omit<ModalProps, K>` does not — `Omit`
+ *    does not distribute over unions, so it collapses the branches into
+ *    something no value satisfies. Use a distributive omit:
+ *    `type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never`
+ *  - A conditional call site cannot inline the correlation; see
+ *    `ModalCancelProps` below.
+ */
+
+/**
+ * The cancel button and its label, together or not at all.
+ *
+ * Exported because a call site that decides conditionally cannot express this
+ * inline: neither `onCancel={x ? fn : undefined}` nor a conditional spread
+ * preserves the correlation — TypeScript widens both branches to optional and
+ * no union member matches. Annotating the value does work:
+ *
+ *   const cancelProps: ModalCancelProps = canDismiss
+ *     ? { onCancel: close, cancelText: 'Close' }
+ *     : {}
+ *   <Modal {...cancelProps} ... />
+ */
+export type ModalCancelProps =
+  { onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }
+
+/** The type-to-confirm value and the prompt that explains it, together or not at all. */
+export type ModalConfirmationProps =
+  | { confirmationValue: string; confirmationLabel: string }
+  | { confirmationValue?: never; confirmationLabel?: never }
+
+export type ModalProps = ModalBaseProps & ModalCancelProps & ModalConfirmationProps
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -80,8 +121,8 @@ export function Modal({
   children,
   onConfirm,
   onCancel,
-  confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
+  confirmText,
+  cancelText,
   confirmationValue,
   confirmationLabel,
   confirmationPlaceholder,
@@ -204,7 +245,7 @@ export function Modal({
         {requiresConfirmationMatch && (
           <TextInput
             id={confirmationInputId}
-            label={confirmationLabel ?? `Para confirmar, escribe "${confirmationValue}"`}
+            label={confirmationLabel}
             placeholder={confirmationPlaceholder}
             value={confirmationInput}
             onChange={(event) => setConfirmationInput(event.target.value)}

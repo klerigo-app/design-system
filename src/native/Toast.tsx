@@ -12,6 +12,7 @@ import {
 import { AccessibilityInfo, Animated, Pressable, View } from 'react-native'
 import { radiusValue, type Palette } from '../tokens/tokens'
 import { createThemedStyles, useTheme, useThemedStyles } from './theme'
+import { fontFamily } from './fonts'
 import { Heading, Text } from './Text'
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error'
@@ -134,7 +135,7 @@ function ToastItem({
   onDismiss: () => void
 }): ReactElement {
   const styles = useThemedStyles(themedStyles)
-  const palette = useTheme()
+  const { colors } = useTheme()
   // Lazy state (not a ref) so it can be read during render without tripping
   // react-hooks/refs; the initializer runs once, so the value is stable.
   const [anim] = useState(() => new Animated.Value(0))
@@ -185,7 +186,7 @@ function ToastItem({
       accessibilityLiveRegion={assertive ? 'assertive' : 'polite'}
     >
       <Pressable style={styles.pressArea} onPressIn={pause} onPressOut={resume}>
-        <View style={[styles.badge, { backgroundColor: variantColor(palette)[record.variant] }]} />
+        <View style={[styles.badge, { backgroundColor: variantColor(colors)[record.variant] }]} />
         <View style={styles.content}>
           <Heading size="md" style={styles.title}>
             {record.title}
@@ -204,7 +205,7 @@ function ToastItem({
         <Pressable
           onPress={onDismiss}
           accessibilityRole="button"
-          accessibilityLabel="Cerrar"
+          accessibilityLabel="Close"
           style={styles.close}
           hitSlop={8}
         >
@@ -212,13 +213,13 @@ function ToastItem({
         </Pressable>
       </Pressable>
       {record.duration !== null ? (
-        <View style={[styles.shelf, { backgroundColor: variantColor(palette)[record.variant] }]} />
+        <View style={[styles.shelf, { backgroundColor: variantColor(colors)[record.variant] }]} />
       ) : null}
     </Animated.View>
   )
 }
 
-const themedStyles = createThemedStyles((palette) => ({
+const themedStyles = createThemedStyles((theme) => ({
   viewport: {
     position: 'absolute',
     left: 16,
@@ -231,15 +232,16 @@ const themedStyles = createThemedStyles((palette) => ({
     width: '100%',
     maxWidth: 380,
     borderRadius: radiusValue['2xl'],
-    backgroundColor: palette.surfaceRaised,
+    backgroundColor: theme.colors.surfaceRaised,
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: theme.colors.border,
     overflow: 'hidden',
-    shadowColor: '#5A3C1E',
-    shadowOpacity: 0.25,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
+    // Was a hardcoded warm brown in legacy shadow props, exempted in
+    // themed-source.test.ts until a themed shadow scale existed. It does now, so
+    // this reads the same token web does — and stops being too warm on a dark
+    // surface. elevation is gone with it: it cannot express an offset or a
+    // colour, so on Android it was never drawing this shadow anyway.
+    boxShadow: [theme.shadows.cardElevated],
   },
   pressArea: {
     flexDirection: 'row',
@@ -266,8 +268,11 @@ const themedStyles = createThemedStyles((palette) => ({
     marginTop: 8,
   },
   linkText: {
-    color: palette.teal[700],
-    fontWeight: '600',
+    color: theme.colors.teal[700],
+    // The family carries the weight: these are static per-weight instances, so
+    // fontWeight alone would leave RN on DMSans-Regular, and naming both can
+    // miss the registered face on Android. See the note in Text.tsx.
+    fontFamily: fontFamily.bodySemiBold,
   },
   close: {
     height: 28,
@@ -277,7 +282,7 @@ const themedStyles = createThemedStyles((palette) => ({
   },
   closeText: {
     fontSize: 20,
-    color: palette.muted,
+    color: theme.colors.muted,
   },
   shelf: {
     height: 4,
