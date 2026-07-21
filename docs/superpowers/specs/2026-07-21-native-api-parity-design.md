@@ -103,8 +103,9 @@ frozen-palette bug — and #8 already set the precedent by removing `colors` rat
 aliasing it.
 
 Blast radius inside this repo is `tokens.test.ts:25-27` and `src/native/index.ts:27`.
-Externally it is a typecheck failure at build, not a silent runtime regression. The
-klerigo-app call-site count is **not yet measured** (see Open questions).
+Externally it is a typecheck failure at build, not a silent runtime regression. In
+klerigo-app it is one line — `packages/mobile-shared/src/theme/tokens.ts:4` re-exports
+`shadows` and nothing imports it, so the migration is a deletion.
 
 The map gains the two `pressed` variants `tokens.css` already declares and `tokens.ts`
 never had.
