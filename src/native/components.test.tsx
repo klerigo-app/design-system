@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import { type ReactElement } from 'react'
 import { styleOf } from './__test__/rn-stub'
-import { getPalette, type ColorScheme, type Palette } from '../tokens/tokens'
+import { getPalette, getShadows, type ColorScheme, type Palette } from '../tokens/tokens'
+import { fontFamily } from './fonts'
 import { ThemeProvider } from './theme'
 import { Screen } from './Screen'
 import { Heading, Text } from './Text'
@@ -62,6 +63,30 @@ describe('Text', () => {
         expect(style('muted').color).toBe(palette.slate)
       },
     )
+  })
+
+  it('sets the brand families, since RN falls back to the system font in silence', () => {
+    // The failure this catches has no error and no tofu — just subtly wrong
+    // type. Nothing else in the suite would notice.
+    inScheme(
+      'light',
+      <>
+        <Heading testID="heading">Title</Heading>
+        <Text testID="body">Body</Text>
+        <Text testID="muted" variant="muted">
+          Caption
+        </Text>
+      </>,
+    )
+    expect(style('heading').fontFamily).toBe(fontFamily.display)
+    expect(style('body').fontFamily).toBe(fontFamily.body)
+    expect(style('muted').fontFamily).toBe(fontFamily.body)
+  })
+
+  it('renders headings at 500, not the 700 that predated the fonts', () => {
+    // Web's display type is font-medium throughout; 700 was native drifting.
+    inScheme('light', <Heading testID="heading">Title</Heading>)
+    expect(style('heading').fontWeight).toBe('500')
   })
 })
 
@@ -139,6 +164,23 @@ describe('Toast', () => {
         act(() => screen.getByTestId('fire').click())
         expect(style('toast-card').backgroundColor).toBe(palette.surfaceRaised)
         expect(style('toast-card').borderColor).toBe(palette.border)
+      },
+    )
+  })
+
+  it('draws its elevation from the themed shadow scale, not a hardcoded brown', () => {
+    // This card used to carry shadowColor: '#5A3C1E' with a standing exemption
+    // in themed-source.test.ts, because the token layer had no shadow RN could
+    // consume. It does now, so the warm brown must not come back.
+    bothSchemes(
+      <ToastProvider>
+        <Trigger />
+      </ToastProvider>,
+      (_palette, scheme) => {
+        act(() => screen.getByTestId('fire').click())
+        expect(style('toast-card').boxShadow).toEqual([getShadows(scheme).cardElevated])
+        expect(style('toast-card').shadowColor).toBeUndefined()
+        expect(style('toast-card').elevation).toBeUndefined()
       },
     )
   })

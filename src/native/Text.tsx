@@ -1,5 +1,6 @@
 import { type ReactElement } from 'react'
 import { Text as RNText, type TextProps as RNTextProps } from 'react-native'
+import { fontFamily } from './fonts'
 import { createThemedStyles, useThemedStyles } from './theme'
 
 export interface HeadingProps extends RNTextProps {
@@ -9,7 +10,7 @@ export interface HeadingProps extends RNTextProps {
 // Explicit return type: without it, tsc's declaration emit infers `JSX.Element`
 // and references @types/react via a path that isn't portable when this package
 // is built as a git dependency in a consumer's pnpm store (TS2883).
-/** Bold display-scale heading in ink. Sizes mirror the web Heading scale. */
+/** Display-scale heading in ink. Sizes mirror the web Heading scale. */
 export function Heading({ size = 'lg', style, ...props }: HeadingProps): ReactElement {
   const styles = useThemedStyles(themedStyles)
   return (
@@ -28,9 +29,13 @@ export function Text({ variant = 'body', style, ...props }: BodyTextProps): Reac
 }
 
 const themedStyles = createThemedStyles((theme) => ({
-  heading: { fontWeight: '700', color: theme.colors.ink },
+  // fontWeight is 500, not the 700 native used before the fonts existed: web's
+  // display type is `font-display font-medium` throughout (Heading.tsx:13). The
+  // family is a static instance already at that weight, so fontWeight is
+  // belt-and-braces for the system-font fallback rather than load-bearing.
+  heading: { fontFamily: fontFamily.display, fontWeight: '500', color: theme.colors.ink },
   lg: { fontSize: 24 },
   md: { fontSize: 20 },
-  body: { fontSize: 16, color: theme.colors.ink },
-  muted: { fontSize: 16, color: theme.colors.slate },
+  body: { fontFamily: fontFamily.body, fontSize: 16, color: theme.colors.ink },
+  muted: { fontFamily: fontFamily.body, fontSize: 16, color: theme.colors.slate },
 }))

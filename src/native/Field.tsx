@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import { TextInput, type TextInput as RNTextInput, type TextInputProps } from 'react-native'
 import { radiusValue } from '../tokens/tokens'
+import { fontFamily } from './fonts'
 import { createThemedStyles, useTheme, useThemedStyles } from './theme'
 
 /**
@@ -30,6 +31,7 @@ const themedStyles = createThemedStyles((theme) => ({
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: theme.colors.ink,
+    fontFamily: fontFamily.body,
     fontSize: 16,
   },
 }))

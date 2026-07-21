@@ -12,6 +12,7 @@ import {
 import { AccessibilityInfo, Animated, Pressable, View } from 'react-native'
 import { radiusValue, type Palette } from '../tokens/tokens'
 import { createThemedStyles, useTheme, useThemedStyles } from './theme'
+import { fontFamily } from './fonts'
 import { Heading, Text } from './Text'
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error'
@@ -235,11 +236,12 @@ const themedStyles = createThemedStyles((theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.border,
     overflow: 'hidden',
-    shadowColor: '#5A3C1E',
-    shadowOpacity: 0.25,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
+    // Was a hardcoded warm brown in legacy shadow props, exempted in
+    // themed-source.test.ts until a themed shadow scale existed. It does now, so
+    // this reads the same token web does — and stops being too warm on a dark
+    // surface. elevation is gone with it: it cannot express an offset or a
+    // colour, so on Android it was never drawing this shadow anyway.
+    boxShadow: [theme.shadows.cardElevated],
   },
   pressArea: {
     flexDirection: 'row',
@@ -267,6 +269,10 @@ const themedStyles = createThemedStyles((theme) => ({
   },
   linkText: {
     color: theme.colors.teal[700],
+    // The family has to be named, not just the weight: these are static
+    // instances, so fontWeight alone leaves RN on DMSans-Regular and the label
+    // renders at the wrong weight with no error.
+    fontFamily: fontFamily.bodySemiBold,
     fontWeight: '600',
   },
   close: {
