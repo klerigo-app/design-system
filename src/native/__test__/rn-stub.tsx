@@ -78,7 +78,23 @@ const host =
         aria-label={accessibilityLabel as string}
         aria-live={accessibilityLiveRegion as 'polite' | 'assertive'}
         aria-disabled={(accessibilityState as { disabled?: boolean })?.disabled || undefined}
-        onClick={onPress}
+        /**
+         * Stops here rather than bubbling, emulating React Native's touch
+         * responder system: exactly one view handles a touch, and an inner
+         * Pressable claims it from the ones around it. The DOM has no such
+         * rule, so without this a tap on a sheet row would also fire the
+         * scrim's onPress behind it and dismiss the sheet — a failure that
+         * exists only in this stub, and which Modal and optionSheet both
+         * document relying on the real behaviour for.
+         */
+        onClick={
+          onPress
+            ? (event: { stopPropagation: () => void }) => {
+                event.stopPropagation()
+                ;(onPress as () => void)()
+              }
+            : undefined
+        }
         // Press and hover are mapped to the nearest DOM events so the pressed
         // and hovered style branches can be exercised at all. Without this a
         // button's rest state is the only thing any test can see — and the

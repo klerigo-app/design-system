@@ -52,18 +52,20 @@ const KNOWN_UNTHEMED: Record<string, Set<string>> = {}
 describe('native components cannot freeze the palette', () => {
   it('finds the component files it is meant to guard', () => {
     // Guards the guard: a walk that matches nothing passes every test below.
-    // 13 after #9 added ButtonBase and the five new button variants; 23 after
-    // #10's ten. A floor, not an equality — but it must rise whenever a batch
-    // lands, or a broken walk goes unnoticed.
-    expect(files.length).toBeGreaterThanOrEqual(15)
+    // 13 after #9 added ButtonBase and the five new button variants; 27 after
+    // #10's ten plus the option sheet and the control row. A floor, not an
+    // equality — but it must rise whenever a batch lands, or a broken walk goes
+    // unnoticed.
+    expect(files.length).toBeGreaterThanOrEqual(27)
   })
 
   it('reaches into the per-component directories, not just the flat files', () => {
     // The specific failure the recursive walk exists to prevent: matching only
     // `src/native/*.tsx` still finds theme.tsx and would satisfy the floor above,
-    // while covering no component at all. Both paths below are nested.
+    // while covering no component at all. Every path below is nested.
+    expect(files).toContain('src/native/Card/Card.tsx')
     expect(files).toContain('src/native/Button/ButtonBase.tsx')
-    expect(files).toContain('src/native/internal/fieldParts.tsx')
+    expect(files).toContain('src/native/internal/optionSheet.tsx')
   })
 
   for (const file of files) {

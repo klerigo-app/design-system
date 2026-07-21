@@ -26,6 +26,20 @@ export * from './Toast'
 // Six variants, one component each, mirroring web's Button variants.
 export * from './Button'
 
+// The primitives mobile parity screens need (#10). Each mirrors the web
+// component of the same name; where the prop contract diverges it is because
+// the platform forced it, and the component says so.
+export * from './Card'
+export * from './Chip'
+export * from './Checkbox'
+export * from './Toggle'
+export * from './SearchField'
+export * from './SegmentedControl'
+export * from './Select'
+export * from './MultiSelect'
+export * from './AnswerOption'
+export * from './LogoMark'
+
 // Re-export tokens so RN consumers have one import site. There is deliberately
 // no standing palette or shadow export: read both through `useTheme` /
 // `useThemedStyles` so they follow the active scheme instead of freezing at

@@ -18,8 +18,22 @@ interface SvgProps {
   [key: string]: unknown
 }
 
+/**
+ * React Native prop names that are not DOM attributes, mapped rather than
+ * spread — the same treatment rn-stub gives them. Spreading them raw makes
+ * React warn on every render and leaves `testID` unreachable by a query.
+ */
+function hostProps({ testID, accessibilityRole, accessibilityLabel, ...rest }: SvgProps) {
+  return {
+    'data-testid': testID as string | undefined,
+    role: accessibilityRole === 'image' ? 'img' : (accessibilityRole as string | undefined),
+    'aria-label': accessibilityLabel as string | undefined,
+    ...rest,
+  }
+}
+
 export function Svg({ children, ...props }: SvgProps) {
-  return <svg {...(props as object)}>{children}</svg>
+  return <svg {...(hostProps(props) as object)}>{children}</svg>
 }
 
 export function Rect(props: SvgProps) {
