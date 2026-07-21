@@ -47,6 +47,17 @@ export function FieldMessage({
  * input a focus ring.
  */
 export const fieldStyles = createThemedStyles((theme) => ({
+  /**
+   * The box: border, surface and focus ring. A wrapper View rather than the
+   * TextInput itself, and it deliberately carries no padding.
+   *
+   * On Android, changing a view's background resets its padding to the
+   * background drawable's own — so putting the focus ring on the TextInput made
+   * its horizontal padding collapse from 16dp to ~5dp the moment it was
+   * focused, and the text visibly jumped left. Splitting them means the view
+   * whose background changes has no padding to lose, and the view with the
+   * padding never changes background.
+   */
   control: {
     // rounded-md (12), not the lg (16) native used before: web's field radius
     // is one step tighter than its button radius.
@@ -54,6 +65,9 @@ export const fieldStyles = createThemedStyles((theme) => ({
     borderWidth: 1.5,
     borderColor: theme.colors.borderInput,
     backgroundColor: theme.colors.surfaceRaised,
+  },
+  /** The text itself. Transparent and border-free; owns the padding. */
+  input: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: theme.colors.ink,

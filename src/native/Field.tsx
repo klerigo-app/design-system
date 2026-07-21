@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react'
-import { TextInput, type TextInput as RNTextInput, type TextInputProps } from 'react-native'
+import { TextInput, View, type TextInput as RNTextInput, type TextInputProps } from 'react-native'
 import { fieldStyles } from './fieldParts'
 import { useTheme, useThemedStyles } from './theme'
 
@@ -24,17 +24,10 @@ export const Field = forwardRef<RNTextInput, FieldProps>(
     const [focused, setFocused] = useState(false)
 
     return (
-      <TextInput
-        ref={ref}
-        placeholderTextColor={colors.muted}
-        onFocus={(e) => {
-          setFocused(true)
-          onFocus?.(e)
-        }}
-        onBlur={(e) => {
-          setFocused(false)
-          onBlur?.(e)
-        }}
+      // The box is a wrapper rather than the TextInput itself. See fieldStyles:
+      // on Android a background change resets a view's padding, so the focus
+      // ring and the padding must not live on the same view.
+      <View
         style={[
           styles.control,
           // Error wins over focus, as on web: the cva's error branch carries no
@@ -43,8 +36,22 @@ export const Field = forwardRef<RNTextInput, FieldProps>(
           error && styles.controlError,
           style,
         ]}
-        {...props}
-      />
+      >
+        <TextInput
+          ref={ref}
+          placeholderTextColor={colors.muted}
+          onFocus={(e) => {
+            setFocused(true)
+            onFocus?.(e)
+          }}
+          onBlur={(e) => {
+            setFocused(false)
+            onBlur?.(e)
+          }}
+          style={styles.input}
+          {...props}
+        />
+      </View>
     )
   },
 )

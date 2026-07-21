@@ -37,6 +37,14 @@ function bothSchemes(ui: ReactElement, assert: (palette: Palette, scheme: ColorS
 
 const style = (testId: string) => styleOf(screen.getByTestId(testId))
 
+/**
+ * A Field's border, surface and focus ring live on a wrapper View, not on the
+ * TextInput — see fieldParts for why (Android resets a view's padding when its
+ * background changes). testID stays on the input so callers can type into it,
+ * so the box is its parent.
+ */
+const box = (testId: string) => styleOf(screen.getByTestId(testId).parentElement!)
+
 describe('Screen', () => {
   it('paints the paper background of the active scheme', () => {
     bothSchemes(
@@ -104,8 +112,8 @@ describe('Field', () => {
     bothSchemes(<Field testID="field" />, (palette) => {
       expect(style('field').color).toBe(palette.ink)
       // border-input, not slate — matching web's fieldControlStyles.
-      expect(style('field').borderColor).toBe(palette.borderInput)
-      expect(style('field').backgroundColor).toBe(palette.surfaceRaised)
+      expect(box('field').borderColor).toBe(palette.borderInput)
+      expect(box('field').backgroundColor).toBe(palette.surfaceRaised)
       // placeholderTextColor is a prop, not a style — easy to leave frozen.
       expect(screen.getByTestId('field').getAttribute('data-placeholder-color')).toBe(palette.muted)
     })
@@ -114,24 +122,30 @@ describe('Field', () => {
   it('matches the web field geometry rather than the old native one', () => {
     inScheme('light', <Field testID="field" />)
     // rounded-md (12) and 1.5px, not the lg (16) and 1px native had.
-    expect(style('field').borderRadius).toBe(12)
-    expect(style('field').borderWidth).toBe(1.5)
+    expect(box('field').borderRadius).toBe(12)
+    expect(box('field').borderWidth).toBe(1.5)
     expect(style('field').fontSize).toBe(15)
     expect(style('field').fontFamily).toBe(fontFamily.body)
+    // The padding must sit on the input, never on the box that changes
+    // background — that split is the whole point.
+    expect(style('field').paddingHorizontal).toBe(16)
+    expect(box('field').paddingHorizontal).toBeUndefined()
   })
 
   it('rings teal on focus and drops it on blur', () => {
     bothSchemes(<Field testID="field" />, (palette, scheme) => {
       const input = screen.getByTestId('field')
-      expect(style('field').boxShadow).toBeUndefined()
+      expect(box('field').boxShadow).toBeUndefined()
 
       fireEvent.focus(input)
-      expect(style('field').borderColor).toBe(palette.teal[500])
-      expect(style('field').boxShadow).toEqual([getShadows(scheme).focusRingTeal])
+      expect(box('field').borderColor).toBe(palette.teal[500])
+      expect(box('field').boxShadow).toEqual([getShadows(scheme).focusRingTeal])
+      // Focusing must not disturb the input's padding.
+      expect(style('field').paddingHorizontal).toBe(16)
 
       fireEvent.blur(input)
-      expect(style('field').borderColor).toBe(palette.borderInput)
-      expect(style('field').boxShadow).toBeUndefined()
+      expect(box('field').borderColor).toBe(palette.borderInput)
+      expect(box('field').boxShadow).toBeUndefined()
     })
   })
 
@@ -139,10 +153,10 @@ describe('Field', () => {
     // Web's cva has no focus variant on the error branch, so an invalid field
     // must not turn teal when the user clicks back into it to fix it.
     bothSchemes(<Field testID="field" error />, (palette, scheme) => {
-      expect(style('field').borderColor).toBe(palette.error)
+      expect(box('field').borderColor).toBe(palette.error)
       fireEvent.focus(screen.getByTestId('field'))
-      expect(style('field').borderColor).toBe(palette.error)
-      expect(style('field').boxShadow).toEqual([getShadows(scheme).focusRingError])
+      expect(box('field').borderColor).toBe(palette.error)
+      expect(box('field').boxShadow).toEqual([getShadows(scheme).focusRingError])
     })
   })
 
@@ -175,7 +189,7 @@ describe('TextInput', () => {
       (palette) => {
         expect(screen.queryByText('We never share it.')).toBeNull()
         expect(styleOf(screen.getByText('Required')).color).toBe(palette.error)
-        expect(style('field').borderColor).toBe(palette.error)
+        expect(box('field').borderColor).toBe(palette.error)
       },
     )
   })
