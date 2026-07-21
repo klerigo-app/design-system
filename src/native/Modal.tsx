@@ -35,21 +35,48 @@ interface ModalBaseProps {
 /**
  * Button and prompt strings are required rather than defaulted.
  *
- * They used to default to 'Confirmar' / 'Cancelar', which shipped Spanish to
- * any caller who forgot — in a package with no other opinion about language.
- * The web Modal had the same defaults and loses them in the same change.
+ * They used to default to 'Confirmar' / 'Cancelar', with a hardcoded
+ * confirmation prompt behind them, which shipped Spanish to any caller who
+ * forgot. The issue that prompted this framed it as a /native leftover; both
+ * Modals had it, and fixing only native would have left the two prop contracts
+ * diverging — web/native drift pointing the other way.
  *
  * Required-ness is a discriminated union rather than three flat required props,
  * because two of the three are only rendered conditionally: a modal with no
- * cancel button should not be asked to invent a label for one. The cost is
- * denser types and worse TS errors on a mismatch.
+ * cancel button should not be asked to invent a label for one.
+ *
+ * The union has two sharp edges, both found integrating it:
+ *
+ *  - Spreading `ModalProps` works, but `Omit<ModalProps, K>` does not — `Omit`
+ *    does not distribute over unions, so it collapses the branches into
+ *    something no value satisfies. Use a distributive omit:
+ *    `type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never`
+ *  - A conditional call site cannot inline the correlation; see
+ *    `ModalCancelProps` below.
  */
-export type ModalProps = ModalBaseProps &
-  ({ onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }) &
-  (
-    | { confirmationValue: string; confirmationLabel: string }
-    | { confirmationValue?: never; confirmationLabel?: never }
-  )
+
+/**
+ * The cancel button and its label, together or not at all.
+ *
+ * Exported because a call site that decides conditionally cannot express this
+ * inline: neither `onCancel={x ? fn : undefined}` nor a conditional spread
+ * preserves the correlation — TypeScript widens both branches to optional and
+ * no union member matches. Annotating the value does work:
+ *
+ *   const cancelProps: ModalCancelProps = canDismiss
+ *     ? { onCancel: close, cancelText: 'Close' }
+ *     : {}
+ *   <Modal {...cancelProps} ... />
+ */
+export type ModalCancelProps =
+  { onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }
+
+/** The type-to-confirm value and the prompt that explains it, together or not at all. */
+export type ModalConfirmationProps =
+  | { confirmationValue: string; confirmationLabel: string }
+  | { confirmationValue?: never; confirmationLabel?: never }
+
+export type ModalProps = ModalBaseProps & ModalCancelProps & ModalConfirmationProps
 
 /**
  * Confirmation dialog built on React Native's built-in `Modal`. Mirrors the

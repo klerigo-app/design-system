@@ -1,4 +1,4 @@
-import { Modal } from './Modal'
+import { Modal, type ModalCancelProps } from './Modal'
 
 /**
  * Type-level tests for the Modal prop union.
@@ -45,6 +45,16 @@ export const valid = (
   </>
 )
 
+/**
+ * The conditional case. This is why ModalCancelProps is exported: writing
+ * `onCancel={cond ? fn : undefined}` inline, or spreading a conditional object
+ * literal, both widen to optional and satisfy no branch of the union.
+ */
+export const conditional = (cond: boolean) => {
+  const cancelProps: ModalCancelProps = cond ? { onCancel: () => {}, cancelText: 'Close' } : {}
+  return <Modal isOpen onClose={noop} title="t" onConfirm={noop} confirmText="C" {...cancelProps} />
+}
+
 export const invalid = (
   <>
     {/* @ts-expect-error confirmText is required — it used to default to 'Confirmar'. */}
@@ -58,5 +68,16 @@ export const invalid = (
 
     {/* @ts-expect-error type-to-confirm requires the prompt that explains it. */}
     <Modal isOpen onClose={noop} title="t" onConfirm={noop} confirmText="C" confirmationValue="x" />
+
+    {/* @ts-expect-error a conditional onCancel cannot be inlined — use ModalCancelProps. */}
+    <Modal
+      isOpen
+      onClose={noop}
+      title="t"
+      onConfirm={noop}
+      confirmText="C"
+      onCancel={Math.round(1) ? noop : undefined}
+      cancelText="Close"
+    />
   </>
 )
