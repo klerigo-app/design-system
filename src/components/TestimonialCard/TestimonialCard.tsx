@@ -42,7 +42,7 @@ export function TestimonialCard({
           ))}
         </div>
         <span className="sr-only">
-          Valoración: {filled} de {MAX_RATING} estrellas
+          Rating: {filled} of {MAX_RATING} stars
         </span>
       </div>
 

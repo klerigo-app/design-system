@@ -27,7 +27,7 @@ describe('Toast (presentational)', () => {
   it('fires onDismiss when the close button is clicked', () => {
     const onDismiss = vi.fn()
     render(<Toast title="Título" onDismiss={onDismiss} />)
-    fireEvent.click(screen.getByLabelText('Cerrar'))
+    fireEvent.click(screen.getByLabelText('Close'))
     expect(onDismiss).toHaveBeenCalledTimes(1)
   })
 
@@ -192,7 +192,7 @@ describe('ToastProvider', () => {
       fireEvent.click(screen.getByText('fire error'))
     })
     act(() => {
-      fireEvent.click(screen.getByLabelText('Cerrar'))
+      fireEvent.click(screen.getByLabelText('Close'))
     })
     expect(screen.queryByText('Falló')).not.toBeInTheDocument()
   })

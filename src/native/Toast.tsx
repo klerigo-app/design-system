@@ -205,7 +205,7 @@ function ToastItem({
         <Pressable
           onPress={onDismiss}
           accessibilityRole="button"
-          accessibilityLabel="Cerrar"
+          accessibilityLabel="Close"
           style={styles.close}
           hitSlop={8}
         >

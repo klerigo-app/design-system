@@ -106,7 +106,7 @@ export function Toast({
 
         <button
           type="button"
-          aria-label="Cerrar"
+          aria-label="Close"
           onClick={onDismiss}
           className="-mr-1 -mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-border hover:text-ink focus-visible:shadow-focus-teal focus-visible:outline-none"
         >
