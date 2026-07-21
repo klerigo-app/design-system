@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { globSync, readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 // The bug this package shipped with was structural, not a typo: colours were
@@ -8,9 +8,9 @@ import { resolve } from 'node:path'
 // guards, because a component can only be caught by a render test once someone
 // remembers to write one — and #9/#10 add roughly ten more components here.
 
-const files = globSync('src/native/*.tsx', { cwd: process.cwd() }).filter(
-  (file) => !file.endsWith('.test.tsx'),
-)
+const files = readdirSync(resolve(process.cwd(), 'src/native'))
+  .filter((name) => name.endsWith('.tsx') && !name.endsWith('.test.tsx'))
+  .map((name) => `src/native/${name}`)
 
 const read = (file: string) => readFileSync(resolve(process.cwd(), file), 'utf8')
 

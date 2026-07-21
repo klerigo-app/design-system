@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { globSync, readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 // Guards the dark-mode component fix: surfaces that were hardcoded (bg-white /
@@ -79,9 +79,16 @@ describe('web components do not bake colors into inline styles', () => {
 
   // Applies to every web component, including ones with no gradient today.
   it('no web component imports the JS palette', () => {
-    const offenders = globSync('src/components/**/*.tsx', { cwd: process.cwd() })
-      .filter((file) => !file.endsWith('.stories.tsx'))
-      .filter((file) => /from\s+'[^']*tokens\/tokens'/.test(read(file)))
+    const components = readdirSync(resolve(process.cwd(), 'src/components'), {
+      recursive: true,
+      encoding: 'utf8',
+    })
+      .filter((name) => name.endsWith('.tsx') && !name.endsWith('.stories.tsx'))
+      .map((name) => `src/components/${name}`)
+    // Guards the guard: a listing that matches nothing passes vacuously.
+    expect(components.length).toBeGreaterThan(20)
+
+    const offenders = components.filter((file) => /from\s+'[^']*tokens\/tokens'/.test(read(file)))
     expect(offenders).toEqual([])
   })
 })
