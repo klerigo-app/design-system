@@ -8,7 +8,10 @@ export default defineConfig({
     react(),
     dts({
       include: ['src'],
-      exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx'],
+      // *.test-d.tsx holds type-level assertions. Unlike *.test.tsx it IS
+      // typechecked (tsconfig excludes only the latter, which is the point of
+      // the extension), but it must not reach the published declarations.
+      exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx', 'src/**/*.test-d.tsx'],
       rollupTypes: false,
     }),
   ],

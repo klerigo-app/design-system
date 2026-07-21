@@ -44,7 +44,7 @@ const modalPanelStyles: (props?: ModalPanelStyleProps) => string = cva(
   },
 )
 
-export interface ModalProps {
+interface ModalBaseProps {
   isOpen: boolean
   /** Called on Escape and overlay click (when enabled). Does not fire from the Confirm/Cancel buttons. */
   onClose: () => void
@@ -55,17 +55,40 @@ export interface ModalProps {
   description?: ReactNode
   children?: ReactNode
   onConfirm: () => void
-  /** Cancel button is only rendered when this is provided. */
-  onCancel?: () => void
-  confirmText?: string
-  cancelText?: string
-  /** When set, Confirm stays disabled until the typed text exactly matches this value. */
-  confirmationValue?: string
-  confirmationLabel?: string
+  /** Required: this component previously defaulted it to Spanish. */
+  confirmText: string
   confirmationPlaceholder?: string
   closeOnOverlayClick?: boolean
   closeOnEscape?: boolean
 }
+
+/**
+ * Button and prompt strings are required rather than defaulted.
+ *
+ * They used to default to 'Confirmar' / 'Cancelar', with a Spanish
+ * confirmationLabel fallback too, which shipped Spanish to any caller who
+ * forgot. The issue that prompted this framed it as a /native leftover; both
+ * Modals had it, and fixing only native would have left the two prop contracts
+ * diverging — web/native drift pointing the other way.
+ *
+ * A discriminated union rather than three flat required props, because two of
+ * the three are only rendered conditionally: a modal with no cancel button
+ * should not be asked to invent a label for one. The cost is denser types and
+ * worse TS errors on a mismatch.
+ *
+ * One sharp edge worth knowing: spreading `ModalProps` straight through works
+ * (`<Modal {...props} />`), but `Omit<ModalProps, K>` does not — `Omit` does not
+ * distribute over unions, so it collapses the branches into something no value
+ * satisfies. Use a distributive omit if you need one:
+ *
+ *   type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
+ */
+export type ModalProps = ModalBaseProps &
+  ({ onCancel: () => void; cancelText: string } | { onCancel?: never; cancelText?: never }) &
+  (
+    | { confirmationValue: string; confirmationLabel: string }
+    | { confirmationValue?: never; confirmationLabel?: never }
+  )
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -80,8 +103,8 @@ export function Modal({
   children,
   onConfirm,
   onCancel,
-  confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
+  confirmText,
+  cancelText,
   confirmationValue,
   confirmationLabel,
   confirmationPlaceholder,
@@ -204,7 +227,7 @@ export function Modal({
         {requiresConfirmationMatch && (
           <TextInput
             id={confirmationInputId}
-            label={confirmationLabel ?? `Para confirmar, escribe "${confirmationValue}"`}
+            label={confirmationLabel}
             placeholder={confirmationPlaceholder}
             value={confirmationInput}
             onChange={(event) => setConfirmationInput(event.target.value)}

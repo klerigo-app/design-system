@@ -4,7 +4,14 @@ import { Button } from '../Button/Button'
 import { TextInput } from '../TextInput/TextInput'
 import { Modal, type ModalProps } from './Modal'
 
-function ModalDemo(props: Omit<ModalProps, 'isOpen' | 'onClose'>) {
+/**
+ * `Omit` does not distribute over a union, so `Omit<ModalProps, ...>` collapses
+ * the prop union's branches and nothing satisfies the result. This preserves
+ * them. See the note on `ModalProps`.
+ */
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never
+
+function ModalDemo(props: DistributiveOmit<ModalProps, 'isOpen' | 'onClose'>) {
   const [isOpen, setIsOpen] = useState(true)
   return (
     <>
@@ -45,7 +52,10 @@ export const ConfirmOnly: Story = {
     title: 'Lección completada',
     description: '¡Buen trabajo! Sigues sumando racha.',
     confirmText: 'OK',
+    // cancelText goes with onCancel — the prop union does not allow a label for
+    // a button that is not rendered.
     onCancel: undefined,
+    cancelText: undefined,
   },
 }
 
@@ -56,6 +66,9 @@ export const TypeToConfirmDelete: Story = {
     description: 'Esta acción eliminará la unidad y todo su progreso de forma permanente.',
     confirmText: 'Eliminar',
     confirmationValue: 'Verbos irregulares',
+    // Required alongside confirmationValue now. This string used to come from a
+    // Spanish fallback inside the component.
+    confirmationLabel: 'Para confirmar, escribe "Verbos irregulares"',
   },
 }
 

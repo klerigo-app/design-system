@@ -235,7 +235,13 @@ export type Shadows = {
 const lightShadows = {
   buttonLiftCoral: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#C63823' },
   buttonLiftSun: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#D99A18' },
-  buttonPressedCoral: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#C63823' },
+  buttonPressedCoral: {
+    offsetX: 0,
+    offsetY: 1,
+    blurRadius: 0,
+    spreadDistance: 0,
+    color: '#C63823',
+  },
   buttonPressedSun: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#D99A18' },
   cardElevated: {
     offsetX: 0,
@@ -258,7 +264,13 @@ const lightShadows = {
 const darkShadows = {
   buttonLiftCoral: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#7A2E21' },
   buttonLiftSun: { offsetX: 0, offsetY: 4, blurRadius: 0, spreadDistance: 0, color: '#8A6613' },
-  buttonPressedCoral: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#7A2E21' },
+  buttonPressedCoral: {
+    offsetX: 0,
+    offsetY: 1,
+    blurRadius: 0,
+    spreadDistance: 0,
+    color: '#7A2E21',
+  },
   buttonPressedSun: { offsetX: 0, offsetY: 1, blurRadius: 0, spreadDistance: 0, color: '#8A6613' },
   cardElevated: {
     offsetX: 0,

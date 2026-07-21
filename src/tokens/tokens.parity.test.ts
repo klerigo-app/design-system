@@ -180,7 +180,10 @@ describe('getShadows mirrors tokens.css', () => {
           const js = shadows[shadowKey(name)]
           return !js || JSON.stringify(normalise(js)) !== JSON.stringify(parseShadow(value))
         })
-        .map(([name, value]) => `${name}: css ${value} vs js ${JSON.stringify(shadows[shadowKey(name)])}`)
+        .map(
+          ([name, value]) =>
+            `${name}: css ${value} vs js ${JSON.stringify(shadows[shadowKey(name)])}`,
+        )
       expect(mismatched).toEqual([])
     })
   }

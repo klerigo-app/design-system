@@ -361,7 +361,14 @@ describe('buttons', () => {
 
 describe('Modal', () => {
   const modal = (
-    <Modal isOpen title="Delete?" onClose={() => {}} onConfirm={() => {}} variant="error" />
+    <Modal
+      isOpen
+      title="Delete?"
+      onClose={() => {}}
+      onConfirm={() => {}}
+      confirmText="Delete"
+      variant="error"
+    />
   )
 
   it('raises the card on the themed surface, not white', () => {
@@ -382,6 +389,55 @@ describe('Modal', () => {
     // Guards the reason scrim is its own token rather than an alias of ink.
     expect(getPalette('dark').scrim).toBe('#000000')
     expect(getPalette('light').scrim).not.toBe(getPalette('dark').scrim)
+  })
+
+  it('renders the error confirm as a DangerButton rather than an inline fill', () => {
+    bothSchemes(modal, (palette) => {
+      const confirm = screen.getByText('Delete').closest('button')!
+      expect(styleOf(confirm).backgroundColor).toBe(palette.error)
+      // The inline version dimmed with opacity; DangerButton does not.
+      expect(styleOf(confirm).opacity).toBeUndefined()
+    })
+  })
+
+  it('renders cancel as a ghost button, matching web', () => {
+    // Native used the slate-outlined SecondaryButton here while web used ghost,
+    // so the two Modals disagreed on the cancel button's visual identity.
+    bothSchemes(
+      <Modal
+        isOpen
+        title="Delete?"
+        onClose={() => {}}
+        onConfirm={() => {}}
+        confirmText="Delete"
+        onCancel={() => {}}
+        cancelText="Keep"
+      />,
+      (palette) => {
+        const cancel = screen.getByText('Keep').closest('button')!
+        expect(styleOf(cancel).backgroundColor).toBe('transparent')
+        expect(styleOf(cancel).borderWidth).toBeUndefined()
+        expect(styleOf(screen.getByText('Keep')).color).toBe(palette.slate)
+      },
+    )
+  })
+
+  it('shows the caller-supplied confirmation prompt, with no built-in fallback', () => {
+    inScheme(
+      'light',
+      <Modal
+        isOpen
+        title="Delete?"
+        onClose={() => {}}
+        onConfirm={() => {}}
+        confirmText="Delete"
+        confirmationValue="unit-1"
+        confirmationLabel="Type the unit name to confirm"
+      />,
+    )
+    expect(screen.getByText('Type the unit name to confirm')).toBeTruthy()
+    // The English fallback that used to live here is gone, as is web's Spanish one.
+    expect(screen.queryByText(/To confirm, write/)).toBeNull()
   })
 })
 
