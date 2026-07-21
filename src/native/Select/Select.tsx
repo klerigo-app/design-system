@@ -31,6 +31,9 @@ export interface SelectProps extends ViewProps {
  * commits and closes, so there is no separate confirm step for one value.
  *
  * Web's required `id` is absent for the reason `TextInput` documents.
+ *
+ * See internal/optionSheet for one caveat: nesting this inside `Modal` is
+ * modal-in-modal and is unverified on a device.
  */
 export function Select({
   label,

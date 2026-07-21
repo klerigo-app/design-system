@@ -25,6 +25,9 @@ export interface MultiSelectProps extends ViewProps {
  * than one thing: the rows are `Checkbox`es rather than commit-on-tap rows, and
  * the sheet needs an explicit dismiss, because there is no single choice that
  * means "done".
+ *
+ * See internal/optionSheet for one caveat: nesting this inside `Modal` is
+ * modal-in-modal and is unverified on a device.
  */
 export function MultiSelect({
   label,

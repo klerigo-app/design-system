@@ -27,6 +27,13 @@ import { fieldStyles } from './fieldParts'
  *
  * The trigger reuses `fieldStyles.control`, so it is the same box `Field` and
  * `TextInput` draw rather than a lookalike that drifts from them.
+ *
+ * UNVERIFIED: nesting inside this package's `Modal`. That is also a React
+ * Native `Modal`, so a `Select` inside one is modal-in-modal — fragile on both
+ * platforms for z-ordering and dismissal, and worst on Android. The test suite
+ * cannot speak to it either way: rn-stub renders `Modal` as a plain `<div>`, so
+ * a nesting test passes without proving anything. Put it on a device before
+ * relying on it.
  */
 export interface OptionSheetTriggerProps {
   /** Selected text, or the placeholder when nothing is selected. */
