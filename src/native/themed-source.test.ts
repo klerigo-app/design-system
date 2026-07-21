@@ -28,7 +28,10 @@ const KNOWN_UNTHEMED: Record<string, Set<string>> = {}
 describe('native components cannot freeze the palette', () => {
   it('finds the component files it is meant to guard', () => {
     // Guards the guard: a glob that matches nothing passes every test below.
-    expect(files.length).toBeGreaterThanOrEqual(8)
+    // 13 after #9 added ButtonBase and the five new button variants. This is a
+    // floor, not an equality, so #10 does not have to touch it — but it must
+    // rise whenever a batch lands, or a broken glob goes unnoticed.
+    expect(files.length).toBeGreaterThanOrEqual(13)
   })
 
   for (const file of files) {

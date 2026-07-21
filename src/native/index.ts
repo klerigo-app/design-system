@@ -13,13 +13,21 @@
  *   import { Screen, Field, PrimaryButton } from '@klerigo/design-system/native'
  */
 export * from './theme'
+export * from './fonts'
 export * from './Screen'
 export * from './Text'
 export * from './Field'
-export * from './PrimaryButton'
-export * from './SecondaryButton'
 export * from './Modal'
 export * from './Toast'
+
+// Six variants, one component each, mirroring web's Button variants. ButtonBase
+// is deliberately not exported: it is how they share geometry, not API.
+export * from './PrimaryButton'
+export * from './RewardButton'
+export * from './SecondaryButton'
+export * from './OutlineButton'
+export * from './GhostButton'
+export * from './DangerButton'
 
 // Re-export tokens so RN consumers have one import site. There is deliberately
 // no standing palette or shadow export: read both through `useTheme` /

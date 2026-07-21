@@ -60,21 +60,35 @@ const host =
     const {
       onPressIn,
       onPressOut,
+      onHoverIn,
+      onHoverOut,
       pointerEvents,
       accessibilityRole,
       accessibilityLabel,
       accessibilityLiveRegion,
+      accessibilityState,
       hitSlop,
       ...domProps
     } = rest
-    void [onPressIn, onPressOut, pointerEvents, hitSlop]
+    void [pointerEvents, hitSlop]
     return (
       <Tag
         data-testid={testID}
         role={(accessibilityRole as string) ?? role}
         aria-label={accessibilityLabel as string}
         aria-live={accessibilityLiveRegion as 'polite' | 'assertive'}
+        aria-disabled={(accessibilityState as { disabled?: boolean })?.disabled || undefined}
         onClick={onPress}
+        // Press and hover are mapped to the nearest DOM events so the pressed
+        // and hovered style branches can be exercised at all. Without this a
+        // button's rest state is the only thing any test can see — and the
+        // pressed shadow and 3px sink are precisely the parts most likely to be
+        // wrong. It still proves only that the right style object is produced,
+        // not that RN honours it.
+        onMouseDown={onPressIn as () => void}
+        onMouseUp={onPressOut as () => void}
+        onMouseEnter={onHoverIn as () => void}
+        onMouseLeave={onHoverOut as () => void}
         {...styleProps(style)}
         {...(domProps as object)}
       >
