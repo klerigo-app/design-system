@@ -77,7 +77,7 @@ Neither is declared in `peerDependencies`, and for `react-native-svg` that is a
 correction rather than an oversight. It was declared optional at first, on the
 grounds that a missing native module is a crash rather than a type error. In a
 pnpm monorepo that backfires: peers are resolved per consumer, so a package that
-depends on this one *without* `react-native-svg` — a shared screen-scaffold
+depends on this one _without_ `react-native-svg` — a shared screen-scaffold
 package, say — resolves a different instance of the design system than the apps
 do, and the fork propagates through the shared graph. That splits NativeWind
 into two instances, one holding the compiled `darkMode` flag and the other
@@ -90,10 +90,13 @@ that installs `react-native-svg`.
 #### `Select` and `MultiSelect` open a sheet, and it is a React Native `Modal`
 
 So is this package's `Modal`. Nesting the two — a `Select` inside a `Modal` —
-is modal-in-modal, which is fragile on both platforms and worst on Android.
-It is **unverified**: the test suite renders `Modal` to a plain `<div>`, so a
-nesting test would pass without proving anything. Check it on a device before
-relying on it.
+is therefore modal-in-modal, which is a fragile arrangement in general.
+
+**Checked on Android** (emulator, API 36): the sheet renders above the modal
+card with its own scrim, commits its selection, and closes without taking the
+modal with it. Not checked on iOS. The test suite cannot speak to this either
+way — it renders `Modal` to a plain `<div>`, so a nesting test would pass
+without proving anything.
 
 The sheet also uses a fixed 34pt bottom inset rather than a real safe-area
 one, since this package deliberately has no `react-native-safe-area-context`
