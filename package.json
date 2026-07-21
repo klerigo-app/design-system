@@ -23,11 +23,16 @@
     },
     "./tokens.css": "./dist/index.css",
     "./fonts.css": "./dist/fonts.css",
-    "./tailwind-preset": "./tailwind-preset.js"
+    "./tailwind-preset": "./tailwind-preset.js",
+    "./native-fonts": {
+      "types": "./native-fonts/index.d.ts",
+      "default": "./native-fonts/index.js"
+    }
   },
   "files": [
     "dist",
-    "tailwind-preset.js"
+    "tailwind-preset.js",
+    "native-fonts"
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
