@@ -269,11 +269,10 @@ const themedStyles = createThemedStyles((theme) => ({
   },
   linkText: {
     color: theme.colors.teal[700],
-    // The family has to be named, not just the weight: these are static
-    // instances, so fontWeight alone leaves RN on DMSans-Regular and the label
-    // renders at the wrong weight with no error.
+    // The family carries the weight: these are static per-weight instances, so
+    // fontWeight alone would leave RN on DMSans-Regular, and naming both can
+    // miss the registered face on Android. See the note in Text.tsx.
     fontFamily: fontFamily.bodySemiBold,
-    fontWeight: '600',
   },
   close: {
     height: 28,

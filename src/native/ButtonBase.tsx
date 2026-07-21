@@ -162,7 +162,9 @@ const themedStyles = createThemedStyles(() => ({
   },
   fullWidth: { alignSelf: 'stretch', width: '100%' },
   icon: { height: 20, width: 20, flexShrink: 0 },
-  label: { fontFamily: fontFamily.display, fontWeight: '500' },
+  // Family only, no fontWeight — see the note in Text.tsx: with per-weight
+  // family names the pair can miss the registered face on Android.
+  label: { fontFamily: fontFamily.display },
 
   sm: { borderRadius: radiusValue.md, paddingHorizontal: 16, paddingVertical: 8 },
   md: { borderRadius: radiusValue.lg, paddingHorizontal: 26, paddingVertical: 14 },

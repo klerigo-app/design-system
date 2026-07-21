@@ -29,11 +29,17 @@ export function Text({ variant = 'body', style, ...props }: BodyTextProps): Reac
 }
 
 const themedStyles = createThemedStyles((theme) => ({
-  // fontWeight is 500, not the 700 native used before the fonts existed: web's
-  // display type is `font-display font-medium` throughout (Heading.tsx:13). The
-  // family is a static instance already at that weight, so fontWeight is
-  // belt-and-braces for the system-font fallback rather than load-bearing.
-  heading: { fontFamily: fontFamily.display, fontWeight: '500', color: theme.colors.ink },
+  // Baloo2-Medium already IS weight 500 — web's display type is
+  // `font-display font-medium` throughout (Heading.tsx:13), where native used
+  // 700 before the fonts existed.
+  //
+  // No fontWeight alongside it, deliberately. With per-weight family names, a
+  // fontFamily + fontWeight pair can miss the registered face on Android and
+  // drop to the system font. Naming the family alone is the reliable form, and
+  // it also keeps a failed font registration visible rather than approximating
+  // it with a synthesised system weight — which is what the emulator pass is
+  // there to catch.
+  heading: { fontFamily: fontFamily.display, color: theme.colors.ink },
   lg: { fontSize: 24 },
   md: { fontSize: 20 },
   body: { fontFamily: fontFamily.body, fontSize: 16, color: theme.colors.ink },

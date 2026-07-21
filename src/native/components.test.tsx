@@ -88,10 +88,14 @@ describe('Text', () => {
     expect(style('muted').fontFamily).toBe(fontFamily.body)
   })
 
-  it('renders headings at 500, not the 700 that predated the fonts', () => {
-    // Web's display type is font-medium throughout; 700 was native drifting.
+  it('carries weight via the family, never a separate fontWeight', () => {
+    // Baloo2-Medium IS 500 (web's display type is font-medium throughout; the
+    // 700 native used before was drift). Setting fontWeight alongside a
+    // per-weight family can miss the registered face on Android and silently
+    // fall back to the system font, so the pair must not reappear.
     inScheme('light', <Heading testID="heading">Title</Heading>)
-    expect(style('heading').fontWeight).toBe('500')
+    expect(style('heading').fontFamily).toBe(fontFamily.display)
+    expect(style('heading').fontWeight).toBeUndefined()
   })
 })
 
@@ -266,10 +270,10 @@ describe('buttons', () => {
     }
   })
 
-  it('renders labels in the display face at 500', () => {
+  it('renders labels in the display face, weight carried by the family', () => {
     inScheme('light', <PrimaryButton testID="btn" label="Go" />)
     expect(label().fontFamily).toBe(fontFamily.display)
-    expect(label().fontWeight).toBe('500')
+    expect(label().fontWeight).toBeUndefined()
   })
 
   it('lifts and sinks only the variants that do so on web', () => {
