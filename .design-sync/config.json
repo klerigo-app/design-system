@@ -10,7 +10,11 @@
     "Overview": null
   },
   "overrides": {
-    "Modal": { "cardMode": "single", "primaryStory": "TypeToConfirmDelete" }
+    "Modal": {
+      "cardMode": "single",
+      "primaryStory": "TypeToConfirmDelete",
+      "skip": ["core-modal--wide-with-side-by-side-fields"]
+    }
   },
   "storyImports": {
     "shim": ["useToast"]
