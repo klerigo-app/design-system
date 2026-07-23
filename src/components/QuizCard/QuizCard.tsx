@@ -12,6 +12,12 @@ export interface QuizCardProps {
   onSubmit?: () => void
   submitLabel: string
   submitDisabled?: boolean
+  /** Shows a compact "←" button sharing the submit row (20% / 80% split) when
+   * a step back is available — e.g. a linear runner where an earlier,
+   * not-yet-revealed answer stays editable. Omit for the default single
+   * full-width submit button. */
+  onBack?: () => void
+  backLabel?: string
 }
 
 export function QuizCard({
@@ -23,6 +29,8 @@ export function QuizCard({
   onSubmit,
   submitLabel,
   submitDisabled,
+  onBack,
+  backLabel = 'Back',
 }: QuizCardProps) {
   return (
     <Card variant="elevated" className="flex flex-col gap-5 !rounded-[var(--radius-card)]">
@@ -45,9 +53,24 @@ export function QuizCard({
         <p className="font-display text-2xl font-medium text-ink">{question}</p>
       </div>
       <div className="flex flex-col gap-3">{children}</div>
-      <Button variant="primary" fullWidth onClick={onSubmit} disabled={submitDisabled}>
-        {submitLabel}
-      </Button>
+      {onBack ? (
+        <div className="flex gap-3">
+          <div className="basis-1/5">
+            <Button variant="secondary" fullWidth aria-label={backLabel} onClick={onBack}>
+              ←
+            </Button>
+          </div>
+          <div className="basis-4/5">
+            <Button variant="primary" fullWidth onClick={onSubmit} disabled={submitDisabled}>
+              {submitLabel}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <Button variant="primary" fullWidth onClick={onSubmit} disabled={submitDisabled}>
+          {submitLabel}
+        </Button>
+      )}
     </Card>
   )
 }

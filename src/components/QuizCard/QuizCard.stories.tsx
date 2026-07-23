@@ -55,3 +55,33 @@ export const AnswerStates: Story = {
     </QuizCard>
   ),
 }
+
+export const WithBack: Story = {
+  render: () => {
+    const options = ['fui', 'fue', 'iba'] as const
+    const [selected, setSelected] = useState<(typeof options)[number] | null>('fui')
+    const statusFor = (option: string): AnswerOptionStatus =>
+      selected === option ? 'selected' : 'default'
+    return (
+      <QuizCard
+        current={3}
+        total={5}
+        promptLabel="Completa la frase"
+        question="Ayer yo ___ al cine con mis amigos."
+        submitLabel="Continue"
+        onSubmit={() => {}}
+        onBack={() => {}}
+      >
+        {options.map((option) => (
+          <AnswerOption
+            key={option}
+            status={statusFor(option)}
+            onSelect={() => setSelected(option)}
+          >
+            {option}
+          </AnswerOption>
+        ))}
+      </QuizCard>
+    )
+  },
+}

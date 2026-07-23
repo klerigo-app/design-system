@@ -84,4 +84,50 @@ describe('QuizCard', () => {
     )
     expect(screen.getByRole('button', { name: 'Enviar' })).toBeInTheDocument()
   })
+
+  it('omits the back button when onBack is not given', () => {
+    render(
+      <QuizCard current={2} total={5} promptLabel="p" question="q" submitLabel="Comprobar">
+        <AnswerOption>fui</AnswerOption>
+      </QuizCard>,
+    )
+    expect(screen.queryByLabelText('Back')).not.toBeInTheDocument()
+  })
+
+  it('shows a back button and fires onBack when given', async () => {
+    const onBack = vi.fn()
+    render(
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="p"
+        question="q"
+        submitLabel="Comprobar"
+        onBack={onBack}
+      >
+        <AnswerOption>fui</AnswerOption>
+      </QuizCard>,
+    )
+    await userEvent.click(screen.getByLabelText('Back'))
+    expect(onBack).toHaveBeenCalledTimes(1)
+    // The submit button still renders alongside it, sharing the row.
+    expect(screen.getByRole('button', { name: 'Comprobar' })).toBeInTheDocument()
+  })
+
+  it('uses the given backLabel for the back button', () => {
+    render(
+      <QuizCard
+        current={2}
+        total={5}
+        promptLabel="p"
+        question="q"
+        submitLabel="Comprobar"
+        onBack={() => {}}
+        backLabel="Späť"
+      >
+        <AnswerOption>fui</AnswerOption>
+      </QuizCard>,
+    )
+    expect(screen.getByLabelText('Späť')).toBeInTheDocument()
+  })
 })
