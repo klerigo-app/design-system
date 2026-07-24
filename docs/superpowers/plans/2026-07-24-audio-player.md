@@ -13,12 +13,12 @@
 - **Prop contract — identical on web and native, verbatim:**
   ```ts
   interface AudioPlayerProps {
-    isPlaying: boolean;
-    currentTime: number; // seconds, elapsed
-    duration: number;    // seconds, total; 0 while unknown/loading
-    onTogglePlay: () => void;
-    onSeek: (time: number) => void; // seconds, absolute position to seek to
-    label?: string; // optional accessible label/caption, e.g. "Audio"
+    isPlaying: boolean
+    currentTime: number // seconds, elapsed
+    duration: number // seconds, total; 0 while unknown/loading
+    onTogglePlay: () => void
+    onSeek: (time: number) => void // seconds, absolute position to seek to
+    label?: string // optional accessible label/caption, e.g. "Audio"
   }
   ```
 - **Exactly these six props** — the component signature is `AudioPlayerProps` itself. Do **not** extend `HTMLAttributes`/`PressableProps` and do **not** add a `testID` prop (the downstream consuming-app plan builds against this exact interface).
@@ -36,6 +36,7 @@
 ### Task 1: Web AudioPlayer
 
 **Files:**
+
 - Create: `src/components/AudioPlayer/AudioPlayer.tsx`
 - Create: `src/components/AudioPlayer/index.ts`
 - Create: `src/components/AudioPlayer/AudioPlayer.stories.tsx`
@@ -43,6 +44,7 @@
 - Test: `src/components/AudioPlayer/AudioPlayer.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `cn` from `../../lib/cn`; `PlayIcon`, `PauseIcon` from `@phosphor-icons/react`.
 - Produces:
   - `AudioPlayer: (props: AudioPlayerProps) => JSX.Element` — exported from `@klerigo/design-system`.
@@ -294,6 +296,7 @@ git commit -m "feat: add headless web AudioPlayer component"
 ### Task 2: Native AudioPlayer
 
 **Files:**
+
 - Create: `src/native/AudioPlayer/AudioPlayer.tsx`
 - Create: `src/native/AudioPlayer/index.ts`
 - Modify: `src/native/index.ts` (add one barrel line)
@@ -301,6 +304,7 @@ git commit -m "feat: add headless web AudioPlayer component"
 - **No `package.json` change** — see Global Constraints (`@expo/vector-icons` stays a `devDependency`, externalized + app-provided + stubbed).
 
 **Interfaces:**
+
 - Consumes: `Feather` from `@expo/vector-icons`; `Pressable`, `Text`, `View`, and types `GestureResponderEvent`, `LayoutChangeEvent` from `react-native`; `radiusValue` from `../../tokens/tokens`; `fontFamily` from `../fonts`; `createThemedStyles`, `useThemedStyles` from `../theme`.
 - Produces:
   - `AudioPlayer: (props: AudioPlayerProps) => ReactElement` — exported from `@klerigo/design-system/native`.
@@ -619,6 +623,7 @@ git commit -m "feat: add headless native AudioPlayer component"
 ## Plan self-review (author checklist — completed)
 
 **Spec coverage.** Every locked requirement maps to a task:
+
 - Headless, no playback state/APIs → Task 1 + Task 2 component bodies (props-only; native's only state is `barWidth` from `onLayout`, pure UI).
 - Custom controls (play/pause + scrubber + elapsed/duration) → both components render toggle, scrubber, and `formatTime` read-out.
 - Prop contract verbatim on both platforms → identical `AudioPlayerProps` block in `AudioPlayer.tsx` of each task (six fields, same order, same comments); both components' signatures are `AudioPlayerProps` with no extra props.
@@ -635,6 +640,7 @@ git commit -m "feat: add headless native AudioPlayer component"
 ## Execution handoff
 
 Two execution options:
+
 1. **Subagent-Driven (recommended)** — one fresh subagent per task, review between tasks.
 2. **Inline Execution** — run both tasks in-session with a checkpoint after each.
 
