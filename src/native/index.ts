@@ -38,6 +38,7 @@ export * from './SegmentedControl'
 export * from './Select'
 export * from './MultiSelect'
 export * from './AnswerOption'
+export * from './AudioPlayer'
 export * from './LogoMark'
 
 // Re-export tokens so RN consumers have one import site. There is deliberately
